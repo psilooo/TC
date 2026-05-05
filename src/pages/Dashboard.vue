@@ -9,6 +9,7 @@
 
     <section class="row-2">
       <Next72HoursCard :shows="next72h" />
+      <TodayTimelineCard :date="todayDate" :events="todayTimeline" />
     </section>
   </div>
 </template>
@@ -17,7 +18,8 @@
 import PageHeader from '../components/PageHeader.vue'
 import KpiTile from '../components/dashboard/KpiTile.vue'
 import Next72HoursCard from '../components/dashboard/Next72HoursCard.vue'
-import { kpis, next72h } from '../data/dashboard'
+import TodayTimelineCard from '../components/dashboard/TodayTimelineCard.vue'
+import { kpis, next72h, todayDate, todayTimeline } from '../data/dashboard'
 </script>
 
 <style scoped lang="scss">
