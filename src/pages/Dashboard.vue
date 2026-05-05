@@ -1,4 +1,4 @@
-<!-- src/pages/Dashboard.vue (in-progress; widgets being composed one at a time) -->
+<!-- src/pages/Dashboard.vue -->
 <template>
   <div class="dashboard-page">
     <PageHeader title="Tour Dashboard" subtitle="Today / Command Center" />
@@ -18,6 +18,8 @@
       <OpenIssuesCard :issues="openIssues" />
       <UpcomingShowsTable :shows="upcomingShows" />
     </section>
+
+    <RecentNotesCard :notes="recentNotes" class="recent-notes" />
   </div>
 </template>
 
@@ -30,6 +32,7 @@ import TravelHotelCard from '../components/dashboard/TravelHotelCard.vue'
 import QuickContactsCard from '../components/dashboard/QuickContactsCard.vue'
 import OpenIssuesCard from '../components/dashboard/OpenIssuesCard.vue'
 import UpcomingShowsTable from '../components/dashboard/UpcomingShowsTable.vue'
+import RecentNotesCard from '../components/dashboard/RecentNotesCard.vue'
 import {
   kpis,
   next72h,
@@ -39,12 +42,16 @@ import {
   quickContacts,
   openIssues,
   upcomingShows,
+  recentNotes,
 } from '../data/dashboard'
 </script>
 
 <style scoped lang="scss">
 .dashboard-page {
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .kpi-row {
@@ -65,7 +72,6 @@ import {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
-  margin-top: 1rem;
 
   @media (min-width: 1024px) {
     grid-template-columns: repeat(3, 1fr);
@@ -76,10 +82,13 @@ import {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
-  margin-top: 1rem;
 
   @media (min-width: 1024px) {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+.recent-notes {
+  width: 100%;
 }
 </style>
