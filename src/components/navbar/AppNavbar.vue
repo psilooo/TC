@@ -11,9 +11,7 @@
             @click="isSidebarMinimized = !isSidebarMinimized"
           />
         </Transition>
-        <RouterLink to="/" aria-label="Visit home page">
-          <VuesticLogo />
-        </RouterLink>
+        <NavbarSearch />
       </div>
     </template>
     <template #right>
@@ -26,7 +24,7 @@
 import { storeToRefs } from 'pinia'
 import { useGlobalStore } from '../../stores/global-store'
 import AppNavbarActions from './components/AppNavbarActions.vue'
-import VuesticLogo from '../VuesticLogo.vue'
+import NavbarSearch from './components/NavbarSearch.vue'
 
 defineProps({
   isMobile: { type: Boolean, default: false },
