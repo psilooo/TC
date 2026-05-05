@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import PageHeader from '../components/PageHeader.vue'
-import KpiTile from '../components/dashboard/KpiTile.vue'
+import KpiTile from '../components/KpiTile.vue'
 import Next72HoursCard from '../components/dashboard/Next72HoursCard.vue'
 import TodayTimelineCard from '../components/dashboard/TodayTimelineCard.vue'
 import TravelHotelCard from '../components/dashboard/TravelHotelCard.vue'

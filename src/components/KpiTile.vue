@@ -1,4 +1,4 @@
-<!-- src/components/dashboard/KpiTile.vue -->
+<!-- src/components/KpiTile.vue -->
 <template>
   <VaCard class="kpi-tile">
     <div class="kpi-tile__head">
@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Kpi } from '../../data/types'
+import type { Kpi } from '../data/types'
 
 defineProps<Kpi>()
 </script>

@@ -48,3 +48,11 @@ export function formatLongDate(iso: string): string {
 export function formatTimeFromIso(iso: string): string {
   return time12.format(new Date(iso))
 }
+
+const relDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' })
+const relTime = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+
+export function formatRelativeDateTime(iso: string): string {
+  const d = new Date(iso)
+  return `${relDate.format(d)} · ${relTime.format(d)}`
+}
