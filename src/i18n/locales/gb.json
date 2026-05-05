@@ -54,7 +54,16 @@
     "404": "404",
     "faq": "FAQ",
     "users": "Users",
-    "projects": "Projects"
+    "projects": "Projects",
+    "tour-dates": "Tour Dates",
+    "shows": "Shows",
+    "itinerary": "Itinerary",
+    "travel": "Travel",
+    "contacts": "Contacts",
+    "tasks": "Tasks",
+    "documents": "Documents",
+    "settlements": "Settlements",
+    "notes": "Notes"
   },
   "messages": {
     "all": "See all messages",
