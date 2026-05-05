@@ -12,6 +12,10 @@
       <TodayTimelineCard :date="todayDate" :events="todayTimeline" />
       <TravelHotelCard :legs="travelLegs" />
     </section>
+
+    <section class="row-3">
+      <QuickContactsCard :contacts="quickContacts" />
+    </section>
   </div>
 </template>
 
@@ -21,7 +25,8 @@ import KpiTile from '../components/dashboard/KpiTile.vue'
 import Next72HoursCard from '../components/dashboard/Next72HoursCard.vue'
 import TodayTimelineCard from '../components/dashboard/TodayTimelineCard.vue'
 import TravelHotelCard from '../components/dashboard/TravelHotelCard.vue'
-import { kpis, next72h, todayDate, todayTimeline, travelLegs } from '../data/dashboard'
+import QuickContactsCard from '../components/dashboard/QuickContactsCard.vue'
+import { kpis, next72h, todayDate, todayTimeline, travelLegs, quickContacts } from '../data/dashboard'
 </script>
 
 <style scoped lang="scss">
@@ -44,6 +49,17 @@ import { kpis, next72h, todayDate, todayTimeline, travelLegs } from '../data/das
 }
 
 .row-2 {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+  margin-top: 1rem;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.row-3 {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
