@@ -1,4 +1,10 @@
 // src/data/format.ts — shared formatters (used by widgets and reusable later by other sections)
+//
+// Note on timezone: formatTimeFromIso intentionally uses the browser's local
+// timezone for now (matches the wireframe mock where all times are shown as
+// wall-clock). When real data arrives, the renderer will need to pass a
+// timeZone option (or convert in the data layer) so that show times always
+// display in the show city's local time regardless of viewer location.
 
 const usd = new Intl.NumberFormat('en-US', {
   style: 'currency',

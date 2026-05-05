@@ -51,6 +51,6 @@ export interface Issue {
 export interface NoteEntry {
   id: string
   body: string
-  at: string // ISO datetime
+  at: string // ISO datetime, naive (no offset). Treated as wall-clock time local to the show city; renderer must apply the correct timeZone when real data arrives.
   authorInitials: string
 }
