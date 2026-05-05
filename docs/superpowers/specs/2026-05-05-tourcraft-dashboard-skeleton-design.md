@@ -6,7 +6,7 @@
 | **Status**                  | Draft (pending user review)                                                                                                                              |
 | **Author**                  | Claude (collaborating with user)                                                                                                                         |
 | **Implementation**          | TBD — next session via `superpowers:writing-plans` → `superpowers:executing-plans`                                                                       |
-| **Repo state at spec time** | Vuestic Admin v3.1.0 cloned into `/Users/samsepiol/code/TC`, deps installed, dev server boots clean on `:5173`, fresh git repo on `main`, no commits yet |
+| **Repo state at spec time** | Vuestic Admin v3.1.0 cloned into `/Users/samsepiol/code/TC`, deps installed, dev server boots clean on `:5173`, two commits on `main` (scaffold + this spec) |
 
 ---
 
@@ -60,8 +60,8 @@ Build the **Dashboard view** as a faithful render of the reference mock. Ship th
 
 ```
 src/
-  App.vue                       (kept — Vuestic shell)
-  main.ts                       (lightly edited — see §8 Branding)
+  App.vue                       (kept — renders <RouterView/>; no edits needed)
+  main.ts                       (edited — see §9 (remove GTM init) and §10 (no functional change beyond GTM strip))
   layouts/
     AppLayout.vue               (kept — responsive sidebar+topbar)
   pages/
@@ -79,6 +79,9 @@ src/
   components/
     PageHeader.vue              (NEW — reusable; <h1> + subtitle, used by every page including the 9 stubs)
     PagePlaceholder.vue         (NEW — composes <PageHeader> + a centered "Coming soon" panel; used by the 9 stub pages)
+    navbar/components/
+      NavbarSearch.vue          (NEW — global search input; visual only this spec)
+      [existing internals retained: NotificationDropdown, ProfileDropdown; GitHubButton/Discord deleted per §9]
     sidebar/
       NavigationRoutes.ts       (REWRITTEN — TourCraft's 10 items, see §6)
       [Vuestic sidebar internals untouched]
@@ -94,8 +97,10 @@ src/
       UpcomingShowsTable.vue
       RecentNotesCard.vue
   data/
-    types.ts                    (NEW — typed interfaces, see §9)
-    dashboard.ts                (NEW — mock fixtures, see §9)
+    types.ts                    (NEW — typed interfaces; see §8)
+    dashboard.ts                (NEW — mock fixtures; see §8)
+    severity.ts                 (NEW — severity tokens shared across sections; see §7)
+    format.ts                   (NEW — date/currency formatters; see §7)
   router/index.ts               (REWRITTEN — see §5)
   i18n/
     index.ts                    (kept; pinned to `gb`, no edits)
@@ -108,7 +113,7 @@ src/
 **Modularity rule (per CLAUDE.md "modularize early"):**
 
 - **Page files contain orchestration only.** `Dashboard.vue` imports and composes the 8 widget components; it does _not_ define their internals inline. `Shows.vue` (when built later) will compose components from `components/shows/`.
-- **Per-section component folders** (`components/dashboard/`, future `components/shows/`, etc.) keep concerns scoped. No cross-folder imports between sections; shared UI lives at `components/` root (`PageHeader`, `PagePlaceholder`).
+- **Per-section component folders** (`components/dashboard/`, future `components/shows/`, etc.) keep concerns scoped. No cross-folder imports between sections; shared UI lives at `components/` root (`PageHeader`, `PagePlaceholder`). Cross-cutting tokens / types / formatters live in `src/data/` so any future section can reuse them (`severity.ts`, `format.ts`, `types.ts`).
 - **Replacing a stub page** = editing one `.vue` file under `pages/`. **Adding a detail route** = adding one route entry + one new page file. No churn elsewhere.
 
 ## 5. Routing
@@ -126,46 +131,16 @@ export default createRouter({
       component: AppLayout,
       redirect: '/dashboard',
       children: [
-        {
-          path: 'dashboard',
-          name: 'dashboard',
-          component: () => import('@/pages/Dashboard.vue'),
-          meta: { title: 'Tour Dashboard' },
-        },
-        {
-          path: 'tour-dates',
-          name: 'tour-dates',
-          component: () => import('@/pages/TourDates.vue'),
-          meta: { title: 'Tour Dates' },
-        },
-        { path: 'shows', name: 'shows', component: () => import('@/pages/Shows.vue'), meta: { title: 'Shows' } },
-        {
-          path: 'itinerary',
-          name: 'itinerary',
-          component: () => import('@/pages/Itinerary.vue'),
-          meta: { title: 'Itinerary' },
-        },
-        { path: 'travel', name: 'travel', component: () => import('@/pages/Travel.vue'), meta: { title: 'Travel' } },
-        {
-          path: 'contacts',
-          name: 'contacts',
-          component: () => import('@/pages/Contacts.vue'),
-          meta: { title: 'Contacts' },
-        },
-        { path: 'tasks', name: 'tasks', component: () => import('@/pages/Tasks.vue'), meta: { title: 'Tasks' } },
-        {
-          path: 'documents',
-          name: 'documents',
-          component: () => import('@/pages/Documents.vue'),
-          meta: { title: 'Documents' },
-        },
-        {
-          path: 'settlements',
-          name: 'settlements',
-          component: () => import('@/pages/Settlements.vue'),
-          meta: { title: 'Settlements' },
-        },
-        { path: 'notes', name: 'notes', component: () => import('@/pages/Notes.vue'), meta: { title: 'Notes' } },
+        { path: 'dashboard',   name: 'dashboard',   component: () => import('@/pages/Dashboard.vue') },
+        { path: 'tour-dates',  name: 'tour-dates',  component: () => import('@/pages/TourDates.vue') },
+        { path: 'shows',       name: 'shows',       component: () => import('@/pages/Shows.vue') },
+        { path: 'itinerary',   name: 'itinerary',   component: () => import('@/pages/Itinerary.vue') },
+        { path: 'travel',      name: 'travel',      component: () => import('@/pages/Travel.vue') },
+        { path: 'contacts',    name: 'contacts',    component: () => import('@/pages/Contacts.vue') },
+        { path: 'tasks',       name: 'tasks',       component: () => import('@/pages/Tasks.vue') },
+        { path: 'documents',   name: 'documents',   component: () => import('@/pages/Documents.vue') },
+        { path: 'settlements', name: 'settlements', component: () => import('@/pages/Settlements.vue') },
+        { path: 'notes',       name: 'notes',       component: () => import('@/pages/Notes.vue') },
       ],
     },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/pages/NotFound.vue') },
@@ -182,39 +157,75 @@ export default createRouter({
 
 ## 6. Layout shell & navigation
 
-`AppLayout.vue` is kept verbatim from Vuestic Admin. Only inputs change:
+`AppLayout.vue` is kept verbatim. Inputs (sidebar route table + navbar contents) change.
+
+### NavigationRoutes (sidebar)
+
+`AppSidebar.vue` runs `displayName` through vue-i18n's `t(...)`, so values are i18n keys (not literals). The default export shape is `{ root, routes }` and is consumed via `navigationRoutes.routes` — `root` is currently unused but preserved to match the existing Vuestic type contract.
 
 ```ts
-// src/components/sidebar/NavigationRoutes.ts (replacement contents, abbreviated)
-import { type INavigationRoute } from './types' // existing Vuestic type
+// src/components/sidebar/NavigationRoutes.ts (full replacement)
+export interface INavigationRoute {
+  name: string
+  displayName: string
+  meta: { icon: string }
+  children?: INavigationRoute[]
+}
 
-const routes: INavigationRoute[] = [
-  { name: 'dashboard', displayName: 'Dashboard', meta: { icon: 'mso-home' } },
-  { name: 'tour-dates', displayName: 'Tour Dates', meta: { icon: 'mso-calendar_today' } },
-  { name: 'shows', displayName: 'Shows', meta: { icon: 'mso-confirmation_number' } },
-  { name: 'itinerary', displayName: 'Itinerary', meta: { icon: 'mso-map' } },
-  { name: 'travel', displayName: 'Travel', meta: { icon: 'mso-flight' } },
-  { name: 'contacts', displayName: 'Contacts', meta: { icon: 'mso-group' } },
-  { name: 'tasks', displayName: 'Tasks', meta: { icon: 'mso-task_alt' } },
-  { name: 'documents', displayName: 'Documents', meta: { icon: 'mso-folder' } },
-  { name: 'settlements', displayName: 'Settlements', meta: { icon: 'mso-attach_money' } },
-  { name: 'notes', displayName: 'Notes', meta: { icon: 'mso-sticky_note_2' } },
-]
-
-export default { routes }
+export default {
+  root: { name: '/', displayName: 'navigationRoutes.home' },
+  routes: [
+    { name: 'dashboard',   displayName: 'menu.dashboard',   meta: { icon: 'mso-home' } },
+    { name: 'tour-dates',  displayName: 'menu.tour-dates',  meta: { icon: 'mso-calendar_today' } },
+    { name: 'shows',       displayName: 'menu.shows',       meta: { icon: 'mso-confirmation_number' } },
+    { name: 'itinerary',   displayName: 'menu.itinerary',   meta: { icon: 'mso-map' } },
+    { name: 'travel',      displayName: 'menu.travel',      meta: { icon: 'mso-flight' } },
+    { name: 'contacts',    displayName: 'menu.contacts',    meta: { icon: 'mso-group' } },
+    { name: 'tasks',       displayName: 'menu.tasks',       meta: { icon: 'mso-task_alt' } },
+    { name: 'documents',   displayName: 'menu.documents',   meta: { icon: 'mso-folder' } },
+    { name: 'settlements', displayName: 'menu.settlements', meta: { icon: 'mso-attach_money' } },
+    { name: 'notes',       displayName: 'menu.notes',       meta: { icon: 'mso-sticky_note_2' } },
+  ] as INavigationRoute[],
+}
 ```
 
-> **Icon set decision:** Use **Material Symbols** (`mso-*`) — Vuestic Admin's default and zero-cost. The mock's icons are lucide-style (more geometric); under wireframe fidelity that gap is acceptable. If exact icon match is wanted later, adding `lucide-vue-next` and swapping `mso-*` references is a tight follow-up, not part of this spec. The exact `mso-*` names listed above are a reasonable starting set; implementer may swap any individual icon for a closer match without spec churn.
+Each `displayName` key needs a corresponding string in `src/i18n/locales/gb.json` under the `menu.*` namespace — see §9 for the exact additions.
 
-**Topbar (`src/components/navbar/`):** kept; with these adjustments during implementation:
+> **Icon set decision:** Use **Material Symbols Outlined** (`mso-*`). Verified during review: `index.html` already loads `Material+Symbols+Outlined` from Google Fonts, and `src/services/vuestic-ui/icons-config/icons-config.ts` includes the `mso-{content}` resolver. So `mso-*` names render with zero added setup. The mock's icons are lucide-style; the visual gap is acceptable under wireframe fidelity. Swapping any individual `mso-*` to a closer Material Symbol during implementation is fine and doesn't require a spec change.
 
-- Search input visible, placeholder text `Search shows, dates, venues, contacts, tasks, and more…`, no `@input` handler this spec.
-- Bell icon visible, no dropdown wired this spec.
-- Profile menu hardcoded to display name **"Jane Manager"** (matches the mock). Avatar can stay as the Vuestic default placeholder.
-- **Locale switcher removed** from the navbar (we have only one locale; a single-option dropdown is noise). After removal, the `flag-icons` dependency should have no remaining importers and gets uninstalled per §9.
-- **Theme toggle** (light/dark) — Vuestic ships one in the navbar by default. Keep it; it's free and useful even in wireframe.
+### Topbar (`src/components/navbar/`) — actual contents and required changes
 
-**Sidebar header / brand mark:** replace any "Vuestic" text/logo with the literal text **"TourCraft"** in a clean wordmark style (no logo asset for this spec). Specific text-replacement targets: any element rendering "Vuestic" string under `src/components/sidebar/` and `src/layouts/AppLayout.vue` — verify with `grep -ri "vuestic" src/components src/layouts` during implementation and swap user-facing instances only (do not touch class names like `va-*` or imports from `vuestic-ui`).
+What's there today (`AppNavbar.vue` + `AppNavbarActions.vue`):
+
+- **Left slot:** hamburger toggle (mobile only) + `<VuesticLogo />` linking to `/`
+- **Right slot, via `AppNavbarActions.vue`:** `GitHubButton` (Vuestic promo) + Discord icon (`VaIconDiscord`, also Vuestic promo) + `NotificationDropdown` (bell) + `ProfileDropdown`
+- **No search input. No theme toggle. No locale switcher.** (Earlier spec drafts assumed otherwise — verified wrong against the actual files during review.)
+
+Target navbar contents (matches the mock — note the mock shows no navbar logo/wordmark):
+
+```
+[hamburger (mobile)]   [─── NavbarSearch ───]                 [bell]   [profile]
+└── left slot ──────────────────────────────┘                 └── right slot ──┘
+```
+
+Required changes during implementation:
+
+| Change | File | Action |
+|---|---|---|
+| Remove navbar branding | `AppNavbar.vue` | Drop `import VuesticLogo from '../VuesticLogo.vue'` and the `<RouterLink to="/"><VuesticLogo /></RouterLink>` template usage. Mock has no navbar logo/wordmark — branding lives in `<title>`, `package.json`, and (later) the favicon. Delete `VuesticLogo.vue` per §9. |
+| Add global search | `AppNavbar.vue` | Mount `<NavbarSearch />` in the **left slot**, after the hamburger toggle, with `flex: 1` so it expands across the available width. Import: `import NavbarSearch from './components/NavbarSearch.vue'`. New component is defined in §10. |
+| Remove GitHub promo button | `AppNavbarActions.vue` | Drop `import GithubButton from './GitHubButton.vue'` and its template usage. Delete `GitHubButton.vue` per §9. |
+| Remove Discord promo icon | `AppNavbarActions.vue` | Drop `import VaIconDiscord from '../../icons/VaIconDiscord.vue'` and its template usage. Delete `VaIconDiscord.vue` per §9. |
+| Set profile name to "Jane Manager" | `ProfileDropdown.vue` (or downstream) | Replace the rendered display name with literal **"Jane Manager"** to match the mock. Find via `grep -rn "displayName\|name\b" src/components/navbar/components/dropdowns/ProfileDropdown.vue`. Avatar stays as the Vuestic default placeholder. |
+| Bell stays | `NotificationDropdown.vue` | No edit. We don't wire its dropdown content this spec — if it currently shows demo notifications in the dropdown, replace the list with a single "No new notifications" stub or leave it; implementer's call (cosmetic). |
+
+**Search input placeholder:** `Search shows, dates, venues, contacts, tasks, and more…`
+
+### Sidebar header / brand mark
+
+The mock shows no brand element in the sidebar either — just the 10 nav items. No sidebar-header changes required.
+
+If `grep -rn "Vuestic" src/components src/layouts` surfaces other user-facing "Vuestic" strings (copy in `gb.json`, template comments), replace user-facing strings only — leave class names (`va-*`), package imports (`from 'vuestic-ui'`), SCSS variable names, and Vuestic API calls alone.
 
 ## 7. Dashboard composition
 
@@ -257,7 +268,7 @@ Layout: CSS grid via Tailwind. KPI row = `grid-cols-4` on `lg`, `grid-cols-2` on
 | **`TodayTimelineCard`**  | `VaCard` + custom timeline               | Card title shows `Today — {{ formatDate(date) }}`. Vertical timeline: left rail with dot markers, time label, then event title + sub-text on the right. Pure CSS (Tailwind) — no timeline lib. Footer: "View full day →" button (no-op).                                                                                                                                 |
 | **`TravelHotelCard`**    | `VaCard` + `VaBadge`                     | Card title "Travel & Hotel". 3 rows (Flight / Hotel / Ground) — each: kind icon, kind label, primary text (e.g., "ATL → BNA"), sub text (e.g., "May 20 · 9:45 AM"), status badge ("Confirmed"), trailing chevron.                                                                                                                                                        |
 | **`QuickContactsCard`**  | `VaCard` + custom rows + icon `VaButton` | 4 rows: role / name / phone-number / phone-call icon button + email icon button. Buttons are `aria-label`'d but no handlers.                                                                                                                                                                                                                                             |
-| **`OpenIssuesCard`**     | `VaCard` + severity badge                | 3 rows: leading bullet dot (severity-tinted), issue title, sub-line, severity pill. **Severity tokens** (defined once in `src/components/dashboard/severityTokens.ts` so they can be re-skinned): `High`=`{ bg: 'red-100', text: 'red-800' }`, `Medium`=`{ bg: 'amber-100', text: 'amber-800' }`, `Low`=`{ bg: 'slate-100', text: 'slate-700' }`.                        |
+| **`OpenIssuesCard`**     | `VaCard` + severity badge                | 3 rows: leading bullet dot (severity-tinted), issue title, sub-line, severity pill. **Severity tokens** (defined once in `src/data/severity.ts` so they can be re-skinned and reused by future sections like Tasks): `High`=`{ bg: 'red-100', text: 'red-800' }`, `Medium`=`{ bg: 'amber-100', text: 'amber-800' }`, `Low`=`{ bg: 'slate-100', text: 'slate-700' }`. Lives in `data/` (not `components/dashboard/`) per the modularity rule in §4 — cross-cutting tokens shouldn't be section-scoped.                        |
 | **`UpcomingShowsTable`** | Plain `<table>` + Tailwind               | Columns: Date / City / Venue / Advance / Travel / Settlement. Right-aligned numeric. Travel column uses the same "Confirmed"/"Pending" badge style as Travel & Hotel. **Decision:** plain `<table>` rather than `VaDataTable` for skeleton — no sort/filter logic to back, easier to restyle. Swap to `VaDataTable` in a future spec when sort/filter/pagination matter. |
 | **`RecentNotesCard`**    | `VaCard` + log rows                      | 3 rows: body text (truncate to 1 line on narrow widths), right-aligned timestamp + `VaAvatar size="small"` with author initials. Footer: "View all notes →" (no-op).                                                                                                                                                                                                     |
 
@@ -454,9 +465,10 @@ export const recentNotes: NoteEntry[] = [
 ### Files / directories to delete
 
 ```
+# Demo pages — entire subtrees
 src/pages/404.vue
-src/pages/admin/                  (entire subtree — demo dashboard, demo pages)
-src/pages/auth/                   (entire subtree — login/signup/recover)
+src/pages/admin/                       (demo dashboard + demo subpages)
+src/pages/auth/                        (login/signup/recover demos)
 src/pages/billing/
 src/pages/faq/
 src/pages/payments/
@@ -466,35 +478,54 @@ src/pages/projects/
 src/pages/settings/
 src/pages/users/
 
-src/components/icons/             (Vuestic demo icons — verify no AppLayout/sidebar/navbar imports first via grep)
-src/components/typography/        (demo)
-src/components/va-charts/         (demo)
-src/components/va-medium-editor/  (demo — pulls in heavy `medium-editor` dep we'll uninstall)
-src/components/va-timeline-item.vue (demo)
-src/components/VuesticLogo.vue
+# Demo components
+src/components/typography/             (demo)
+src/components/va-charts/              (demo)
+src/components/va-medium-editor/       (demo — pulls in `medium-editor` dep)
+src/components/va-timeline-item.vue    (demo)
+src/components/VuesticLogo.vue         (delete only AFTER editing AppNavbar.vue per §6 — no replacement; mock has no navbar logo)
 src/components/VuesticLogo.stories.ts
 src/components/NotFoundImage.vue
 
+# Promotional UI in the navbar (Vuestic-specific, not part of TourCraft)
+src/components/navbar/components/GitHubButton.vue
+src/components/icons/VaIconDiscord.vue (only this one demo icon; see note below)
+
+# Locales — keep gb.json only
 src/i18n/locales/br.json
 src/i18n/locales/cn.json
 src/i18n/locales/es.json
 src/i18n/locales/ir.json
-# Keep src/i18n/locales/gb.json (default locale)
 
-src/data/charts/                  (demo)
+# Demo data
+src/data/charts/                       (demo)
 src/data/CountriesList.ts
 src/data/geo.json
-src/data/pages/                   (demo subtree)
+src/data/pages/                        (demo subtree)
 src/data/users.json
-src/data/types.ts                 (will be REPLACED with TourCraft types — overwrite, don't preserve)
+src/data/types.ts                      (REPLACED with TourCraft types — overwrite, see §8)
 
-.storybook/                       (entire dir — Storybook config)
-e2e/                              (entire workspace dir)
+# Demo / unused tooling
+.storybook/                            (entire dir)
+e2e/                                   (entire workspace)
 
-public/vuestic-admin-image.png    (demo asset)
+# Demo asset
+public/vuestic-admin-image.png
 ```
 
-**Verification gate before each deletion** (in implementation): `grep -rln "<imported-name>" src/` confirms no remaining references. If a delete breaks an import in `AppLayout.vue` / `navbar/` / `sidebar/` / `App.vue`, replace the consumer's import with the TourCraft equivalent or remove the consumer's reference.
+> **DO NOT delete `src/components/icons/` wholesale.** Verified during review: `AppLayoutNavigation.vue` imports `VaIconMenuCollapsed` from this folder. The dir contains both demo icons (e.g., `VaIconDiscord`) and layout-chrome icons (e.g., `VaIconMenuCollapsed`). Delete only `VaIconDiscord.vue` for this spec; the rest stays. Revisit later if a section's detailed design lets us prune more.
+
+**Verification gate before each deletion**: `grep -rln "<symbol-or-path>" src/ index.html` returns clean. If a delete still breaks an import, the surviving consumer is in §6's "actual contents and required changes" table — fix the consumer in the same step.
+
+### Code edits required by deletions
+
+| File | Edit |
+|---|---|
+| `src/main.ts` | Remove `import { createGtm } from '@gtm-support/vue-gtm'` and the `if (import.meta.env.VITE_APP_GTM_ENABLED) { app.use(createGtm({...})) }` block (currently lines 7 and 20–28). Build will break otherwise once `@gtm-support/vue-gtm` is uninstalled. |
+| `src/components/navbar/AppNavbar.vue` | Drop the `VuesticLogo` import + `<RouterLink to="/"><VuesticLogo /></RouterLink>` template usage (no replacement — mock has no navbar logo). Add `import NavbarSearch from './components/NavbarSearch.vue'` and mount `<NavbarSearch />` in the **left slot** after the hamburger toggle, with `flex: 1` so it expands. |
+| `src/components/navbar/components/AppNavbarActions.vue` | Drop `GithubButton` and `VaIconDiscord` imports + template usages. (No additions here — search lives in `AppNavbar.vue`'s left slot, not in this right-slot component.) |
+| `src/components/navbar/components/dropdowns/ProfileDropdown.vue` (or downstream) | Replace the rendered display name with literal `"Jane Manager"`. Locate via `grep -rn "displayName\|name\b" src/components/navbar/components/dropdowns/`. |
+| `src/i18n/locales/gb.json` | Add `menu.tour-dates`, `menu.shows`, `menu.itinerary`, `menu.travel`, `menu.contacts`, `menu.tasks`, `menu.documents`, `menu.settlements`, `menu.notes` keys with the displayed strings (e.g., `"menu.tour-dates": "Tour Dates"`). `menu.dashboard` already exists — keep. Orphaned keys for deleted demo pages (`menu.users`, `menu.projects`, `menu.faq`, etc.) can be left in for now (vue-i18n won't error on unused keys); a separate hygiene pass can prune them later. |
 
 ### Dependencies to uninstall
 
@@ -504,10 +535,10 @@ After component deletes:
 medium-editor                    (used only by va-medium-editor)
 @types/medium-editor             (devDep — paired)
 chartjs-chart-geo                (used only by demo geo chart)
-flag-icons                       (used by the navbar locale switcher being removed per §6)
+flag-icons                       (no kept consumers — verified during review)
 ionicons                         (used only by demo)
-register-service-worker          (we don't ship a PWA in this spec; safe to drop)
-@gtm-support/vue-gtm             (demo analytics; we'll add analytics intentionally later per CLAUDE.md — PostHog/Plausible)
+register-service-worker          (verified: no imports in src/ or public/; safe to drop)
+@gtm-support/vue-gtm             (after main.ts edit above; will reintroduce analytics later via PostHog/Plausible per CLAUDE.md)
 
 # Storybook devDeps:
 @storybook/addon-essentials, @storybook/addon-interactions, @storybook/addon-links,
@@ -526,27 +557,53 @@ storybook, eslint-plugin-storybook
 
 ## 10. Branding rename
 
-| Where                  | Before                  | After                                                                              |
-| ---------------------- | ----------------------- | ---------------------------------------------------------------------------------- |
-| `index.html` `<title>` | `Vuestic Admin`         | `TourCraft`                                                                        |
-| `index.html` favicon   | Vuestic favicon         | (leave default for this spec; brand asset later)                                   |
-| `package.json` `name`  | `vuestic-admin`         | `tourcraft`                                                                        |
-| Sidebar header         | Vuestic logo + wordmark | Plain text `TourCraft` (geometric/serif fallback acceptable; brand wordmark later) |
-| README.md              | Vuestic README          | (leave for this spec — user can replace later; not user-facing)                    |
+| Where | Before | After |
+|---|---|---|
+| `index.html` `<title>` | `Vuestic Admin` | `TourCraft` |
+| `index.html` favicon | Vuestic favicon | (leave default for this spec; brand asset later) |
+| `package.json` `name` | `vuestic-admin` | `tourcraft` |
+| Navbar logo | `<VuesticLogo>` in `AppNavbar.vue` | (removed entirely — mock has no navbar logo) |
+| README.md | Vuestic README | (leave for this spec — user-replaceable later, not user-facing) |
 
-Search-and-replace surface: `grep -ril "vuestic" src/ index.html package.json` — review each hit, replace user-facing strings, leave class names (`va-*`), package imports (`from 'vuestic-ui'`), and SCSS variable names alone.
+### New component required
+
+```vue
+<!-- src/components/navbar/components/NavbarSearch.vue -->
+<template>
+  <VaInput
+    class="navbar-search"
+    placeholder="Search shows, dates, venues, contacts, tasks, and more…"
+    aria-label="Global search"
+  >
+    <template #prependInner>
+      <VaIcon name="mso-search" color="secondary" />
+    </template>
+  </VaInput>
+</template>
+
+<style scoped>
+.navbar-search {
+  min-width: 16rem;
+  flex: 1 1 auto;
+}
+</style>
+```
+
+Lives under `components/navbar/components/` because it's navbar-specific.
+
+Search-and-replace surface: `grep -ril "vuestic" src/ index.html package.json` — review each hit, replace user-facing strings, leave class names (`va-*`), package imports (`from 'vuestic-ui'`), SCSS variable names, and Vuestic API calls alone.
 
 ## 11. Definition of done
 
-- [ ] `npm run dev` boots without warnings related to deleted demo files
+- [ ] `npm run dev` boots cleanly — no warnings about missing modules from deleted demo files or uninstalled deps (GTM, etc.)
 - [ ] Visiting `/` redirects to `/dashboard`
-- [ ] Dashboard renders all 8 widgets, populated from `src/data/dashboard.ts`, visually matching the reference mock under wireframe fidelity (layout/structure/copy match; exact pixel parity not required)
-- [ ] Sidebar shows TourCraft's 10 IA items in the order specified, with the active item highlighted as you navigate
+- [ ] Dashboard renders all 8 widgets, populated from `src/data/dashboard.ts`, visually matching the reference mock under wireframe fidelity (layout / structure / copy match; exact pixel parity not required)
+- [ ] Sidebar shows TourCraft's 10 IA items in the order specified, each labeled via i18n keys from `gb.json`, with the active item highlighted as you navigate
 - [ ] Each non-Dashboard nav item routes to `<PagePlaceholder>` rendering `<PageHeader title="<section name>"/>` + a centered panel reading **"Coming soon — detailed design pending."** — no console errors, no broken layout
-- [ ] Topbar shows search field with the specified placeholder, bell icon, and profile menu reading "Jane Manager"
+- [ ] Navbar layout matches mock: hamburger (mobile) + `<NavbarSearch>` filling the left slot, bell (`NotificationDropdown`) + profile menu reading **"Jane Manager"** in the right slot. **No VuesticLogo, no GitHub button, no Discord icon.**
 - [ ] `npm run build:ci` completes successfully (skips lint/tsc; production-grade `npm run build` deferred — TS strict cleanup may surface issues to fix in a follow-up)
-- [ ] No remaining demo Vuestic pages, demo data, demo components, Storybook config, or e2e workspace in the repo
-- [ ] No broken imports anywhere (`grep` for any deleted file path returns clean)
+- [ ] No remaining demo Vuestic pages, demo data, demo `va-charts`/`va-medium-editor`/typography components, Storybook config, or e2e workspace in the repo
+- [ ] No broken imports anywhere (`grep` for any deleted file path / removed dep returns clean)
 - [ ] Spec file (this doc) committed; implementation work committed in subsequent commits keyed to the writing-plans output
 
 ## 12. Non-goals / decisions explicitly deferred
