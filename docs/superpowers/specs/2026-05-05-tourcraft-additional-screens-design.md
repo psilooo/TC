@@ -84,14 +84,14 @@ src/
     Notes.vue                   (kept as PagePlaceholder)
 
   components/
+    KpiTile.vue                 (MOVE from components/dashboard/KpiTile.vue — see §9; consumed by KpiRow + Dashboard)
     KpiRow.vue                  (NEW — shared 4-up KPI grid; takes Kpi[])
     PageHeader.vue              (EXTEND — add slots: #subtitle, #actions; keep title/subtitle props for back-compat)
     ShowSwitcher.vue            (NEW — visual-only "<show name> ▾" button used in PageHeader for Tour Dates + Shows)
     Breadcrumb.vue              (NEW — small "Tour Dashboard › Travel" component)
 
     tour-dates/
-      AdvanceProgressRing.vue   (% Complete circular ring KPI)
-      AdvanceSectionRow.vue     (one row in the main 9-section list)
+      AdvanceSectionRow.vue     (one row in the main 11-section list)
       AdvanceMissingCard.vue    (right rail)
       AdvanceQuickContactsCard.vue (right rail)
       AdvanceNotesCard.vue      (right rail)
@@ -153,7 +153,7 @@ src/
 
 - **Pages contain orchestration only.** Each `pages/<Section>.vue` imports `PageHeader`, `KpiRow` (where applicable), and the section's widgets, then composes them. No UI guts inline.
 - **Per-section component folders** keep widgets scoped. Cross-folder imports between sections are forbidden — a widget for Tasks does not import from `components/contacts/`. Shared UI lives at `components/` root.
-- **Cross-cutting tokens / types / formatters** continue to live in `src/data/` (`severity.ts`, `format.ts`, `types.ts`).
+- **Cross-cutting tokens / types / formatters** continue to live in `src/data/` (`severity.ts`, `format.ts`, `types.ts`). The cross-folder import ban applies only to `src/components/` subfolders — `src/data/` files are explicitly shared. (E.g., `shows.ts` may import `todayTimeline` from `dashboard.ts` to keep one source of truth.)
 - Replacing a stub later or extending a section is still a one-file edit per change.
 
 ## 5. Routing & layout shell
@@ -194,6 +194,8 @@ Add (without breaking dashboard's existing usage):
 </template>
 
 <script setup lang="ts">
+// Invariant: callers must provide either the `title` prop OR a `#title` slot.
+// Both omitted = empty <h1> rendered (caught by visual review, not by TS).
 defineProps<{
   title?: string
   subtitle?: string
@@ -343,17 +345,21 @@ Each page section below specifies: page header structure, KPIs, main content, ri
 
 **Main column — `AdvanceSectionRow`:**
 
-Each row: leading icon · section name + sub · progress bar (Vuestic `VaProgressBar` or a styled `<div>`) · status pill · trailing chevron. The 9 sections in the fixture (see §8):
+Each row: leading icon · section name + sub · progress bar (Vuestic `VaProgressBar` or a styled `<div>`) · status pill · trailing chevron. The 11 sections in the fixture, of which 8 are Complete (matches the KPI "8 of 11" / "75%"):
 
 1. Venue Info — 6/6 — Complete
-2. Local Contacts — 4/5 — Need Follow-Up
+2. Local Contacts — 5/5 — Complete
 3. Hospitality — 2/4 — Need Follow-Up
 4. Schedule Confirmation — 3/3 — Complete
 5. Travel & Hotel — 5/5 — Complete
-6. Guest List — 1/2 — Need Follow-Up
-7. Settlement Terms — 4/4 — Complete
-8. Merch / Parking / Load-In — 2/3 — Need Follow-Up
-9. Promo / Marketing — 0/2 — Missing
+6. Crew Accommodations — 4/4 — Complete
+7. Production / Tech Rider — 6/6 — Complete
+8. Guest List — 1/2 — Need Follow-Up
+9. Settlement Terms — 4/4 — Complete
+10. Merch / Parking / Load-In — 3/3 — Complete
+11. Promo / Marketing — 0/2 — Missing
+
+Tally: 8 Complete · 2 Need Follow-Up · 1 Missing. 8/11 ≈ 73%; KPI fixture should display `'75%'` per the mock (a small visible rounding mismatch is acceptable wireframe fidelity; alternatively use `'73%'` for exact math).
 
 Status pills use the same severity-token pattern from `OpenIssuesCard`: Complete = green (success), Need Follow-Up = amber, Missing = red. Add to `severity.ts` if needed (see §8).
 
@@ -731,7 +737,7 @@ export interface TravelIssue {
 }
 
 // Contacts
-export type ContactRole = 'Venue Mgr' | 'Promoter' | 'Driver' | 'Hotel' | 'Production' | 'Catering' | 'Sound' | 'Lighting' | 'Other'
+export type ContactRole = 'Venue Manager' | 'Promoter' | 'Driver' | 'Hotel' | 'Production' | 'Catering' | 'Sound' | 'Lighting' | 'Other'
 
 export interface Contact {
   id: string
@@ -860,7 +866,7 @@ The fixtures must match the mocks 1:1 for any value visible (KPI numbers, table 
 
 **`src/data/tasks.ts`**: `tasksKpis` (4 — 27/6/9/14), four arrays `tasksTodo`, `tasksWaiting`, `tasksDueSoon`, `tasksDone` (3-4 items each; total reasonably matches "27 open"), `tasksDeadlines` (5), `tasksCategories` (6).
 
-**`src/data/documents.ts`**: `docsKpis` (4 — 132/18/9/`'$128,740'`), `docsFiles` (6-8 files; one with `id: 'sel'` for "The Ryman.pdf"), `docsSelectedId = 'sel'`, `docsSelectedFile: DocsSelectedFile`, `docsSettlements` (6-8), `docsMissing` (4-5), `docsIssues` (3).
+**`src/data/documents.ts`**: `docsKpis` (4 — 132/18/9/`'$128,740.00'`), `docsFiles` (6-8 files; one with `id: 'sel'` for "The Ryman.pdf"), `docsSelectedId = 'sel'`, `docsSelectedFile: DocsSelectedFile`, `docsSettlements` (6-8), `docsMissing` (4-5), `docsIssues` (3).
 
 ## 9. Cleanup operations
 
