@@ -1,102 +1,65 @@
-## Git Commit Message Convention
+# Commit Message Convention
 
-> This is adapted from [Angular's commit convention](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular).
+We use a lightweight version of [Conventional Commits](https://www.conventionalcommits.org/).
 
-#### TL;DR:
-
-Messages must match the following regex:
-
-```js
-;/^(revert: )?(feat|fix|docs|style|refactor|test|ci|chore)(\(.+\))?: .{1,70}/
-```
-
-#### Types
-
-- `feat` - new functionality.
-- `fix` - patching a bug.
-- `docs` - documentation and comments.
-- `style` - style changes only (not necessarily in css).
-- `refactor` - reworking internals without impacting project interface.
-- `test` - tests and demo.
-- `ci` - deploy and continuous integration.
-- `chore` - no significant code changes: code formatting, version changes, tool updates, minor refactorings.
-
-#### Examples
-
-Appears under "Features" header, `compiler` subheader:
+## Format
 
 ```
-feat(compiler): add 'comments' option
+<type>(<scope>): <short summary>
 ```
 
-Appears under "Bug Fixes" header, `v-model` subheader, with a link to issue #28:
+Examples from the existing log:
 
 ```
-fix(v-model): handle events on blur
-
-close #28
+feat(shows): add Settlement, Attachments, RecentActivity cards (row 3)
+fix(router): restore scrollBehavior and BASE_URL config
+chore(deps): uninstall demo runtime + Storybook devDeps
+docs: spec for additional skeleton screens
+refactor(foundation): move KpiTile to components/ root
 ```
 
-Appears under "Performance Improvements" header, and under "Breaking Changes" with the breaking change explanation:
+## Types
+
+- **feat** — new functionality, new component, new fixture
+- **fix** — bug fix, missed reference, broken import
+- **refactor** — moving/renaming/restructuring without behavior change
+- **chore** — deps, config, branding, deletes
+- **docs** — README, specs, plans, code comments
+- **style** — pure formatting (rare; the pre-commit hook handles most)
+- **test** — when we add tests, those go here
+
+## Scopes
+
+Match the section being changed. Common ones in this repo:
+
+- `dashboard`, `tour-dates`, `shows`, `travel`, `contacts`, `tasks`, `docs` — per-section work
+- `navbar`, `sidebar`, `routing`, `layout` — shell-level work
+- `data`, `types`, `severity`, `format` — data layer
+- `foundation` — anything affecting multiple sections at once
+- `deps` — package install/uninstall
+- `brand` — branding / branding-adjacent metadata changes
+
+A scope is optional but encouraged. `chore: bump deps` is fine if no specific section applies.
+
+## Subject
+
+- Imperative mood: "add X", "fix Y", "remove Z" — not "added", "fixes", "removed"
+- ≤ 72 characters when possible (auto-wraps in `git log --oneline`)
+- No period at the end
+
+## Body (optional)
+
+- Wrap at 72 characters
+- Use it when the "why" isn't obvious from the title or diff
+- Reference specs/plans when relevant: `Implements §6.3 of <spec-name>`
+- Reference issues: `Closes #42`
+
+## Co-author trailers
+
+When pairing or working with Claude:
 
 ```
-feat(core): improve vdom diffing by removing 'foo' option
-
-BREAKING CHANGE: The 'foo' option has been removed.
+Co-Authored-By: Name <email@example.com>
 ```
 
-The following commit and commit `667ecc1` do not appear in the changelog if they are under the same release. If not, the revert commit appears under the "Reverts" header.
-
-```
-revert: feat(compiler): add 'comments' option
-
-This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
-```
-
-### Full Message Format
-
-A commit message consists of a **header**, **body** and **footer**. The header has a **type**, **scope** and **subject**:
-
-```
-<type>(<scope>): <subject>
-<BLANK LINE>
-<body>
-<BLANK LINE>
-<footer>
-```
-
-The **header** is mandatory and the **scope** of the header is optional.
-
-### Revert
-
-If the commit reverts a previous commit, it should begin with `revert: `, followed by the header of the reverted commit. In the body it should say: `This reverts commit <hash>.`, where the hash is the SHA of the commit being reverted.
-
-### Type
-
-If the prefix is `feat` or `fix` it will appear in the changelog. However if there is any [BREAKING CHANGE](#footer), the commit will always appear in the changelog.
-
-Other prefixes are up to your discretion. Suggested prefixes are `docs`, `chore`, `style`, `refactor`, and `test` for non-changelog related tasks.
-
-### Scope
-
-The scope could be anything specifying place of the commit change. For example `core`, `compiler`, `ssr`, `v-model`, `transition` etc...
-
-### Subject
-
-The subject contains succinct description of the change:
-
-- use the imperative, present tense: "change" not "changed" nor "changes"
-- don't capitalize first letter
-- no period (.) at the end
-
-### Body
-
-Just as in the **subject**, use the imperative, present tense: "change" not "changed" nor "changes".
-The body should include the motivation for the change and contrast this with previous behavior.
-
-### Footer
-
-The footer should contain any information about **Breaking Changes** and is also the place to
-reference GitHub issues that this commit **Closes**.
-
-**Breaking Changes** should start with the word `BREAKING CHANGE:` with a space or two newlines. The rest of the commit message is then used for this.
+GitHub renders these as a list of co-authors on the commit.

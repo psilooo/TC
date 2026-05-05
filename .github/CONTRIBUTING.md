@@ -1,62 +1,52 @@
-# Vue.js Contributing Guide
+# Contributing to TourCraft
 
-Hi! We are really excited that you are interested in contributing to Vuestic. Before submitting your contribution though, please make sure to take a moment and read through the following guidelines.
+## TL;DR
 
-- [Code of Conduct](./../CODE_OF_CONDUCT.md)
+- Read the README first (root `README.md`)
+- Branch off `main`, open a PR back to `main`
+- Pre-commit hook auto-formats; don't fight it
+- Read the relevant spec in `docs/superpowers/specs/` before non-trivial changes
+- Use the per-section component folder convention; no cross-section imports
+- Conventional-commit-style messages: `feat|fix|chore|docs|refactor(scope): short summary`
 
-## Pull Request Guidelines
+## Working on a feature
 
-- The `master` branch is just a snapshot of the latest stable release. **Do not submit PRs against the `master` branch.**
-- Atomic code contribution looks something like this:
-  - Checkout from upstream `develop`.
-  - Work on your fork in dedicated branch.
-  - When you're ready to show results - create PR against upstream `develop` and add a developer for review. You can ping said developer to speed things up ;).
-- It's OK to have multiple small commits as you work on the PR - we will let GitHub automatically squash it before merging.
+1. **Start from a spec.** If one doesn't exist for what you're building, write one in `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` first. The existing specs in that folder are good templates.
+2. **Branch from `main`**. Use a short kebab-case name: `feat/itinerary-page`, `fix/contacts-pagination-overflow`.
+3. **Build it.** Stick to the conventions in the README:
+   - `<script setup lang="ts">` SFCs
+   - Per-section component folders, no cross-section imports
+   - Shared primitives at `components/` root; tokens/types/formatters in `src/data/`
+   - BEM-style scoped SCSS class names
+   - `mso-*` icon names (Material Symbols Outlined)
+4. **Commit.** Conventional commits style: `feat(shows): add dispute settlement modal` / `fix(travel): correct grid columns on narrow viewport`. The pre-commit hook runs Prettier + ESLint via lint-staged.
+5. **Open a PR.** Fill in the PR template (`.github/PULL_REQUEST_TEMPLATE.md`). Screenshots for UI changes save reviewer time.
 
-- Good stuff to add in your pull request:
-  - If your PR fully resolves existing issue, add `(fix #xxxx[,#xxx])` (#xxxx is the issue id) so that github will close the issue once it's up on `master`. You have to add that to the body of PR, won't work in header :).
-  - Provide detailed description of the issue in the PR if it's not done in the issue.
-  - If you're working on visual changes - provide before/after screenshot. That speeds up review immensely.
-
-### Branches
-
-- Upstream branches (**epicmax/vuestic-admin**):
-  - `master` - stable snapshot from `develop`. Releases and hotfixes only. Do not submit PR's to `master`!.
-  - `develop` - main development branch.
-
-- Local branches
-  - For local branches naming stick to [commit message convention](./COMMIT_CONVENTION.md). So for feature branch that adds tabs name would be `feat/tabs`.
-
-### For core contributors
-
-- Keep amount of local branches minimal.
-- Always link PR to issue (via `fix #123`).
-- For small issues you may push to `develop` branch directly while adding (`fix #123`) to commit message.
-- Create single PR for one issue. If we have several PRs - move all the code into a single one and close the rest. If one PR covers several issues - either split it in several PRs or mark one of the issues as duplicate.
-- Be sure to have only one person assigned per issue.
-- Check your code: https://github.com/epicmaxco/vuestic-admin/issues/378.
-- We use [yarn](https://yarnpkg.com/lang/en/) for package management.
-- Be proactive. If you think something is wrong - create an issue or discuss.
-- Recommended tools: [GitKraken](https://www.gitkraken.com/), [WebStorm](https://www.jetbrains.com/webstorm/), [ShareX](https://getsharex.com/)
-
-#### Before release workflow
-
-- Update package versions to newest ones. Update lock files (for both `npm` and `yarn`)
-
-### Vuestic-ui
-
-Vuestic-admin uses vuestic-ui internally. So if you have some troubles with components - it's better to submit issue or PR in [respective repo](https://github.com/epicmaxco/vuestic-ui).
-
-### Commonly used NPM scripts
+## Local dev
 
 ```bash
-# run dev server
-$ yarn dev
-
-# build vuestic-admin project into bundle
-$ yarn build
+nvm use            # picks up Node 20 from .nvmrc
+npm install
+npm run dev        # http://localhost:5173/
 ```
 
-## Credits
+If `npm install` warns about peer deps after `git pull`, try `rm -rf node_modules package-lock.json && npm install`. Vuestic UI's dependency tree is occasionally fragile.
 
-<a href="https://github.com/epicmaxco/vuestic-admin/graphs/contributors">Hall of fame!</a>
+## Code review expectations
+
+- **Spec compliance first.** Does the change match what the spec says it should do?
+- **Code quality second.** Naming, types, BEM consistency, no `any`, no commented-out code.
+- **Visual fidelity for UI.** Compare to the relevant mock in `screens/`. Wireframe fidelity is the bar — exact pixels not required, but layout / structure / copy should match.
+
+## Things that won't pass review
+
+- Cross-section component imports (a `tasks/` widget importing from `contacts/`)
+- New `any` types (use `unknown` and narrow if you genuinely don't know the shape)
+- Hardcoded colors instead of `severityTokens` / `statusTokens` / Vuestic theme variables
+- Pre-formatted `<script>` style blocks (let Prettier own formatting)
+- Renaming widely-used types/exports without updating consumers + the relevant spec
+- New deps without justification (we just stripped ~16 demo deps; we're not in a rush to add more)
+
+## License
+
+Internal collab project. Don't redistribute or open-source without checking with the team first.

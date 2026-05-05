@@ -1,31 +1,40 @@
-<!--
-MAKE SURE TO READ THE CONTRIBUTING GUIDE BEFORE CREATING A PR
-https://github.com/epicmaxco/vuestic-admin/blob/master/CODE_OF_CONDUCT.md
--->
+<!-- Keep the title short and descriptive. Use the conventional-commit style: feat|fix|chore|docs|refactor(scope): short summary. -->
 
-<!-- Provide a general summary of your changes in the Title above -->
-<!-- Keep the title short and descriptive, as it will be used as a commit message -->
+## Summary
 
-## Description
+<!-- 1–3 bullets describing what this PR changes and why -->
 
-<!-- Describe your changes in detail -->
+-
+-
 
-## Markup:
+## Screenshots
 
-<!-- Paste your markup here. -->
-<details>
+<!-- For UI changes — before / after, ideally cropped to the affected widget. Skip if non-visual. -->
 
-```vue
-// Your code
-```
+## Testing
 
-</details>
+- [ ] `npm run dev` boots cleanly with no console errors
+- [ ] `npm run build:ci` passes
+- [ ] Manually verified the affected route(s):
+  - [ ] /dashboard
+  - [ ] /tour-dates
+  - [ ] /shows
+  - [ ] /travel
+  - [ ] /contacts
+  - [ ] /tasks
+  - [ ] /documents
+  - [ ] /settlements
+  - [ ] (other)
 
-## Types of changes
+## Conventions checklist
 
-<!-- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
+- [ ] Follows the per-section component folder convention (no cross-section imports)
+- [ ] Shared UI lives at `components/` root; tokens/types/formatters in `src/data/`
+- [ ] BEM-style scoped SCSS class names
+- [ ] No new `any` types
+- [ ] Updated `docs/superpowers/specs/` or `docs/superpowers/plans/` if scope changed
+- [ ] Linked the relevant spec / plan / issue below
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Improvement/refactoring (non-breaking change that doesn't add any feature but make things better)
+## Spec / plan / issue
+
+<!-- e.g. "Implements docs/superpowers/specs/<spec-name>.md §6.3" or "Closes #123" -->

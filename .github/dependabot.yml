@@ -2,4 +2,44 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    target-branch: "develop"
+    target-branch: "main"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      vuestic:
+        patterns:
+          - "vuestic-ui"
+          - "@vuestic/*"
+      vue-core:
+        patterns:
+          - "vue"
+          - "vue-*"
+          - "@vue/*"
+          - "pinia"
+      build:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+          - "vue-tsc"
+          - "typescript"
+          - "tailwindcss"
+          - "postcss"
+          - "autoprefixer"
+          - "sass"
+      lint-format:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "@typescript-eslint/*"
+          - "prettier"
+          - "@vue/eslint-*"
+          - "@vue/prettier"
+          - "husky"
+          - "lint-staged"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "main"
+    schedule:
+      interval: "monthly"

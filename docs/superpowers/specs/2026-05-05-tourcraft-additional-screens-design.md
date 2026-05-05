@@ -7,7 +7,7 @@
 | **Author**                  | Claude (collaborating with user)                                                                                               |
 | **Implementation**          | TBD — next session via `superpowers:writing-plans` → `superpowers:subagent-driven-development`                                 |
 | **Repo state at spec time** | TourCraft on `main` at tag `v0.1.0-skeleton` (Dashboard skeleton + IA shell complete; 9 stub pages render `<PagePlaceholder>`) |
-| **Reference mocks**         | `screens/Tourcraft & O1S{,(1),…(7)}.png`                                                                                       |
+| **Reference mocks**         | `screens/01-dashboard.png` … `screens/07-documents.png` (renamed from original `Tourcraft & O1S*.png`)                          |
 
 ---
 
@@ -17,16 +17,15 @@ The Dashboard skeleton (spec `2026-05-05-tourcraft-dashboard-skeleton-design.md`
 
 The user provided 8 PNG mocks in `screens/`:
 
-| File                      | What it shows                                            | Active sidebar            |
-| ------------------------- | -------------------------------------------------------- | ------------------------- |
-| `Tourcraft & O1S.png`     | Tour Dashboard                                           | Dashboard (already built) |
-| `Tourcraft & O1S (1).png` | **Advance Checklist** for "Atlanta — Tabernacle, May 21" | **Tour Dates**            |
-| `Tourcraft & O1S (2).png` | (duplicate of (1))                                       | —                         |
-| `Tourcraft & O1S (3).png` | **Show Detail** for "The Ryman — Nashville, TN"          | **Shows**                 |
-| `Tourcraft & O1S (4).png` | **Travel & Hotels**                                      | **Travel**                |
-| `Tourcraft & O1S (5).png` | **Contacts** directory + selected-contact rail           | **Contacts**              |
-| `Tourcraft & O1S (6).png` | **Tasks & Follow-Ups** kanban                            | **Tasks**                 |
-| `Tourcraft & O1S (7).png` | **Documents & Settlements** combined view                | **Documents**             |
+| File                       | What it shows                                            | Active sidebar            |
+| -------------------------- | -------------------------------------------------------- | ------------------------- |
+| `screens/01-dashboard.png` | Tour Dashboard                                           | Dashboard (already built) |
+| `screens/02-tour-dates.png`| **Advance Checklist** for "Atlanta — Tabernacle, May 21" | **Tour Dates**            |
+| `screens/03-shows.png`     | **Show Detail** for "The Ryman — Nashville, TN"          | **Shows**                 |
+| `screens/04-travel.png`    | **Travel & Hotels**                                      | **Travel**                |
+| `screens/05-contacts.png`  | **Contacts** directory + selected-contact rail           | **Contacts**              |
+| `screens/06-tasks.png`     | **Tasks & Follow-Ups** kanban                            | **Tasks**                 |
+| `screens/07-documents.png` | **Documents & Settlements** combined view                | **Documents**             |
 
 Itinerary and Notes have no mocks.
 

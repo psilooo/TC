@@ -1,18 +1,26 @@
-**Note: for support questions, please use stackoverflow**. This repository's issues are reserved for feature requests and bug reports.
+<!-- Keep the title short and specific: "tour-dates: progress bar overflows on narrow viewport" -->
 
-- **I'm submitting a ...**
-  - [ ] bug report
-  - [ ] feature request
-  - [ ] support request => Please do not submit support request here, see note at the top of this template.
+## Type
 
-- **Do you want to request a _feature_ or report a _bug_?**
+- [ ] Bug
+- [ ] Feature request
+- [ ] Design / spec question
+- [ ] Tech debt / cleanup
 
-- **What is the current behavior?**
+## Current behavior
 
-- **If the current behavior is a bug, please provide the steps to reproduce, ideally also a screenshot or gif if it's a style issue**
+<!-- What's happening today? Include console errors, screenshots, route, repro steps if a bug. -->
 
-- **What is the expected behavior?**
+## Expected behavior
 
-- **What is the motivation / use case for changing the behavior?**
+<!-- What should happen? -->
 
-- **Other information** (e.g. detailed explanation, stacktraces, related issues, suggestions how to fix, links for us to have context, eg. stackoverflow, gitter, etc)
+## Context
+
+<!-- Relevant spec section (`docs/superpowers/specs/...`), related issue/PR, or stack info if needed -->
+
+## Environment (for bugs)
+
+- Browser:
+- Node:
+- Branch / commit:

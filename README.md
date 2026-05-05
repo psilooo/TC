@@ -1,118 +1,91 @@
-<p align="center">
-  <a href="https://vuestic.dev" target="_blank">
-    <img alt="Vuestic UI Logo" width="220" src="./.github/assets/vuestic-admin-logo.png">
-  </a>
-</p>
+# TourCraft
 
-<p align="center">
-  Free and beautiful Admin Template utilizing Vue 3, Vite, Pinia, and Tailwind CSS. Designed for building efficient, responsive, and fast-loading admin interfaces.</br>
-  Developed by  <a href="https://epicmax.co">Epicmax</a>.</br>
-  Based on <a href="https://ui.vuestic.dev">Vuestic UI</a> library.
-</p>
+Artist / collective tour management platform. Skeleton frontend (mock data, no real backend yet) built on top of [Vuestic UI](https://ui.vuestic.dev/).
 
-<p align="center">
-  <a href="https://admin-demo.vuestic.dev"> Live Demo </a> |
-  <a href="https://admin.vuestic.dev/"> About Vuestic Admin </a> |
-  <a href="https://ui.vuestic.dev/">Vuestic UI documentation</a>
-</p>
+**Live preview locally:** `http://localhost:5173/dashboard` after `npm run dev`.
 
-> Vuestic Admin is built with [Vuestic UI](https://ui.vuestic.dev). See our
-> <a href="https://github.com/epicmaxco/vuestic-ui/issues">issues</a>,
-> <a href="https://ui.vuestic.dev/en/contribution/guide">contributing guide</a> and join discussions on our
-> <a href="https://discord.gg/jTKTjj2weV">Discord server</a> to help us improve Vuestic Admin & Vuestic UI experience.
+## Stack
 
-<p align="center">
-  <a href="https://admin.vuestic.dev" target="_blank">
-    <img src="./public/vuestic-admin-image.png" align="center" width="888px"/>
-  </a>
-</p>
+- **Vue 3.5** + **Vite 5** + **TypeScript**
+- **[Vuestic UI](https://ui.vuestic.dev/)** 1.10 + **Tailwind CSS** 3.4 + **SCSS**
+- **Pinia** 2 (state) + **Vue Router** 4 (routing)
+- **vue-i18n** 9 (locale wired, English-only for now)
 
-### Quick start
+## Quick start
 
-Use following command to quickly scaffold new [Vuestic Admin](https://admin-demo.vuestic.dev) or empty Vite or Nuxt project with [Vuestic UI](https://ui.vuestic.dev).
+Requires **Node 20** (see `.nvmrc`).
 
 ```bash
-npm create vuestic@latest
+nvm use            # picks up .nvmrc
+npm install
+npm run dev        # http://localhost:5173/
 ```
 
-After [Vuestic Admin](https://admin.vuestic.dev) is installed, run `npm install` to install dependcies, then run `npm run dev` to start local development server.
+## Project state
 
-### Documentation
+This is a **skeleton frontend** — every page renders mock data; there is no real backend, no auth, and no tests yet.
 
-Documentation, guides, examples and tutorials are available on [ui.vuestic.dev](https://ui.vuestic.dev)
+| Tag | What ships |
+|---|---|
+| `v0.1.0-skeleton` | Layout shell, IA sidebar, Tour Dashboard view fully built; 9 other sections render `<PagePlaceholder>` |
+| `v0.2.0-screens` | 6 mocked pages added (Tour Dates, Shows, Travel, Contacts, Tasks, Documents/Settlements). `/itinerary` and `/notes` still placeholders pending designs. |
 
-### Official Discord Server
+`/documents` and `/settlements` both render the same combined view (sidebar highlight differs per route — the IA semantics may collapse in a future spec).
 
-Ask questions at the official community [discord server](https://discord.gg/jTKTjj2weV)
+## Where to look
 
-### Features
+- **Design specs:** `docs/superpowers/specs/`
+- **Implementation plans:** `docs/superpowers/plans/`
+- **Reference mocks:** `screens/01-dashboard.png` through `screens/07-documents.png`
+- **Layout shell:** `src/layouts/AppLayout.vue` + `src/components/{sidebar,navbar}/`
+- **Shared primitives:** `src/components/{PageHeader,PagePlaceholder,KpiTile,KpiRow,ShowSwitcher,Breadcrumb}.vue`
+- **Per-section widgets:** `src/components/{tour-dates,shows,travel,contacts,tasks,documents}/`
+- **Mock data fixtures:** `src/data/{tourDates,shows,travel,contacts,tasks,documents,dashboard}.ts`
+- **Cross-cutting types/tokens/formatters:** `src/data/{types,severity,format}.ts`
 
-- **Vue 3, Vite, Pinia, and Tailwind CSS -** Fast and efficient development
-- **Dark Theme -** Modern and eye-catching
-- **Global Configuration -** Effortless customization
-- **Accessibility -** Inclusive and user-friendly
-- **i18n Integration -** Easy localization for global reach
-- **Educational Resource -** Ideal for learning and improving skills
-- **Responsive Design -** Adapts seamlessly to all devices
-- **Professional Support -** Reliable help from the experts
-- **Highly Customizable -** Tailor to your project’s style
+## Scripts
 
-### Contributing
+| Script | What it does |
+|---|---|
+| `npm run dev` | Vite dev server (HMR) |
+| `npm run build:ci` | Fast production build (no lint, no tsc) — for CI smoke checks |
+| `npm run build` | Full production build (lint + `vue-tsc --noEmit` + Vite) |
+| `npm run lint` | ESLint with auto-fix on `src/**/*.{ts,js,vue}` |
+| `npm run format` | Prettier on the whole tree |
+| `npm run preview` | Serve the built `dist/` |
 
-Thanks for all your wonderful PRs, issues and ideas.
+A pre-commit hook (Husky + lint-staged) runs Prettier and ESLint on staged files automatically.
 
-<a href="https://github.com/epicmaxco/vuestic-admin/graphs/contributors">
-<img src="https://opencollective.com/vuestic-admin/contributors.svg?width=890&button=false" />
-</a>
-<br>
+## Conventions
 
-You’re always welcome to join: check out
-our <a href="https://ui.vuestic.dev/en/contribution/guide">
-contribution guides</a>
-, [open issues](https://github.com/epicmaxco/vuestic-ui/issues)
-and [Discord server](https://discord.gg/jTKTjj2weV)
+- **`<script setup lang="ts">`** SFCs throughout. No Options API in new code.
+- **Per-section component folders** (`components/<section>/`) keep concerns scoped. **No cross-section component imports** — a Tasks widget never imports from `components/contacts/`. Shared UI lives at `components/` root.
+- **Cross-cutting tokens / types / formatters** live in `src/data/` (`types.ts`, `severity.ts`, `format.ts`). Data files _may_ import each other (e.g., `shows.ts` reuses fixtures from `dashboard.ts`).
+- **BEM-style scoped SCSS** class names — one block prefix per component (`.kpi-tile__head`, `.advance-row__pill`, etc.).
+- **Material Symbols Outlined** icons — `mso-*` names in `<VaIcon>`. The font is loaded in `index.html`.
+- **Page files contain orchestration only.** Each `pages/*.vue` imports `PageHeader` + section widgets and composes them. UI guts live in section folders.
+- **Status / severity pills** use the token maps in `src/data/severity.ts` (`severityTokens` for High/Medium/Low; `statusTokens` for Confirmed/Pending/Approved/Missing/etc.). Don't hardcode pill colors per component.
 
-### Partners & Sponsors ❤️
+## What's intentionally out
 
-<img src="./.github/assets/sponsors.png" loading="lazy" alt="Epicmax, vuejobs, ag-grid, flatlogic, browserstack and jetbrains" width="400px">
+This is a wireframe-fidelity skeleton:
 
-Become a partner: [hello@epicmax.co](mailto:hello@epicmax.co)
+- **No interactivity** — search, filters, sort, pagination, kanban drag, row clicks, dropdown opens, action buttons all render but have no handlers
+- **No real auth** — profile menu hardcoded to "Jane Manager"
+- **No real backend** — fixtures only
+- **No detail routes** — Tour Dates and Shows render the current show; switcher in the page header is visual-only
+- **No tests** yet — they get added when there's behavior worth covering
+- **Itinerary and Notes** — render `<PagePlaceholder>` until designs arrive
 
-### Can I hire you guys?
+See spec §11 ("Non-goals") in each design doc for the full list.
 
-[Epicmax](https://epicmax.co) is committed to Open Source from its beginning. Vuestic Admin was created and backed by Epicmax, and is supported through all the years.
+## Contributing
 
-With 6+ years of dedicated work on both commercial and open-source projects, and more than 47 clients worldwide across various fields, Epicmax has deep expertise in frontend development, especially in Vue.js. We regularly conduct code audits for our projects and now excited to offer this service not only to our existing clients but to anyone looking to understand the state of their frontend code and ensure it's secure and up-to-date!
+- Read the relevant spec in `docs/superpowers/specs/` before making non-trivial changes
+- Stick to the per-section folder convention — when in doubt, follow the pattern in `components/dashboard/` or any sibling section
+- The pre-commit hook will reformat your code; don't fight it
+- For bigger changes, open an issue or PR with the proposed approach before writing the code
 
-You can request a consultation or order web development services by Epicmax via this [form](https://epicmax.co/contacts) 😎
+## License
 
-Say hi: <a href="mailto:hello@epicmax.co">hello@epicmax.co</a>. We will be happy to work with you!
-
-[Other work](https://epicmax.co) we’ve done 🤘
-
-[Meet the Team](https://ui.vuestic.dev/introduction/team)
-
-### Awards
-
-<a href="https://flatlogic.com/templates/vuestic-vue-free-admin" target="_blank">
-    <img src="https://i.imgur.com/ZeQPZ3Q.png" align="center" width="150px"/>
-</a>
-<p>
-  By <a href="https://flatlogic.com/templates/vuestic-vue-free-admin" target="_blank">@flatlogic</a> marketplace
-</p>
-
-### Premium Support and Consulting
-
-Get Premium Support & Consulting services through our official development partner, Epicmax. As the main contributor to Vuestic UI and Vuestic Admin, Epicmax brings a wealth of expertise and experience to help you achieve your project goals efficiently and effectively.
-
-[Get a quote](https://www.epicmax.co/?ref=vuestic-consulting)
-
-### Follow us
-
-Stay up to date with the latest Vuestic news! Follow us
-on [Twitter](https://twitter.com/vuestic_ui)
-or [Linkedin](https://www.linkedin.com/company/18509340)
-
-### License
-
-[MIT](https://github.com/epicmaxco/vuestic-admin/blob/master/LICENSE) license.
+TBD — internal collab project.
