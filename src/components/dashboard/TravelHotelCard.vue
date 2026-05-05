@@ -14,7 +14,7 @@
           <div class="travel__primary">{{ leg.primary }}</div>
           <div class="travel__sub">{{ leg.sub }}</div>
         </div>
-        <VaBadge :text="leg.status" color="success" class="travel__badge" />
+        <VaBadge :text="leg.status" :color="leg.status === 'Confirmed' ? 'success' : 'warning'" class="travel__badge" />
         <VaIcon name="mso-chevron_right" size="18px" color="secondary" />
       </li>
     </ul>
