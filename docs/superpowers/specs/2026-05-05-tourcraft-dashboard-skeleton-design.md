@@ -1,11 +1,11 @@
 # TourCraft — Dashboard Skeleton Design
 
-|                             |                                                                                                                                                          |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Date**                    | 2026-05-05                                                                                                                                               |
-| **Status**                  | Draft (pending user review)                                                                                                                              |
-| **Author**                  | Claude (collaborating with user)                                                                                                                         |
-| **Implementation**          | TBD — next session via `superpowers:writing-plans` → `superpowers:executing-plans`                                                                       |
+|                             |                                                                                                                                                              |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Date**                    | 2026-05-05                                                                                                                                                   |
+| **Status**                  | Draft (pending user review)                                                                                                                                  |
+| **Author**                  | Claude (collaborating with user)                                                                                                                             |
+| **Implementation**          | TBD — next session via `superpowers:writing-plans` → `superpowers:executing-plans`                                                                           |
 | **Repo state at spec time** | Vuestic Admin v3.1.0 cloned into `/Users/samsepiol/code/TC`, deps installed, dev server boots clean on `:5173`, two commits on `main` (scaffold + this spec) |
 
 ---
@@ -131,16 +131,16 @@ export default createRouter({
       component: AppLayout,
       redirect: '/dashboard',
       children: [
-        { path: 'dashboard',   name: 'dashboard',   component: () => import('@/pages/Dashboard.vue') },
-        { path: 'tour-dates',  name: 'tour-dates',  component: () => import('@/pages/TourDates.vue') },
-        { path: 'shows',       name: 'shows',       component: () => import('@/pages/Shows.vue') },
-        { path: 'itinerary',   name: 'itinerary',   component: () => import('@/pages/Itinerary.vue') },
-        { path: 'travel',      name: 'travel',      component: () => import('@/pages/Travel.vue') },
-        { path: 'contacts',    name: 'contacts',    component: () => import('@/pages/Contacts.vue') },
-        { path: 'tasks',       name: 'tasks',       component: () => import('@/pages/Tasks.vue') },
-        { path: 'documents',   name: 'documents',   component: () => import('@/pages/Documents.vue') },
+        { path: 'dashboard', name: 'dashboard', component: () => import('@/pages/Dashboard.vue') },
+        { path: 'tour-dates', name: 'tour-dates', component: () => import('@/pages/TourDates.vue') },
+        { path: 'shows', name: 'shows', component: () => import('@/pages/Shows.vue') },
+        { path: 'itinerary', name: 'itinerary', component: () => import('@/pages/Itinerary.vue') },
+        { path: 'travel', name: 'travel', component: () => import('@/pages/Travel.vue') },
+        { path: 'contacts', name: 'contacts', component: () => import('@/pages/Contacts.vue') },
+        { path: 'tasks', name: 'tasks', component: () => import('@/pages/Tasks.vue') },
+        { path: 'documents', name: 'documents', component: () => import('@/pages/Documents.vue') },
         { path: 'settlements', name: 'settlements', component: () => import('@/pages/Settlements.vue') },
-        { path: 'notes',       name: 'notes',       component: () => import('@/pages/Notes.vue') },
+        { path: 'notes', name: 'notes', component: () => import('@/pages/Notes.vue') },
       ],
     },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/pages/NotFound.vue') },
@@ -175,16 +175,16 @@ export interface INavigationRoute {
 export default {
   root: { name: '/', displayName: 'navigationRoutes.home' },
   routes: [
-    { name: 'dashboard',   displayName: 'menu.dashboard',   meta: { icon: 'mso-home' } },
-    { name: 'tour-dates',  displayName: 'menu.tour-dates',  meta: { icon: 'mso-calendar_today' } },
-    { name: 'shows',       displayName: 'menu.shows',       meta: { icon: 'mso-confirmation_number' } },
-    { name: 'itinerary',   displayName: 'menu.itinerary',   meta: { icon: 'mso-map' } },
-    { name: 'travel',      displayName: 'menu.travel',      meta: { icon: 'mso-flight' } },
-    { name: 'contacts',    displayName: 'menu.contacts',    meta: { icon: 'mso-group' } },
-    { name: 'tasks',       displayName: 'menu.tasks',       meta: { icon: 'mso-task_alt' } },
-    { name: 'documents',   displayName: 'menu.documents',   meta: { icon: 'mso-folder' } },
+    { name: 'dashboard', displayName: 'menu.dashboard', meta: { icon: 'mso-home' } },
+    { name: 'tour-dates', displayName: 'menu.tour-dates', meta: { icon: 'mso-calendar_today' } },
+    { name: 'shows', displayName: 'menu.shows', meta: { icon: 'mso-confirmation_number' } },
+    { name: 'itinerary', displayName: 'menu.itinerary', meta: { icon: 'mso-map' } },
+    { name: 'travel', displayName: 'menu.travel', meta: { icon: 'mso-flight' } },
+    { name: 'contacts', displayName: 'menu.contacts', meta: { icon: 'mso-group' } },
+    { name: 'tasks', displayName: 'menu.tasks', meta: { icon: 'mso-task_alt' } },
+    { name: 'documents', displayName: 'menu.documents', meta: { icon: 'mso-folder' } },
     { name: 'settlements', displayName: 'menu.settlements', meta: { icon: 'mso-attach_money' } },
-    { name: 'notes',       displayName: 'menu.notes',       meta: { icon: 'mso-sticky_note_2' } },
+    { name: 'notes', displayName: 'menu.notes', meta: { icon: 'mso-sticky_note_2' } },
   ] as INavigationRoute[],
 }
 ```
@@ -210,14 +210,14 @@ Target navbar contents (matches the mock — note the mock shows no navbar logo/
 
 Required changes during implementation:
 
-| Change | File | Action |
-|---|---|---|
-| Remove navbar branding | `AppNavbar.vue` | Drop `import VuesticLogo from '../VuesticLogo.vue'` and the `<RouterLink to="/"><VuesticLogo /></RouterLink>` template usage. Mock has no navbar logo/wordmark — branding lives in `<title>`, `package.json`, and (later) the favicon. Delete `VuesticLogo.vue` per §9. |
-| Add global search | `AppNavbar.vue` | Mount `<NavbarSearch />` in the **left slot**, after the hamburger toggle, with `flex: 1` so it expands across the available width. Import: `import NavbarSearch from './components/NavbarSearch.vue'`. New component is defined in §10. |
-| Remove GitHub promo button | `AppNavbarActions.vue` | Drop `import GithubButton from './GitHubButton.vue'` and its template usage. Delete `GitHubButton.vue` per §9. |
-| Remove Discord promo icon | `AppNavbarActions.vue` | Drop `import VaIconDiscord from '../../icons/VaIconDiscord.vue'` and its template usage. Delete `VaIconDiscord.vue` per §9. |
-| Set profile name to "Jane Manager" | `ProfileDropdown.vue` (or downstream) | Replace the rendered display name with literal **"Jane Manager"** to match the mock. Find via `grep -rn "displayName\|name\b" src/components/navbar/components/dropdowns/ProfileDropdown.vue`. Avatar stays as the Vuestic default placeholder. |
-| Bell stays | `NotificationDropdown.vue` | No edit. We don't wire its dropdown content this spec — if it currently shows demo notifications in the dropdown, replace the list with a single "No new notifications" stub or leave it; implementer's call (cosmetic). |
+| Change                             | File                                  | Action                                                                                                                                                                                                                                                                  |
+| ---------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Remove navbar branding             | `AppNavbar.vue`                       | Drop `import VuesticLogo from '../VuesticLogo.vue'` and the `<RouterLink to="/"><VuesticLogo /></RouterLink>` template usage. Mock has no navbar logo/wordmark — branding lives in `<title>`, `package.json`, and (later) the favicon. Delete `VuesticLogo.vue` per §9. |
+| Add global search                  | `AppNavbar.vue`                       | Mount `<NavbarSearch />` in the **left slot**, after the hamburger toggle, with `flex: 1` so it expands across the available width. Import: `import NavbarSearch from './components/NavbarSearch.vue'`. New component is defined in §10.                                |
+| Remove GitHub promo button         | `AppNavbarActions.vue`                | Drop `import GithubButton from './GitHubButton.vue'` and its template usage. Delete `GitHubButton.vue` per §9.                                                                                                                                                          |
+| Remove Discord promo icon          | `AppNavbarActions.vue`                | Drop `import VaIconDiscord from '../../icons/VaIconDiscord.vue'` and its template usage. Delete `VaIconDiscord.vue` per §9.                                                                                                                                             |
+| Set profile name to "Jane Manager" | `ProfileDropdown.vue` (or downstream) | Replace the rendered display name with literal **"Jane Manager"** to match the mock. Find via `grep -rn "displayName\|name\b" src/components/navbar/components/dropdowns/ProfileDropdown.vue`. Avatar stays as the Vuestic default placeholder.                         |
+| Bell stays                         | `NotificationDropdown.vue`            | No edit. We don't wire its dropdown content this spec — if it currently shows demo notifications in the dropdown, replace the list with a single "No new notifications" stub or leave it; implementer's call (cosmetic).                                                |
 
 **Search input placeholder:** `Search shows, dates, venues, contacts, tasks, and more…`
 
@@ -261,16 +261,16 @@ Layout: CSS grid via Tailwind. KPI row = `grid-cols-4` on `lg`, `grid-cols-2` on
 
 ### Widget specifications
 
-| Widget                   | Vuestic / HTML primitives                | Behavior & notes                                                                                                                                                                                                                                                                                                                                                         |
-| ------------------------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **`KpiTile`**            | `VaCard` + custom layout                 | Props: `icon`, `label`, `value`, `sub`. Renders icon top-left, label top, large numeric value, sub-label muted underneath. No interactivity.                                                                                                                                                                                                                             |
-| **`Next72HoursCard`**    | `VaCard` + custom rows                   | Card title + list of 3 rows: left = date+time stacked; right = city+venue stacked; trailing right-chevron icon (decorative, no click handler). Footer: a "View all shows →" `VaButton preset="secondary"` (no nav this spec).                                                                                                                                            |
-| **`TodayTimelineCard`**  | `VaCard` + custom timeline               | Card title shows `Today — {{ formatDate(date) }}`. Vertical timeline: left rail with dot markers, time label, then event title + sub-text on the right. Pure CSS (Tailwind) — no timeline lib. Footer: "View full day →" button (no-op).                                                                                                                                 |
-| **`TravelHotelCard`**    | `VaCard` + `VaBadge`                     | Card title "Travel & Hotel". 3 rows (Flight / Hotel / Ground) — each: kind icon, kind label, primary text (e.g., "ATL → BNA"), sub text (e.g., "May 20 · 9:45 AM"), status badge ("Confirmed"), trailing chevron.                                                                                                                                                        |
-| **`QuickContactsCard`**  | `VaCard` + custom rows + icon `VaButton` | 4 rows: role / name / phone-number / phone-call icon button + email icon button. Buttons are `aria-label`'d but no handlers.                                                                                                                                                                                                                                             |
-| **`OpenIssuesCard`**     | `VaCard` + severity badge                | 3 rows: leading bullet dot (severity-tinted), issue title, sub-line, severity pill. **Severity tokens** (defined once in `src/data/severity.ts` so they can be re-skinned and reused by future sections like Tasks): `High`=`{ bg: 'red-100', text: 'red-800' }`, `Medium`=`{ bg: 'amber-100', text: 'amber-800' }`, `Low`=`{ bg: 'slate-100', text: 'slate-700' }`. Lives in `data/` (not `components/dashboard/`) per the modularity rule in §4 — cross-cutting tokens shouldn't be section-scoped.                        |
-| **`UpcomingShowsTable`** | Plain `<table>` + Tailwind               | Columns: Date / City / Venue / Advance / Travel / Settlement. Right-aligned numeric. Travel column uses the same "Confirmed"/"Pending" badge style as Travel & Hotel. **Decision:** plain `<table>` rather than `VaDataTable` for skeleton — no sort/filter logic to back, easier to restyle. Swap to `VaDataTable` in a future spec when sort/filter/pagination matter. |
-| **`RecentNotesCard`**    | `VaCard` + log rows                      | 3 rows: body text (truncate to 1 line on narrow widths), right-aligned timestamp + `VaAvatar size="small"` with author initials. Footer: "View all notes →" (no-op).                                                                                                                                                                                                     |
+| Widget                   | Vuestic / HTML primitives                | Behavior & notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------ | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`KpiTile`**            | `VaCard` + custom layout                 | Props: `icon`, `label`, `value`, `sub`. Renders icon top-left, label top, large numeric value, sub-label muted underneath. No interactivity.                                                                                                                                                                                                                                                                                                                                                          |
+| **`Next72HoursCard`**    | `VaCard` + custom rows                   | Card title + list of 3 rows: left = date+time stacked; right = city+venue stacked; trailing right-chevron icon (decorative, no click handler). Footer: a "View all shows →" `VaButton preset="secondary"` (no nav this spec).                                                                                                                                                                                                                                                                         |
+| **`TodayTimelineCard`**  | `VaCard` + custom timeline               | Card title shows `Today — {{ formatDate(date) }}`. Vertical timeline: left rail with dot markers, time label, then event title + sub-text on the right. Pure CSS (Tailwind) — no timeline lib. Footer: "View full day →" button (no-op).                                                                                                                                                                                                                                                              |
+| **`TravelHotelCard`**    | `VaCard` + `VaBadge`                     | Card title "Travel & Hotel". 3 rows (Flight / Hotel / Ground) — each: kind icon, kind label, primary text (e.g., "ATL → BNA"), sub text (e.g., "May 20 · 9:45 AM"), status badge ("Confirmed"), trailing chevron.                                                                                                                                                                                                                                                                                     |
+| **`QuickContactsCard`**  | `VaCard` + custom rows + icon `VaButton` | 4 rows: role / name / phone-number / phone-call icon button + email icon button. Buttons are `aria-label`'d but no handlers.                                                                                                                                                                                                                                                                                                                                                                          |
+| **`OpenIssuesCard`**     | `VaCard` + severity badge                | 3 rows: leading bullet dot (severity-tinted), issue title, sub-line, severity pill. **Severity tokens** (defined once in `src/data/severity.ts` so they can be re-skinned and reused by future sections like Tasks): `High`=`{ bg: 'red-100', text: 'red-800' }`, `Medium`=`{ bg: 'amber-100', text: 'amber-800' }`, `Low`=`{ bg: 'slate-100', text: 'slate-700' }`. Lives in `data/` (not `components/dashboard/`) per the modularity rule in §4 — cross-cutting tokens shouldn't be section-scoped. |
+| **`UpcomingShowsTable`** | Plain `<table>` + Tailwind               | Columns: Date / City / Venue / Advance / Travel / Settlement. Right-aligned numeric. Travel column uses the same "Confirmed"/"Pending" badge style as Travel & Hotel. **Decision:** plain `<table>` rather than `VaDataTable` for skeleton — no sort/filter logic to back, easier to restyle. Swap to `VaDataTable` in a future spec when sort/filter/pagination matter.                                                                                                                              |
+| **`RecentNotesCard`**    | `VaCard` + log rows                      | 3 rows: body text (truncate to 1 line on narrow widths), right-aligned timestamp + `VaAvatar size="small"` with author initials. Footer: "View all notes →" (no-op).                                                                                                                                                                                                                                                                                                                                  |
 
 ### Cross-widget conventions
 
@@ -519,13 +519,13 @@ public/vuestic-admin-image.png
 
 ### Code edits required by deletions
 
-| File | Edit |
-|---|---|
-| `src/main.ts` | Remove `import { createGtm } from '@gtm-support/vue-gtm'` and the `if (import.meta.env.VITE_APP_GTM_ENABLED) { app.use(createGtm({...})) }` block (currently lines 7 and 20–28). Build will break otherwise once `@gtm-support/vue-gtm` is uninstalled. |
-| `src/components/navbar/AppNavbar.vue` | Drop the `VuesticLogo` import + `<RouterLink to="/"><VuesticLogo /></RouterLink>` template usage (no replacement — mock has no navbar logo). Add `import NavbarSearch from './components/NavbarSearch.vue'` and mount `<NavbarSearch />` in the **left slot** after the hamburger toggle, with `flex: 1` so it expands. |
-| `src/components/navbar/components/AppNavbarActions.vue` | Drop `GithubButton` and `VaIconDiscord` imports + template usages. (No additions here — search lives in `AppNavbar.vue`'s left slot, not in this right-slot component.) |
-| `src/components/navbar/components/dropdowns/ProfileDropdown.vue` (or downstream) | Replace the rendered display name with literal `"Jane Manager"`. Locate via `grep -rn "displayName\|name\b" src/components/navbar/components/dropdowns/`. |
-| `src/i18n/locales/gb.json` | Add `menu.tour-dates`, `menu.shows`, `menu.itinerary`, `menu.travel`, `menu.contacts`, `menu.tasks`, `menu.documents`, `menu.settlements`, `menu.notes` keys with the displayed strings (e.g., `"menu.tour-dates": "Tour Dates"`). `menu.dashboard` already exists — keep. Orphaned keys for deleted demo pages (`menu.users`, `menu.projects`, `menu.faq`, etc.) can be left in for now (vue-i18n won't error on unused keys); a separate hygiene pass can prune them later. |
+| File                                                                             | Edit                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/main.ts`                                                                    | Remove `import { createGtm } from '@gtm-support/vue-gtm'` and the `if (import.meta.env.VITE_APP_GTM_ENABLED) { app.use(createGtm({...})) }` block (currently lines 7 and 20–28). Build will break otherwise once `@gtm-support/vue-gtm` is uninstalled.                                                                                                                                                                                                                       |
+| `src/components/navbar/AppNavbar.vue`                                            | Drop the `VuesticLogo` import + `<RouterLink to="/"><VuesticLogo /></RouterLink>` template usage (no replacement — mock has no navbar logo). Add `import NavbarSearch from './components/NavbarSearch.vue'` and mount `<NavbarSearch />` in the **left slot** after the hamburger toggle, with `flex: 1` so it expands.                                                                                                                                                       |
+| `src/components/navbar/components/AppNavbarActions.vue`                          | Drop `GithubButton` and `VaIconDiscord` imports + template usages. (No additions here — search lives in `AppNavbar.vue`'s left slot, not in this right-slot component.)                                                                                                                                                                                                                                                                                                       |
+| `src/components/navbar/components/dropdowns/ProfileDropdown.vue` (or downstream) | Replace the rendered display name with literal `"Jane Manager"`. Locate via `grep -rn "displayName\|name\b" src/components/navbar/components/dropdowns/`.                                                                                                                                                                                                                                                                                                                     |
+| `src/i18n/locales/gb.json`                                                       | Add `menu.tour-dates`, `menu.shows`, `menu.itinerary`, `menu.travel`, `menu.contacts`, `menu.tasks`, `menu.documents`, `menu.settlements`, `menu.notes` keys with the displayed strings (e.g., `"menu.tour-dates": "Tour Dates"`). `menu.dashboard` already exists — keep. Orphaned keys for deleted demo pages (`menu.users`, `menu.projects`, `menu.faq`, etc.) can be left in for now (vue-i18n won't error on unused keys); a separate hygiene pass can prune them later. |
 
 ### Dependencies to uninstall
 
@@ -557,13 +557,13 @@ storybook, eslint-plugin-storybook
 
 ## 10. Branding rename
 
-| Where | Before | After |
-|---|---|---|
-| `index.html` `<title>` | `Vuestic Admin` | `TourCraft` |
-| `index.html` favicon | Vuestic favicon | (leave default for this spec; brand asset later) |
-| `package.json` `name` | `vuestic-admin` | `tourcraft` |
-| Navbar logo | `<VuesticLogo>` in `AppNavbar.vue` | (removed entirely — mock has no navbar logo) |
-| README.md | Vuestic README | (leave for this spec — user-replaceable later, not user-facing) |
+| Where                  | Before                             | After                                                           |
+| ---------------------- | ---------------------------------- | --------------------------------------------------------------- |
+| `index.html` `<title>` | `Vuestic Admin`                    | `TourCraft`                                                     |
+| `index.html` favicon   | Vuestic favicon                    | (leave default for this spec; brand asset later)                |
+| `package.json` `name`  | `vuestic-admin`                    | `tourcraft`                                                     |
+| Navbar logo            | `<VuesticLogo>` in `AppNavbar.vue` | (removed entirely — mock has no navbar logo)                    |
+| README.md              | Vuestic README                     | (leave for this spec — user-replaceable later, not user-facing) |
 
 ### New component required
 

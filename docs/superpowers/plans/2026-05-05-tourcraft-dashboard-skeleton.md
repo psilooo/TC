@@ -19,6 +19,7 @@
 ## File map (locked in)
 
 ### Created
+
 - `src/data/types.ts` — typed interfaces (replaces existing demo types.ts)
 - `src/data/severity.ts` — severity tokens shared across sections
 - `src/data/format.ts` — currency + date helpers
@@ -39,6 +40,7 @@
 - `src/pages/NotFound.vue` — 404 page
 
 ### Modified
+
 - `src/components/sidebar/NavigationRoutes.ts` — full replacement
 - `src/router/index.ts` — full replacement
 - `src/i18n/locales/gb.json` — add `menu.*` keys for TourCraft sections
@@ -50,6 +52,7 @@
 - `package.json` — `name` → `tourcraft`, `version` → `0.1.0`, drop demo scripts + workspace
 
 ### Deleted
+
 - All demo pages under `src/pages/` (404.vue, admin/, auth/, billing/, faq/, payments/, preferences/, pricing-plans/, projects/, settings/, users/)
 - Demo components: `src/components/typography/`, `src/components/va-charts/`, `src/components/va-medium-editor/`, `src/components/va-timeline-item.vue`, `src/components/VuesticLogo.vue`, `src/components/VuesticLogo.stories.ts`, `src/components/NotFoundImage.vue`
 - Demo navbar: `src/components/navbar/components/GitHubButton.vue`, `src/components/icons/VaIconDiscord.vue`
@@ -59,6 +62,7 @@
 - Vuestic-only docs: `docs/pre-production.md` (committed accidentally during scaffolding)
 
 ### Deps removed (uninstalled from package.json)
+
 - `medium-editor`, `@types/medium-editor`, `chartjs-chart-geo`, `flag-icons`, `ionicons`, `register-service-worker`, `@gtm-support/vue-gtm`
 - Storybook devDeps: `@storybook/addon-essentials`, `@storybook/addon-interactions`, `@storybook/addon-links`, `@storybook/blocks`, `@storybook/testing-library`, `@storybook/vue3`, `@storybook/vue3-vite`, `storybook`, `eslint-plugin-storybook`
 
@@ -79,6 +83,7 @@ Expected for P.3: `VITE v5.4.x  ready in <ms>ms` and `Local:   http://localhost:
 ## Task 1: Data foundation — types, tokens, formatters, fixtures
 
 **Files:**
+
 - Create: `src/data/types.ts` (overwrites existing demo file — see deletes for old contents)
 - Create: `src/data/severity.ts`
 - Create: `src/data/format.ts`
@@ -258,17 +263,72 @@ export const openIssues: Issue[] = [
 ]
 
 export const upcomingShows: ShowSummary[] = [
-  { id: 'u1', date: '2026-05-20', city: 'Nashville, TN', venue: 'The Ryman', advanceUsd: 65000, travel: 'Confirmed', settlement: '-' },
-  { id: 'u2', date: '2026-05-21', city: 'Atlanta, GA', venue: 'Tabernacle', advanceUsd: 55000, travel: 'Confirmed', settlement: '-' },
-  { id: 'u3', date: '2026-05-22', city: 'New Orleans, LA', venue: 'The Fillmore', advanceUsd: 50000, travel: 'Confirmed', settlement: '-' },
-  { id: 'u4', date: '2026-05-23', city: 'Birmingham, AL', venue: 'Iron City', advanceUsd: 45000, travel: 'Confirmed', settlement: '-' },
-  { id: 'u5', date: '2026-05-24', city: 'Charlotte, NC', venue: 'The Fillmore', advanceUsd: 48000, travel: 'Pending', settlement: '-' },
+  {
+    id: 'u1',
+    date: '2026-05-20',
+    city: 'Nashville, TN',
+    venue: 'The Ryman',
+    advanceUsd: 65000,
+    travel: 'Confirmed',
+    settlement: '-',
+  },
+  {
+    id: 'u2',
+    date: '2026-05-21',
+    city: 'Atlanta, GA',
+    venue: 'Tabernacle',
+    advanceUsd: 55000,
+    travel: 'Confirmed',
+    settlement: '-',
+  },
+  {
+    id: 'u3',
+    date: '2026-05-22',
+    city: 'New Orleans, LA',
+    venue: 'The Fillmore',
+    advanceUsd: 50000,
+    travel: 'Confirmed',
+    settlement: '-',
+  },
+  {
+    id: 'u4',
+    date: '2026-05-23',
+    city: 'Birmingham, AL',
+    venue: 'Iron City',
+    advanceUsd: 45000,
+    travel: 'Confirmed',
+    settlement: '-',
+  },
+  {
+    id: 'u5',
+    date: '2026-05-24',
+    city: 'Charlotte, NC',
+    venue: 'The Fillmore',
+    advanceUsd: 48000,
+    travel: 'Pending',
+    settlement: '-',
+  },
 ]
 
 export const recentNotes: NoteEntry[] = [
-  { id: 'n1', body: 'Venue load-in will use loading dock on 5th Ave. Street access only.', at: '2026-05-20T09:15:00', authorInitials: 'JM' },
-  { id: 'n2', body: 'Soundcheck at The Ryman moved to 11:00 AM. All crew please adjust call times.', at: '2026-05-19T16:08:00', authorInitials: 'JM' },
-  { id: 'n3', body: 'Guest list for Atlanta is closed. No additional names accepted.', at: '2026-05-18T14:22:00', authorInitials: 'JM' },
+  {
+    id: 'n1',
+    body: 'Venue load-in will use loading dock on 5th Ave. Street access only.',
+    at: '2026-05-20T09:15:00',
+    authorInitials: 'JM',
+  },
+  {
+    id: 'n2',
+    body: 'Soundcheck at The Ryman moved to 11:00 AM. All crew please adjust call times.',
+    at: '2026-05-19T16:08:00',
+    authorInitials: 'JM',
+  },
+  {
+    id: 'n3',
+    body: 'Guest list for Atlanta is closed. No additional names accepted.',
+    at: '2026-05-18T14:22:00',
+    authorInitials: 'JM',
+  },
 ]
 ```
 
@@ -293,6 +353,7 @@ git commit -m "feat(data): add TourCraft types, severity tokens, formatters, and
 ## Task 2: Shared layout primitives — PageHeader, PagePlaceholder, NotFound
 
 **Files:**
+
 - Create: `src/components/PageHeader.vue`
 - Create: `src/components/PagePlaceholder.vue`
 - Create: `src/pages/NotFound.vue`
@@ -390,9 +451,7 @@ defineProps<{
   <div class="not-found">
     <PageHeader title="Page not found" subtitle="404" />
     <p class="not-found__copy">The page you're looking for doesn't exist.</p>
-    <RouterLink :to="{ name: 'dashboard' }" class="not-found__link">
-      ← Back to Dashboard
-    </RouterLink>
+    <RouterLink :to="{ name: 'dashboard' }" class="not-found__link"> ← Back to Dashboard </RouterLink>
   </div>
 </template>
 
@@ -438,6 +497,7 @@ git commit -m "feat(layout): add shared PageHeader, PagePlaceholder, and NotFoun
 ## Task 3: Page files — Dashboard placeholder + 9 section stubs
 
 **Files:**
+
 - Create: `src/pages/Dashboard.vue` (placeholder body for now; widgets composed in Task 22)
 - Create: `src/pages/TourDates.vue`
 - Create: `src/pages/Shows.vue`
@@ -583,6 +643,7 @@ git commit -m "feat(pages): add Dashboard placeholder + 9 section stub pages"
 ## Task 4: Sidebar — NavigationRoutes rewrite + gb.json menu keys
 
 **Files:**
+
 - Modify: `src/components/sidebar/NavigationRoutes.ts` (full replacement)
 - Modify: `src/i18n/locales/gb.json` (add `menu.*` keys)
 
@@ -602,16 +663,16 @@ export interface INavigationRoute {
 export default {
   root: { name: '/', displayName: 'navigationRoutes.home' },
   routes: [
-    { name: 'dashboard',   displayName: 'menu.dashboard',   meta: { icon: 'mso-home' } },
-    { name: 'tour-dates',  displayName: 'menu.tour-dates',  meta: { icon: 'mso-calendar_today' } },
-    { name: 'shows',       displayName: 'menu.shows',       meta: { icon: 'mso-confirmation_number' } },
-    { name: 'itinerary',   displayName: 'menu.itinerary',   meta: { icon: 'mso-map' } },
-    { name: 'travel',      displayName: 'menu.travel',      meta: { icon: 'mso-flight' } },
-    { name: 'contacts',    displayName: 'menu.contacts',    meta: { icon: 'mso-group' } },
-    { name: 'tasks',       displayName: 'menu.tasks',       meta: { icon: 'mso-task_alt' } },
-    { name: 'documents',   displayName: 'menu.documents',   meta: { icon: 'mso-folder' } },
+    { name: 'dashboard', displayName: 'menu.dashboard', meta: { icon: 'mso-home' } },
+    { name: 'tour-dates', displayName: 'menu.tour-dates', meta: { icon: 'mso-calendar_today' } },
+    { name: 'shows', displayName: 'menu.shows', meta: { icon: 'mso-confirmation_number' } },
+    { name: 'itinerary', displayName: 'menu.itinerary', meta: { icon: 'mso-map' } },
+    { name: 'travel', displayName: 'menu.travel', meta: { icon: 'mso-flight' } },
+    { name: 'contacts', displayName: 'menu.contacts', meta: { icon: 'mso-group' } },
+    { name: 'tasks', displayName: 'menu.tasks', meta: { icon: 'mso-task_alt' } },
+    { name: 'documents', displayName: 'menu.documents', meta: { icon: 'mso-folder' } },
     { name: 'settlements', displayName: 'menu.settlements', meta: { icon: 'mso-attach_money' } },
-    { name: 'notes',       displayName: 'menu.notes',       meta: { icon: 'mso-sticky_note_2' } },
+    { name: 'notes', displayName: 'menu.notes', meta: { icon: 'mso-sticky_note_2' } },
   ] as INavigationRoute[],
 }
 ```
@@ -642,6 +703,7 @@ To merge precisely without disturbing other keys, edit by hand: locate the closi
 - [ ] **Step 4.3: Verify sidebar shows new items**
 
 The dev server hot-reloads on file change. In the browser at `http://localhost:5173/`, the sidebar should now show:
+
 - Dashboard
 - Tour Dates
 - Shows
@@ -671,6 +733,7 @@ git commit -m "feat(nav): rewrite sidebar nav to TourCraft IA + add menu i18n ke
 ## Task 5: Router rewrite
 
 **Files:**
+
 - Modify: `src/router/index.ts` (full replacement)
 
 After this task, clicking any sidebar item navigates correctly. Demo Vuestic pages still exist on disk but become unreferenced (deletion in Task 13).
@@ -694,16 +757,16 @@ export default createRouter({
       component: AppLayout,
       redirect: { name: 'dashboard' },
       children: [
-        { path: 'dashboard',   name: 'dashboard',   component: () => import('@/pages/Dashboard.vue') },
-        { path: 'tour-dates',  name: 'tour-dates',  component: () => import('@/pages/TourDates.vue') },
-        { path: 'shows',       name: 'shows',       component: () => import('@/pages/Shows.vue') },
-        { path: 'itinerary',   name: 'itinerary',   component: () => import('@/pages/Itinerary.vue') },
-        { path: 'travel',      name: 'travel',      component: () => import('@/pages/Travel.vue') },
-        { path: 'contacts',    name: 'contacts',    component: () => import('@/pages/Contacts.vue') },
-        { path: 'tasks',       name: 'tasks',       component: () => import('@/pages/Tasks.vue') },
-        { path: 'documents',   name: 'documents',   component: () => import('@/pages/Documents.vue') },
+        { path: 'dashboard', name: 'dashboard', component: () => import('@/pages/Dashboard.vue') },
+        { path: 'tour-dates', name: 'tour-dates', component: () => import('@/pages/TourDates.vue') },
+        { path: 'shows', name: 'shows', component: () => import('@/pages/Shows.vue') },
+        { path: 'itinerary', name: 'itinerary', component: () => import('@/pages/Itinerary.vue') },
+        { path: 'travel', name: 'travel', component: () => import('@/pages/Travel.vue') },
+        { path: 'contacts', name: 'contacts', component: () => import('@/pages/Contacts.vue') },
+        { path: 'tasks', name: 'tasks', component: () => import('@/pages/Tasks.vue') },
+        { path: 'documents', name: 'documents', component: () => import('@/pages/Documents.vue') },
         { path: 'settlements', name: 'settlements', component: () => import('@/pages/Settlements.vue') },
-        { path: 'notes',       name: 'notes',       component: () => import('@/pages/Notes.vue') },
+        { path: 'notes', name: 'notes', component: () => import('@/pages/Notes.vue') },
       ],
     },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/pages/NotFound.vue') },
@@ -737,6 +800,7 @@ git commit -m "feat(routing): rewrite router with TourCraft routes, redirect, an
 ## Task 6: NavbarSearch component
 
 **Files:**
+
 - Create: `src/components/navbar/components/NavbarSearch.vue`
 
 A minimal global-search input used by `AppNavbar.vue` in Task 7. Visual only — no `@input` handler, no results panel.
@@ -781,6 +845,7 @@ git commit -m "feat(navbar): add NavbarSearch component"
 ## Task 7: AppNavbar — drop VuesticLogo, mount NavbarSearch in left slot
 
 **Files:**
+
 - Modify: `src/components/navbar/AppNavbar.vue`
 
 Removes the Vuestic logo (mock has none) and wires in the new search input.
@@ -866,6 +931,7 @@ git commit -m "feat(navbar): drop VuesticLogo, mount NavbarSearch in left slot"
 ## Task 8: AppNavbarActions — drop GithubButton + VaIconDiscord
 
 **Files:**
+
 - Modify: `src/components/navbar/components/AppNavbarActions.vue`
 
 Removes Vuestic's promotional UI (GitHub button + Discord icon) from the right slot. Bell + profile remain.
@@ -913,6 +979,7 @@ git commit -m "feat(navbar): remove Vuestic promo (GitHub button + Discord icon)
 ## Task 9: ProfileDropdown — display name "Jane Manager"
 
 **Files:**
+
 - Modify: `src/components/navbar/components/dropdowns/ProfileDropdown.vue` (or the file/store that supplies the displayed user name)
 
 The mock shows the navbar avatar paired with the literal name "Jane Manager." This task hardcodes that name (no auth this spec).
@@ -951,6 +1018,7 @@ git commit -m "feat(navbar): set profile display name to Jane Manager"
 ## Task 10: main.ts — remove GTM init
 
 **Files:**
+
 - Modify: `src/main.ts`
 
 `@gtm-support/vue-gtm` is a demo analytics dep we'll uninstall in Task 14. Removing the import + init now means the build still compiles immediately after the dep is uninstalled (Task 14).
@@ -1003,6 +1071,7 @@ git commit -m "chore(main): remove @gtm-support/vue-gtm init (dep uninstall comi
 ## Task 11: Branding — index.html title + package.json metadata
 
 **Files:**
+
 - Modify: `index.html`
 - Modify: `package.json`
 
@@ -1042,6 +1111,7 @@ git commit -m "chore(brand): rename to TourCraft, reset version to 0.1.0"
 - [ ] **Step 12.2: Walk the IA**
 
 Click each of the 10 sidebar items in order. For each, confirm:
+
 - The URL becomes `/<slug>` (e.g., `/tour-dates`)
 - The page renders `<PagePlaceholder>` with the correct title (e.g., "Tour Dates")
 - The "Coming soon — detailed design pending." panel renders inside a dashed border
@@ -1065,6 +1135,7 @@ If anything in steps 12.2–12.4 fails, fix in a small follow-up commit before m
 ## Task 13: Delete demo files
 
 **Files:**
+
 - Delete: `src/pages/{404.vue,admin/,auth/,billing/,faq/,payments/,preferences/,pricing-plans/,projects/,settings/,users/}`
 - Delete: `src/components/{typography/,va-charts/,va-medium-editor/,va-timeline-item.vue,VuesticLogo.vue,VuesticLogo.stories.ts,NotFoundImage.vue}`
 - Delete: `src/components/navbar/components/GitHubButton.vue`
@@ -1151,6 +1222,7 @@ git commit -m "chore: delete Vuestic Admin demo pages, components, data, locales
 ## Task 14: Uninstall demo deps + remove demo scripts
 
 **Files:**
+
 - Modify: `package.json` (deps + devDeps + scripts + workspaces)
 
 - [ ] **Step 14.1: Uninstall runtime deps**
@@ -1168,6 +1240,7 @@ npm uninstall @types/medium-editor @storybook/addon-essentials @storybook/addon-
 - [ ] **Step 14.3: Edit `package.json` — remove demo scripts and workspace**
 
 Open `package.json`. In the `"scripts"` block, remove:
+
 - `"storybook": "storybook dev -p 6006"`
 - `"build-storybook": "storybook build"`
 - `"e2e": "yarn workspace e2e test"`
@@ -1200,6 +1273,7 @@ git commit -m "chore(deps): uninstall demo runtime + Storybook devDeps; drop e2e
 ## Task 15: Dashboard widget — KpiTile
 
 **Files:**
+
 - Create: `src/components/dashboard/KpiTile.vue`
 
 First of 8 dashboard widgets. After creating, mount it temporarily in `Dashboard.vue` for visual verification, then leave that wiring in place — Task 22 finalizes the full Dashboard composition.
@@ -1317,6 +1391,7 @@ git commit -m "feat(dashboard): add KpiTile widget + KPI row in Dashboard"
 ## Task 16: Dashboard widget — Next72HoursCard
 
 **Files:**
+
 - Create: `src/components/dashboard/Next72HoursCard.vue`
 
 - [ ] **Step 16.1: Create `src/components/dashboard/Next72HoursCard.vue`**
@@ -1500,6 +1575,7 @@ git commit -m "feat(dashboard): add Next72HoursCard widget"
 ## Task 17: Dashboard widget — TodayTimelineCard
 
 **Files:**
+
 - Create: `src/components/dashboard/TodayTimelineCard.vue`
 
 - [ ] **Step 17.1: Create `src/components/dashboard/TodayTimelineCard.vue`**
@@ -1636,7 +1712,7 @@ defineProps<{
 Update the `<template>` in `src/pages/Dashboard.vue`:
 
 ```vue
-    <section class="row-2">
+<section class="row-2">
       <Next72HoursCard :shows="next72h" />
       <TodayTimelineCard :date="todayDate" :events="todayTimeline" />
     </section>
@@ -1665,6 +1741,7 @@ git commit -m "feat(dashboard): add TodayTimelineCard widget"
 ## Task 18: Dashboard widget — TravelHotelCard
 
 **Files:**
+
 - Create: `src/components/dashboard/TravelHotelCard.vue`
 
 - [ ] **Step 18.1: Create `src/components/dashboard/TravelHotelCard.vue`**
@@ -1781,7 +1858,7 @@ function iconFor(kind: TravelLeg['kind']): string {
 - [ ] **Step 18.2: Add to Dashboard.vue's `row-2`**
 
 ```vue
-    <section class="row-2">
+<section class="row-2">
       <Next72HoursCard :shows="next72h" />
       <TodayTimelineCard :date="todayDate" :events="todayTimeline" />
       <TravelHotelCard :legs="travelLegs" />
@@ -1809,6 +1886,7 @@ git commit -m "feat(dashboard): add TravelHotelCard widget"
 ## Task 19: Dashboard widget — QuickContactsCard
 
 **Files:**
+
 - Create: `src/components/dashboard/QuickContactsCard.vue`
 
 - [ ] **Step 19.1: Create `src/components/dashboard/QuickContactsCard.vue`**
@@ -1828,18 +1906,8 @@ git commit -m "feat(dashboard): add TravelHotelCard widget"
         <div class="contacts__name">{{ c.name }}</div>
         <div class="contacts__phone">{{ c.phone }}</div>
         <div class="contacts__actions">
-          <VaButton
-            preset="secondary"
-            size="small"
-            icon="mso-call"
-            :aria-label="`Call ${c.name}`"
-          />
-          <VaButton
-            preset="secondary"
-            size="small"
-            icon="mso-mail"
-            :aria-label="`Email ${c.name}`"
-          />
+          <VaButton preset="secondary" size="small" icon="mso-call" :aria-label="`Call ${c.name}`" />
+          <VaButton preset="secondary" size="small" icon="mso-mail" :aria-label="`Email ${c.name}`" />
         </div>
       </li>
     </ul>
@@ -1927,7 +1995,7 @@ defineProps<{ contacts: QuickContact[] }>()
 In `src/pages/Dashboard.vue`, after `row-2`, add `row-3`:
 
 ```vue
-    <section class="row-3">
+<section class="row-3">
       <QuickContactsCard :contacts="quickContacts" />
     </section>
 ```
@@ -1968,6 +2036,7 @@ git commit -m "feat(dashboard): add QuickContactsCard widget"
 ## Task 20: Dashboard widget — OpenIssuesCard
 
 **Files:**
+
 - Create: `src/components/dashboard/OpenIssuesCard.vue`
 
 - [ ] **Step 20.1: Create `src/components/dashboard/OpenIssuesCard.vue`**
@@ -1988,10 +2057,7 @@ git commit -m "feat(dashboard): add QuickContactsCard widget"
           <div class="issues__name">{{ issue.title }}</div>
           <div class="issues__sub">{{ issue.sub }}</div>
         </div>
-        <span
-          class="issues__pill"
-          :class="[severityTokens[issue.severity].bg, severityTokens[issue.severity].text]"
-        >
+        <span class="issues__pill" :class="[severityTokens[issue.severity].bg, severityTokens[issue.severity].text]">
           {{ issue.severity }}
         </span>
       </li>
@@ -2081,7 +2147,7 @@ defineProps<{ issues: Issue[] }>()
 - [ ] **Step 20.2: Add to Dashboard.vue's `row-3`**
 
 ```vue
-    <section class="row-3">
+<section class="row-3">
       <QuickContactsCard :contacts="quickContacts" />
       <OpenIssuesCard :issues="openIssues" />
     </section>
@@ -2108,6 +2174,7 @@ git commit -m "feat(dashboard): add OpenIssuesCard widget with severity pills"
 ## Task 21: Dashboard widget — UpcomingShowsTable
 
 **Files:**
+
 - Create: `src/components/dashboard/UpcomingShowsTable.vue`
 
 - [ ] **Step 21.1: Create `src/components/dashboard/UpcomingShowsTable.vue`**
@@ -2216,7 +2283,7 @@ defineProps<{ shows: ShowSummary[] }>()
 - [ ] **Step 21.2: Add to Dashboard.vue's `row-3`**
 
 ```vue
-    <section class="row-3">
+<section class="row-3">
       <QuickContactsCard :contacts="quickContacts" />
       <OpenIssuesCard :issues="openIssues" />
       <UpcomingShowsTable :shows="upcomingShows" />
@@ -2225,7 +2292,16 @@ defineProps<{ shows: ShowSummary[] }>()
 
 ```ts
 import UpcomingShowsTable from '../components/dashboard/UpcomingShowsTable.vue'
-import { kpis, next72h, todayDate, todayTimeline, travelLegs, quickContacts, openIssues, upcomingShows } from '../data/dashboard'
+import {
+  kpis,
+  next72h,
+  todayDate,
+  todayTimeline,
+  travelLegs,
+  quickContacts,
+  openIssues,
+  upcomingShows,
+} from '../data/dashboard'
 ```
 
 - [ ] **Step 21.3: Verify visually**
@@ -2244,6 +2320,7 @@ git commit -m "feat(dashboard): add UpcomingShowsTable widget"
 ## Task 22: Dashboard widget — RecentNotesCard
 
 **Files:**
+
 - Create: `src/components/dashboard/RecentNotesCard.vue`
 
 - [ ] **Step 22.1: Create `src/components/dashboard/RecentNotesCard.vue`**
@@ -2449,6 +2526,7 @@ import {
 - [ ] **Step 22.3: Verify visually**
 
 Refresh `/dashboard`. The full Dashboard now renders:
+
 1. Header: "Tour Dashboard" / "Today / Command Center"
 2. KPI row: 4 tiles
 3. Row 2: Next 72 Hours / Today timeline / Travel & Hotel
@@ -2490,6 +2568,7 @@ Open the reference mock side-by-side with `/dashboard`. Walk each widget and con
 - [ ] **Step 23.5: Sidebar navigation**
 
 Click each of the 10 sidebar items in order:
+
 - Dashboard renders the full mock
 - Tour Dates, Shows, Itinerary, Travel, Contacts, Tasks, Documents, Settlements, Notes — each renders `<PagePlaceholder>` with the section name + "Coming soon — detailed design pending."
 - Active item highlights as you navigate
@@ -2549,25 +2628,25 @@ git tag -a v0.1.0-skeleton -m "TourCraft Dashboard skeleton + IA shell complete"
 
 For each major item in the spec, the implementing task:
 
-| Spec section | Implementing task(s) |
-|---|---|
-| §3 In scope #1 (strip demo content) | Tasks 13, 14 |
-| §3 In scope #2 (rewrite NavigationRoutes) | Task 4 |
-| §3 In scope #3 (rewrite router) | Task 5 |
-| §3 In scope #4 (rebrand chrome) | Tasks 7, 11 |
-| §3 In scope #5 (build Dashboard) | Tasks 15–22 |
-| §3 In scope #6 (stub 9 sections) | Tasks 2, 3 |
-| §3 In scope #7 (mock data) | Task 1 |
-| §3 In scope #8 (verify dev boots, mock parity) | Tasks 12, 23 |
-| §4 file layout | Tasks 1–3, 6, 11, 15–22 |
-| §5 routing | Task 5 |
-| §6 NavigationRoutes + topbar | Tasks 4, 6, 7, 8, 9 |
-| §7 widget specs | Tasks 15–22 |
-| §8 mock data shape | Task 1 |
-| §9 cleanup ops (deletes, code edits, deps) | Tasks 8, 9, 10, 13, 14 |
-| §10 branding | Tasks 7, 11 |
-| §11 Definition of Done | Task 23 |
+| Spec section                                   | Implementing task(s)    |
+| ---------------------------------------------- | ----------------------- |
+| §3 In scope #1 (strip demo content)            | Tasks 13, 14            |
+| §3 In scope #2 (rewrite NavigationRoutes)      | Task 4                  |
+| §3 In scope #3 (rewrite router)                | Task 5                  |
+| §3 In scope #4 (rebrand chrome)                | Tasks 7, 11             |
+| §3 In scope #5 (build Dashboard)               | Tasks 15–22             |
+| §3 In scope #6 (stub 9 sections)               | Tasks 2, 3              |
+| §3 In scope #7 (mock data)                     | Task 1                  |
+| §3 In scope #8 (verify dev boots, mock parity) | Tasks 12, 23            |
+| §4 file layout                                 | Tasks 1–3, 6, 11, 15–22 |
+| §5 routing                                     | Task 5                  |
+| §6 NavigationRoutes + topbar                   | Tasks 4, 6, 7, 8, 9     |
+| §7 widget specs                                | Tasks 15–22             |
+| §8 mock data shape                             | Task 1                  |
+| §9 cleanup ops (deletes, code edits, deps)     | Tasks 8, 9, 10, 13, 14  |
+| §10 branding                                   | Tasks 7, 11             |
+| §11 Definition of Done                         | Task 23                 |
 
 ---
 
-*End of plan. Begin execution at Pre-flight P.1.*
+_End of plan. Begin execution at Pre-flight P.1._
