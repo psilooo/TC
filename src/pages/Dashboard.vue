@@ -15,6 +15,7 @@
 
     <section class="row-3">
       <QuickContactsCard :contacts="quickContacts" />
+      <OpenIssuesCard :issues="openIssues" />
     </section>
   </div>
 </template>
@@ -26,7 +27,8 @@ import Next72HoursCard from '../components/dashboard/Next72HoursCard.vue'
 import TodayTimelineCard from '../components/dashboard/TodayTimelineCard.vue'
 import TravelHotelCard from '../components/dashboard/TravelHotelCard.vue'
 import QuickContactsCard from '../components/dashboard/QuickContactsCard.vue'
-import { kpis, next72h, todayDate, todayTimeline, travelLegs, quickContacts } from '../data/dashboard'
+import OpenIssuesCard from '../components/dashboard/OpenIssuesCard.vue'
+import { kpis, next72h, todayDate, todayTimeline, travelLegs, quickContacts, openIssues } from '../data/dashboard'
 </script>
 
 <style scoped lang="scss">
