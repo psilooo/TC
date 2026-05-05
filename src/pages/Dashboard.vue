@@ -10,6 +10,7 @@
     <section class="row-2">
       <Next72HoursCard :shows="next72h" />
       <TodayTimelineCard :date="todayDate" :events="todayTimeline" />
+      <TravelHotelCard :legs="travelLegs" />
     </section>
   </div>
 </template>
@@ -19,7 +20,8 @@ import PageHeader from '../components/PageHeader.vue'
 import KpiTile from '../components/dashboard/KpiTile.vue'
 import Next72HoursCard from '../components/dashboard/Next72HoursCard.vue'
 import TodayTimelineCard from '../components/dashboard/TodayTimelineCard.vue'
-import { kpis, next72h, todayDate, todayTimeline } from '../data/dashboard'
+import TravelHotelCard from '../components/dashboard/TravelHotelCard.vue'
+import { kpis, next72h, todayDate, todayTimeline, travelLegs } from '../data/dashboard'
 </script>
 
 <style scoped lang="scss">
