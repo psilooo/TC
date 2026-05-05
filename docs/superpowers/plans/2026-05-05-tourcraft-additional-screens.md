@@ -27,6 +27,7 @@
 ## Task 1: Foundation refactor — types, severity, format, KpiTile move
 
 **Files:**
+
 - Move: `src/components/dashboard/KpiTile.vue` → `src/components/KpiTile.vue`
 - Modify: `src/pages/Dashboard.vue` (update KpiTile import path only)
 - Modify: `src/data/types.ts` (append new interfaces)
@@ -42,10 +43,13 @@ git mv src/components/dashboard/KpiTile.vue src/components/KpiTile.vue
 - [ ] **Step 1.2: Update Dashboard.vue import path**
 
 In `src/pages/Dashboard.vue`, find:
+
 ```ts
 import KpiTile from '../components/dashboard/KpiTile.vue'
 ```
+
 Replace with:
+
 ```ts
 import KpiTile from '../components/KpiTile.vue'
 ```
@@ -275,7 +279,6 @@ export interface DocsSelectedFile extends FileEntry {
 Append:
 
 ```ts
-
 export const statusTokens = {
   Confirmed: { bg: 'bg-emerald-100', text: 'text-emerald-800' },
   Approved: { bg: 'bg-emerald-100', text: 'text-emerald-800' },
@@ -293,7 +296,6 @@ export const statusTokens = {
 Append at the end:
 
 ```ts
-
 const relDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' })
 const relTime = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
 
@@ -308,11 +310,13 @@ export function formatRelativeDateTime(iso: string): string {
 ```bash
 curl -s -o /dev/null -w "HTTP %{http_code}\n" http://localhost:5173/dashboard
 ```
+
 Expect: HTTP 200 (Dashboard still renders with KpiTile from new path).
 
 ```bash
 grep -rln "components/dashboard/KpiTile" src/
 ```
+
 Expect: zero output (no surviving references to old path).
 
 - [ ] **Step 1.7: Commit**
@@ -327,6 +331,7 @@ git commit -m "refactor(foundation): move KpiTile to components/ root; extend ty
 ## Task 2: Foundation refactor — PageHeader + KpiRow + ShowSwitcher + Breadcrumb
 
 **Files:**
+
 - Modify: `src/components/PageHeader.vue` (add slots; keep backward-compat)
 - Create: `src/components/KpiRow.vue`
 - Create: `src/components/ShowSwitcher.vue`
@@ -524,6 +529,7 @@ defineProps<{ items: string[] }>()
 ```bash
 curl -s -o /dev/null -w "HTTP %{http_code}\n" http://localhost:5173/dashboard
 ```
+
 Expect: HTTP 200. `<PageHeader title="Tour Dashboard" subtitle="Today / Command Center" />` continues to work via the `#title` slot fallback.
 
 - [ ] **Step 2.6: Commit**
@@ -538,20 +544,14 @@ git commit -m "feat(foundation): extend PageHeader with slots; add KpiRow, ShowS
 ## Task 3: Tour Dates fixtures
 
 **Files:**
+
 - Create: `src/data/tourDates.ts`
 
 - [ ] **Step 3.1: Create `src/data/tourDates.ts`**
 
 ```ts
 // src/data/tourDates.ts — Advance Checklist fixtures (matches mock 1)
-import type {
-  AdvanceMissingItem,
-  AdvanceSection,
-  AdvanceUpdate,
-  Kpi,
-  NoteEntry,
-  QuickContact,
-} from './types'
+import type { AdvanceMissingItem, AdvanceSection, AdvanceUpdate, Kpi, NoteEntry, QuickContact } from './types'
 
 export const advanceCurrentShow = {
   id: 'show-may-21',
@@ -566,17 +566,105 @@ export const advanceKpis: Kpi[] = [
 ]
 
 export const advanceSections: AdvanceSection[] = [
-  { id: 'venue', name: 'Venue Info', icon: 'mso-stadium', sub: 'Capacity, address, load-in', done: 6, total: 6, status: 'Complete' },
-  { id: 'local', name: 'Local Contacts', icon: 'mso-group', sub: 'Promoter, runner, security', done: 5, total: 5, status: 'Complete' },
-  { id: 'hosp', name: 'Hospitality', icon: 'mso-restaurant', sub: 'Catering, dressing rooms, riders', done: 2, total: 4, status: 'Need Follow-Up' },
-  { id: 'sched', name: 'Schedule Confirmation', icon: 'mso-schedule', sub: 'Load-in, soundcheck, doors', done: 3, total: 3, status: 'Complete' },
-  { id: 'travel', name: 'Travel & Hotel', icon: 'mso-flight', sub: 'Flights and hotel rooms', done: 5, total: 5, status: 'Complete' },
-  { id: 'crew', name: 'Crew Accommodations', icon: 'mso-hotel', sub: 'Crew rooms and per-diems', done: 4, total: 4, status: 'Complete' },
-  { id: 'tech', name: 'Production / Tech Rider', icon: 'mso-build', sub: 'Sound, lighting, backline', done: 6, total: 6, status: 'Complete' },
-  { id: 'guest', name: 'Guest List', icon: 'mso-list_alt', sub: 'Comps and holds', done: 1, total: 2, status: 'Need Follow-Up' },
-  { id: 'sett', name: 'Settlement Terms', icon: 'mso-attach_money', sub: 'Deal points and deductions', done: 4, total: 4, status: 'Complete' },
-  { id: 'mpl', name: 'Merch / Parking / Load-In', icon: 'mso-local_shipping', sub: 'Vendor, lot, dock access', done: 3, total: 3, status: 'Complete' },
-  { id: 'promo', name: 'Promo / Marketing', icon: 'mso-campaign', sub: 'Press release, socials, ads', done: 0, total: 2, status: 'Missing' },
+  {
+    id: 'venue',
+    name: 'Venue Info',
+    icon: 'mso-stadium',
+    sub: 'Capacity, address, load-in',
+    done: 6,
+    total: 6,
+    status: 'Complete',
+  },
+  {
+    id: 'local',
+    name: 'Local Contacts',
+    icon: 'mso-group',
+    sub: 'Promoter, runner, security',
+    done: 5,
+    total: 5,
+    status: 'Complete',
+  },
+  {
+    id: 'hosp',
+    name: 'Hospitality',
+    icon: 'mso-restaurant',
+    sub: 'Catering, dressing rooms, riders',
+    done: 2,
+    total: 4,
+    status: 'Need Follow-Up',
+  },
+  {
+    id: 'sched',
+    name: 'Schedule Confirmation',
+    icon: 'mso-schedule',
+    sub: 'Load-in, soundcheck, doors',
+    done: 3,
+    total: 3,
+    status: 'Complete',
+  },
+  {
+    id: 'travel',
+    name: 'Travel & Hotel',
+    icon: 'mso-flight',
+    sub: 'Flights and hotel rooms',
+    done: 5,
+    total: 5,
+    status: 'Complete',
+  },
+  {
+    id: 'crew',
+    name: 'Crew Accommodations',
+    icon: 'mso-hotel',
+    sub: 'Crew rooms and per-diems',
+    done: 4,
+    total: 4,
+    status: 'Complete',
+  },
+  {
+    id: 'tech',
+    name: 'Production / Tech Rider',
+    icon: 'mso-build',
+    sub: 'Sound, lighting, backline',
+    done: 6,
+    total: 6,
+    status: 'Complete',
+  },
+  {
+    id: 'guest',
+    name: 'Guest List',
+    icon: 'mso-list_alt',
+    sub: 'Comps and holds',
+    done: 1,
+    total: 2,
+    status: 'Need Follow-Up',
+  },
+  {
+    id: 'sett',
+    name: 'Settlement Terms',
+    icon: 'mso-attach_money',
+    sub: 'Deal points and deductions',
+    done: 4,
+    total: 4,
+    status: 'Complete',
+  },
+  {
+    id: 'mpl',
+    name: 'Merch / Parking / Load-In',
+    icon: 'mso-local_shipping',
+    sub: 'Vendor, lot, dock access',
+    done: 3,
+    total: 3,
+    status: 'Complete',
+  },
+  {
+    id: 'promo',
+    name: 'Promo / Marketing',
+    icon: 'mso-campaign',
+    sub: 'Press release, socials, ads',
+    done: 0,
+    total: 2,
+    status: 'Missing',
+  },
 ]
 
 export const advanceMissing: AdvanceMissingItem[] = [
@@ -592,8 +680,18 @@ export const advanceQuickContacts: QuickContact[] = [
 ]
 
 export const advanceNotes: NoteEntry[] = [
-  { id: 'n1', body: 'Update load-in entrance: use 6th Ave dock per venue email.', at: '2026-05-19T11:30:00', authorInitials: 'JM' },
-  { id: 'n2', body: 'Promoter prefers 7:30 PM doors. Confirm with crew.', at: '2026-05-18T15:10:00', authorInitials: 'JM' },
+  {
+    id: 'n1',
+    body: 'Update load-in entrance: use 6th Ave dock per venue email.',
+    at: '2026-05-19T11:30:00',
+    authorInitials: 'JM',
+  },
+  {
+    id: 'n2',
+    body: 'Promoter prefers 7:30 PM doors. Confirm with crew.',
+    at: '2026-05-18T15:10:00',
+    authorInitials: 'JM',
+  },
 ]
 
 export const advanceUpdates: AdvanceUpdate[] = [
@@ -608,6 +706,7 @@ export const advanceUpdates: AdvanceUpdate[] = [
 ```bash
 npx vue-tsc --noEmit 2>&1 | grep -E "tourDates|types" | head -10
 ```
+
 Expect: zero errors related to your new file.
 
 - [ ] **Step 3.3: Commit**
@@ -622,6 +721,7 @@ git commit -m "feat(data): add Tour Dates Advance Checklist fixtures"
 ## Task 4: Tour Dates — `AdvanceSectionRow` component
 
 **Files:**
+
 - Create: `src/components/tour-dates/AdvanceSectionRow.vue`
 
 - [ ] **Step 4.1: Create `src/components/tour-dates/AdvanceSectionRow.vue`**
@@ -738,6 +838,7 @@ const pillClass = computed(() => statusTokens[props.status])
 ```bash
 curl -s -o /dev/null -w "HTTP %{http_code}\n" http://localhost:5173/
 ```
+
 Expect: HTTP 200. (Component not mounted yet — Tour Dates page composition is Task 6.)
 
 - [ ] **Step 4.3: Commit**
@@ -752,6 +853,7 @@ git commit -m "feat(tour-dates): add AdvanceSectionRow component"
 ## Task 5: Tour Dates — right-rail cards (4 components)
 
 **Files:**
+
 - Create: `src/components/tour-dates/AdvanceMissingCard.vue`
 - Create: `src/components/tour-dates/AdvanceQuickContactsCard.vue`
 - Create: `src/components/tour-dates/AdvanceNotesCard.vue`
@@ -789,15 +891,52 @@ defineProps<{ items: AdvanceMissingItem[] }>()
 </script>
 
 <style scoped lang="scss">
-.amc { padding: 1.25rem; }
-.amc__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.amc__title { font-weight: 600; font-size: 0.95rem; }
-.amc__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.amc__row { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.amc__row:last-child { border-bottom: none; }
-.amc__name { font-size: 0.875rem; font-weight: 600; }
-.amc__sub { font-size: 0.8125rem; color: var(--va-secondary); }
-.amc__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
+.amc {
+  padding: 1.25rem;
+}
+.amc__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.amc__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.amc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.amc__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.amc__row:last-child {
+  border-bottom: none;
+}
+.amc__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.amc__sub {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.amc__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
 </style>
 ```
 
@@ -830,14 +969,46 @@ defineProps<{ contacts: QuickContact[] }>()
 </script>
 
 <style scoped lang="scss">
-.aqc { padding: 1.25rem; }
-.aqc__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.aqc__title { font-weight: 600; font-size: 0.95rem; }
-.aqc__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.aqc__row { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.aqc__row:last-child { border-bottom: none; }
-.aqc__name { font-size: 0.875rem; font-weight: 600; }
-.aqc__sub { font-size: 0.8125rem; color: var(--va-secondary); }
+.aqc {
+  padding: 1.25rem;
+}
+.aqc__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.aqc__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.aqc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.aqc__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.aqc__row:last-child {
+  border-bottom: none;
+}
+.aqc__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.aqc__sub {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
 </style>
 ```
 
@@ -871,15 +1042,53 @@ defineProps<{ notes: NoteEntry[] }>()
 </script>
 
 <style scoped lang="scss">
-.anc { padding: 1.25rem; }
-.anc__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.anc__title { font-weight: 600; font-size: 0.95rem; }
-.anc__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-.anc__row { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: start; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.anc__row:last-child { border-bottom: none; }
-.anc__body { font-size: 0.875rem; line-height: 1.4; }
-.anc__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; white-space: nowrap; }
-.anc__when { font-size: 0.75rem; color: var(--va-secondary); }
+.anc {
+  padding: 1.25rem;
+}
+.anc__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.anc__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.anc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.anc__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.anc__row:last-child {
+  border-bottom: none;
+}
+.anc__body {
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.anc__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+.anc__when {
+  font-size: 0.75rem;
+  color: var(--va-secondary);
+}
 </style>
 ```
 
@@ -911,15 +1120,52 @@ defineProps<{ updates: AdvanceUpdate[] }>()
 </script>
 
 <style scoped lang="scss">
-.auc { padding: 1.25rem; }
-.auc__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.auc__title { font-weight: 600; font-size: 0.95rem; }
-.auc__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.auc__row { display: grid; grid-template-columns: 0.5rem 1fr auto; gap: 0.5rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.auc__row:last-child { border-bottom: none; }
-.auc__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--va-primary); }
-.auc__body { font-size: 0.875rem; }
-.auc__when { font-size: 0.75rem; color: var(--va-secondary); white-space: nowrap; }
+.auc {
+  padding: 1.25rem;
+}
+.auc__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.auc__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.auc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.auc__row {
+  display: grid;
+  grid-template-columns: 0.5rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.auc__row:last-child {
+  border-bottom: none;
+}
+.auc__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--va-primary);
+}
+.auc__body {
+  font-size: 0.875rem;
+}
+.auc__when {
+  font-size: 0.75rem;
+  color: var(--va-secondary);
+  white-space: nowrap;
+}
 </style>
 ```
 
@@ -936,6 +1182,7 @@ git commit -m "feat(tour-dates): add 4 right-rail cards (Missing, QuickContacts,
 ## Task 6: Tour Dates page composition
 
 **Files:**
+
 - Modify: `src/pages/TourDates.vue` (replace stub with full page)
 
 - [ ] **Step 6.1: Overwrite `src/pages/TourDates.vue`**
@@ -1036,6 +1283,7 @@ import {
 ```bash
 curl -s -o /dev/null -w "HTTP %{http_code}\n" http://localhost:5173/tour-dates
 ```
+
 Expect: HTTP 200. Browser at `/tour-dates` shows the Advance Checklist with header, 3 KPIs, 11 advance sections, and 4 right-rail cards.
 
 ```bash
@@ -1048,6 +1296,7 @@ git commit -m "feat(tour-dates): compose Advance Checklist page"
 ## Task 7: Shows fixtures
 
 **Files:**
+
 - Create: `src/data/shows.ts`
 
 - [ ] **Step 7.1: Create `src/data/shows.ts`**
@@ -1118,6 +1367,7 @@ git commit -m "feat(data): add Shows show-detail fixture"
 ## Task 8: Shows row 1 — Snapshot, Schedule, Contacts cards
 
 **Files:**
+
 - Create: `src/components/shows/ShowSnapshotCard.vue`
 - Create: `src/components/shows/ShowScheduleCard.vue`
 - Create: `src/components/shows/ShowContactsCard.vue`
@@ -1133,14 +1383,38 @@ git commit -m "feat(data): add Shows show-detail fixture"
       <span class="show-snap__title">Show Snapshot</span>
     </div>
     <dl class="show-snap__list">
-      <div class="show-snap__row"><dt>Venue</dt><dd>{{ venue }}</dd></div>
-      <div class="show-snap__row"><dt>Address</dt><dd>{{ address }}</dd></div>
-      <div class="show-snap__row"><dt>Capacity</dt><dd>{{ capacity.toLocaleString() }}</dd></div>
-      <div class="show-snap__row"><dt>Doors</dt><dd>{{ doors }}</dd></div>
-      <div class="show-snap__row"><dt>Show Start</dt><dd>{{ showStart }}</dd></div>
-      <div class="show-snap__row"><dt>Set Length</dt><dd>{{ setLength }}</dd></div>
-      <div class="show-snap__row"><dt>Support</dt><dd>{{ support }}</dd></div>
-      <div v-if="ageRestriction" class="show-snap__row"><dt>Age</dt><dd>{{ ageRestriction }}</dd></div>
+      <div class="show-snap__row">
+        <dt>Venue</dt>
+        <dd>{{ venue }}</dd>
+      </div>
+      <div class="show-snap__row">
+        <dt>Address</dt>
+        <dd>{{ address }}</dd>
+      </div>
+      <div class="show-snap__row">
+        <dt>Capacity</dt>
+        <dd>{{ capacity.toLocaleString() }}</dd>
+      </div>
+      <div class="show-snap__row">
+        <dt>Doors</dt>
+        <dd>{{ doors }}</dd>
+      </div>
+      <div class="show-snap__row">
+        <dt>Show Start</dt>
+        <dd>{{ showStart }}</dd>
+      </div>
+      <div class="show-snap__row">
+        <dt>Set Length</dt>
+        <dd>{{ setLength }}</dd>
+      </div>
+      <div class="show-snap__row">
+        <dt>Support</dt>
+        <dd>{{ support }}</dd>
+      </div>
+      <div v-if="ageRestriction" class="show-snap__row">
+        <dt>Age</dt>
+        <dd>{{ ageRestriction }}</dd>
+      </div>
       <div v-if="ticketSales" class="show-snap__row">
         <dt>Sold</dt>
         <dd>{{ ticketSales.sold.toLocaleString() }} / {{ ticketSales.capacity.toLocaleString() }}</dd>
@@ -1156,13 +1430,42 @@ defineProps<ShowSnapshot>()
 </script>
 
 <style scoped lang="scss">
-.show-snap { padding: 1.25rem; }
-.show-snap__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.show-snap__title { font-weight: 600; font-size: 0.95rem; }
-.show-snap__list { margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.show-snap__row { display: grid; grid-template-columns: 7rem 1fr; gap: 0.75rem; padding: 0.25rem 0; }
-.show-snap__row dt { font-size: 0.8125rem; color: var(--va-secondary); margin: 0; }
-.show-snap__row dd { font-size: 0.875rem; margin: 0; font-weight: 500; }
+.show-snap {
+  padding: 1.25rem;
+}
+.show-snap__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.show-snap__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.show-snap__list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.show-snap__row {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+}
+.show-snap__row dt {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+  margin: 0;
+}
+.show-snap__row dd {
+  font-size: 0.875rem;
+  margin: 0;
+  font-weight: 500;
+}
 </style>
 ```
 
@@ -1196,19 +1499,75 @@ defineProps<{ events: TimelineEvent[] }>()
 </script>
 
 <style scoped lang="scss">
-.show-sched { padding: 1.25rem; }
-.show-sched__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.show-sched__title { font-weight: 600; font-size: 0.95rem; }
-.show-sched__timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-.show-sched__item { display: grid; grid-template-columns: 1rem 4rem 1fr; gap: 0.75rem; align-items: start; padding: 0.5rem 0; position: relative; }
-.show-sched__rail { position: relative; height: 100%; display: flex; justify-content: center; }
-.show-sched__rail::before { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; background: var(--va-background-border); }
-.show-sched__item:first-child .show-sched__rail::before { top: 0.5rem; }
-.show-sched__item:last-child .show-sched__rail::before { bottom: calc(100% - 0.5rem); }
-.show-sched__dot { width: 0.625rem; height: 0.625rem; border-radius: 50%; background: var(--va-primary); margin-top: 0.5rem; z-index: 1; }
-.show-sched__time { font-size: 0.8125rem; font-weight: 600; padding-top: 0.25rem; }
-.show-sched__name { font-size: 0.875rem; font-weight: 600; }
-.show-sched__sub { font-size: 0.8125rem; color: var(--va-secondary); }
+.show-sched {
+  padding: 1.25rem;
+}
+.show-sched__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.show-sched__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.show-sched__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.show-sched__item {
+  display: grid;
+  grid-template-columns: 1rem 4rem 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.5rem 0;
+  position: relative;
+}
+.show-sched__rail {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+.show-sched__rail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--va-background-border);
+}
+.show-sched__item:first-child .show-sched__rail::before {
+  top: 0.5rem;
+}
+.show-sched__item:last-child .show-sched__rail::before {
+  bottom: calc(100% - 0.5rem);
+}
+.show-sched__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--va-primary);
+  margin-top: 0.5rem;
+  z-index: 1;
+}
+.show-sched__time {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding-top: 0.25rem;
+}
+.show-sched__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.show-sched__sub {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
 </style>
 ```
 
@@ -1240,15 +1599,51 @@ defineProps<{ contacts: QuickContact[] }>()
 </script>
 
 <style scoped lang="scss">
-.show-contacts { padding: 1.25rem; }
-.show-contacts__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.show-contacts__title { font-weight: 600; font-size: 0.95rem; }
-.show-contacts__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.show-contacts__row { display: grid; grid-template-columns: 6rem 1fr auto auto; gap: 0.5rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.show-contacts__row:last-child { border-bottom: none; }
-.show-contacts__role { font-size: 0.8125rem; color: var(--va-secondary); }
-.show-contacts__name { font-size: 0.875rem; font-weight: 600; }
-.show-contacts__phone { font-size: 0.8125rem; color: var(--va-secondary); white-space: nowrap; }
+.show-contacts {
+  padding: 1.25rem;
+}
+.show-contacts__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.show-contacts__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.show-contacts__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.show-contacts__row {
+  display: grid;
+  grid-template-columns: 6rem 1fr auto auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.show-contacts__row:last-child {
+  border-bottom: none;
+}
+.show-contacts__role {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.show-contacts__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.show-contacts__phone {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+  white-space: nowrap;
+}
 </style>
 ```
 
@@ -1265,6 +1660,7 @@ git commit -m "feat(shows): add Snapshot, Schedule, Contacts cards (row 1)"
 ## Task 9: Shows row 2 — GuestList, Hospitality, OpenTasks cards
 
 **Files:**
+
 - Create: `src/components/shows/ShowGuestListCard.vue`
 - Create: `src/components/shows/ShowHospitalityCard.vue`
 - Create: `src/components/shows/ShowOpenTasksCard.vue`
@@ -1280,11 +1676,26 @@ git commit -m "feat(shows): add Snapshot, Schedule, Contacts cards (row 1)"
       <span class="show-gl__title">Guest List & Holds</span>
     </div>
     <dl class="show-gl__list">
-      <div class="show-gl__row"><dt>Capacity</dt><dd>{{ data.capacity.toLocaleString() }}</dd></div>
-      <div class="show-gl__row"><dt>Sold</dt><dd>{{ data.sold.toLocaleString() }}</dd></div>
-      <div class="show-gl__row"><dt>Holds</dt><dd>{{ data.holds }}</dd></div>
-      <div class="show-gl__row"><dt>Comps</dt><dd>{{ data.comps }}</dd></div>
-      <div class="show-gl__row"><dt>On List</dt><dd>{{ data.onList }}</dd></div>
+      <div class="show-gl__row">
+        <dt>Capacity</dt>
+        <dd>{{ data.capacity.toLocaleString() }}</dd>
+      </div>
+      <div class="show-gl__row">
+        <dt>Sold</dt>
+        <dd>{{ data.sold.toLocaleString() }}</dd>
+      </div>
+      <div class="show-gl__row">
+        <dt>Holds</dt>
+        <dd>{{ data.holds }}</dd>
+      </div>
+      <div class="show-gl__row">
+        <dt>Comps</dt>
+        <dd>{{ data.comps }}</dd>
+      </div>
+      <div class="show-gl__row">
+        <dt>On List</dt>
+        <dd>{{ data.onList }}</dd>
+      </div>
     </dl>
   </VaCard>
 </template>
@@ -1296,14 +1707,46 @@ defineProps<{ data: ShowGuestListData }>()
 </script>
 
 <style scoped lang="scss">
-.show-gl { padding: 1.25rem; }
-.show-gl__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.show-gl__title { font-weight: 600; font-size: 0.95rem; }
-.show-gl__list { margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.show-gl__row { display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; padding: 0.25rem 0; border-bottom: 1px solid var(--va-background-border); }
-.show-gl__row:last-child { border-bottom: none; }
-.show-gl__row dt { font-size: 0.875rem; color: var(--va-secondary); margin: 0; }
-.show-gl__row dd { font-size: 0.875rem; font-weight: 600; margin: 0; }
+.show-gl {
+  padding: 1.25rem;
+}
+.show-gl__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.show-gl__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.show-gl__list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.show-gl__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.show-gl__row:last-child {
+  border-bottom: none;
+}
+.show-gl__row dt {
+  font-size: 0.875rem;
+  color: var(--va-secondary);
+  margin: 0;
+}
+.show-gl__row dd {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+}
 </style>
 ```
 
@@ -1329,12 +1772,33 @@ defineProps<{ notes: { rider: string; bullets: string[] } }>()
 </script>
 
 <style scoped lang="scss">
-.show-hosp { padding: 1.25rem; }
-.show-hosp__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
-.show-hosp__title { font-weight: 600; font-size: 0.95rem; }
-.show-hosp__rider { font-size: 0.875rem; line-height: 1.4; margin: 0 0 0.75rem; }
-.show-hosp__bullets { margin: 0; padding-left: 1.25rem; font-size: 0.875rem; line-height: 1.5; }
-.show-hosp__bullets li { margin-bottom: 0.25rem; }
+.show-hosp {
+  padding: 1.25rem;
+}
+.show-hosp__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.show-hosp__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.show-hosp__rider {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0 0 0.75rem;
+}
+.show-hosp__bullets {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.show-hosp__bullets li {
+  margin-bottom: 0.25rem;
+}
 </style>
 ```
 
@@ -1352,7 +1816,11 @@ defineProps<{ notes: { rider: string; bullets: string[] } }>()
       <li v-for="t in tasks" :key="t.id" class="show-tasks__row">
         <span class="show-tasks__check"><VaIcon name="mso-radio_button_unchecked" size="16px" /></span>
         <div class="show-tasks__body">{{ t.title }}</div>
-        <span v-if="t.severity" class="show-tasks__pill" :class="[severityTokens[t.severity].bg, severityTokens[t.severity].text]">
+        <span
+          v-if="t.severity"
+          class="show-tasks__pill"
+          :class="[severityTokens[t.severity].bg, severityTokens[t.severity].text]"
+        >
           {{ t.due }}
         </span>
         <span v-else class="show-tasks__due">{{ t.due }}</span>
@@ -1371,15 +1839,53 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.show-tasks { padding: 1.25rem; }
-.show-tasks__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.show-tasks__title { font-weight: 600; font-size: 0.95rem; }
-.show-tasks__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.show-tasks__row { display: grid; grid-template-columns: 1.25rem 1fr auto; gap: 0.5rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.show-tasks__row:last-child { border-bottom: none; }
-.show-tasks__body { font-size: 0.875rem; }
-.show-tasks__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; white-space: nowrap; }
-.show-tasks__due { font-size: 0.75rem; color: var(--va-secondary); white-space: nowrap; }
+.show-tasks {
+  padding: 1.25rem;
+}
+.show-tasks__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.show-tasks__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.show-tasks__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.show-tasks__row {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.show-tasks__row:last-child {
+  border-bottom: none;
+}
+.show-tasks__body {
+  font-size: 0.875rem;
+}
+.show-tasks__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+.show-tasks__due {
+  font-size: 0.75rem;
+  color: var(--va-secondary);
+  white-space: nowrap;
+}
 </style>
 ```
 
@@ -1395,6 +1901,7 @@ git commit -m "feat(shows): add GuestList, Hospitality, OpenTasks cards (row 2)"
 ## Task 10: Shows row 3 — Settlement, Attachments, RecentActivity cards
 
 **Files:**
+
 - Create: `src/components/shows/ShowSettlementCard.vue`
 - Create: `src/components/shows/ShowAttachmentsCard.vue`
 - Create: `src/components/shows/ShowRecentActivityCard.vue`
@@ -1408,14 +1915,30 @@ git commit -m "feat(shows): add GuestList, Hospitality, OpenTasks cards (row 2)"
     <div class="show-sett__head">
       <VaIcon name="mso-attach_money" size="18px" color="secondary" />
       <span class="show-sett__title">Settlement Snapshot</span>
-      <span class="show-sett__pill" :class="[statusTokens[data.status === 'Settled' ? 'Confirmed' : data.status === 'Pending' ? 'Pending' : 'Pending'].bg, statusTokens[data.status === 'Settled' ? 'Confirmed' : data.status === 'Pending' ? 'Pending' : 'Pending'].text]">
+      <span
+        class="show-sett__pill"
+        :class="[
+          statusTokens[data.status === 'Settled' ? 'Confirmed' : data.status === 'Pending' ? 'Pending' : 'Pending'].bg,
+          statusTokens[data.status === 'Settled' ? 'Confirmed' : data.status === 'Pending' ? 'Pending' : 'Pending']
+            .text,
+        ]"
+      >
         {{ data.status }}
       </span>
     </div>
     <dl class="show-sett__list">
-      <div class="show-sett__row"><dt>Gross</dt><dd>{{ formatUsd(data.gross) }}</dd></div>
-      <div class="show-sett__row"><dt>Expenses</dt><dd>{{ formatUsd(data.expenses) }}</dd></div>
-      <div class="show-sett__row show-sett__row--net"><dt>Net</dt><dd>{{ formatUsd(data.net) }}</dd></div>
+      <div class="show-sett__row">
+        <dt>Gross</dt>
+        <dd>{{ formatUsd(data.gross) }}</dd>
+      </div>
+      <div class="show-sett__row">
+        <dt>Expenses</dt>
+        <dd>{{ formatUsd(data.expenses) }}</dd>
+      </div>
+      <div class="show-sett__row show-sett__row--net">
+        <dt>Net</dt>
+        <dd>{{ formatUsd(data.net) }}</dd>
+      </div>
     </dl>
   </VaCard>
 </template>
@@ -1429,16 +1952,58 @@ defineProps<{ data: ShowSettlementSnapshot }>()
 </script>
 
 <style scoped lang="scss">
-.show-sett { padding: 1.25rem; }
-.show-sett__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.show-sett__title { font-weight: 600; font-size: 0.95rem; flex: 1; }
-.show-sett__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
-.show-sett__list { margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.show-sett__row { display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; padding: 0.25rem 0; border-bottom: 1px solid var(--va-background-border); }
-.show-sett__row:last-child { border-bottom: none; }
-.show-sett__row dt { font-size: 0.875rem; color: var(--va-secondary); margin: 0; }
-.show-sett__row dd { font-size: 0.875rem; font-weight: 600; margin: 0; }
-.show-sett__row--net dt, .show-sett__row--net dd { font-size: 1rem; font-weight: 700; }
+.show-sett {
+  padding: 1.25rem;
+}
+.show-sett__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.show-sett__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  flex: 1;
+}
+.show-sett__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
+.show-sett__list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.show-sett__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.show-sett__row:last-child {
+  border-bottom: none;
+}
+.show-sett__row dt {
+  font-size: 0.875rem;
+  color: var(--va-secondary);
+  margin: 0;
+}
+.show-sett__row dd {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+}
+.show-sett__row--net dt,
+.show-sett__row--net dd {
+  font-size: 1rem;
+  font-weight: 700;
+}
 </style>
 ```
 
@@ -1472,14 +2037,46 @@ defineProps<{ files: ShowAttachment[] }>()
 </script>
 
 <style scoped lang="scss">
-.show-att { padding: 1.25rem; }
-.show-att__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.show-att__title { font-weight: 600; font-size: 0.95rem; }
-.show-att__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.show-att__row { display: grid; grid-template-columns: 1.25rem 1fr auto; gap: 0.5rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.show-att__row:last-child { border-bottom: none; }
-.show-att__name { font-size: 0.875rem; font-weight: 500; }
-.show-att__sub { font-size: 0.75rem; color: var(--va-secondary); }
+.show-att {
+  padding: 1.25rem;
+}
+.show-att__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.show-att__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.show-att__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.show-att__row {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.show-att__row:last-child {
+  border-bottom: none;
+}
+.show-att__name {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.show-att__sub {
+  font-size: 0.75rem;
+  color: var(--va-secondary);
+}
 </style>
 ```
 
@@ -1511,15 +2108,52 @@ defineProps<{ entries: ShowActivityEntry[] }>()
 </script>
 
 <style scoped lang="scss">
-.show-act { padding: 1.25rem; }
-.show-act__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.show-act__title { font-weight: 600; font-size: 0.95rem; }
-.show-act__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.show-act__row { display: grid; grid-template-columns: 0.5rem 1fr auto; gap: 0.5rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.show-act__row:last-child { border-bottom: none; }
-.show-act__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--va-primary); }
-.show-act__body { font-size: 0.875rem; }
-.show-act__when { font-size: 0.75rem; color: var(--va-secondary); white-space: nowrap; }
+.show-act {
+  padding: 1.25rem;
+}
+.show-act__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.show-act__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.show-act__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.show-act__row {
+  display: grid;
+  grid-template-columns: 0.5rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.show-act__row:last-child {
+  border-bottom: none;
+}
+.show-act__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--va-primary);
+}
+.show-act__body {
+  font-size: 0.875rem;
+}
+.show-act__when {
+  font-size: 0.75rem;
+  color: var(--va-secondary);
+  white-space: nowrap;
+}
 </style>
 ```
 
@@ -1535,6 +2169,7 @@ git commit -m "feat(shows): add Settlement, Attachments, RecentActivity cards (r
 ## Task 11: Shows page composition
 
 **Files:**
+
 - Modify: `src/pages/Shows.vue`
 
 - [ ] **Step 11.1: Overwrite `src/pages/Shows.vue`**
@@ -1596,11 +2231,27 @@ import { showDetail } from '../data/shows'
 </script>
 
 <style scoped lang="scss">
-.page--shows { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-.page--shows__date { font-size: 0.875rem; color: var(--va-secondary); margin-top: 0.25rem; display: inline-block; }
-.page--shows__row { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+.page--shows {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.page--shows__date {
+  font-size: 0.875rem;
+  color: var(--va-secondary);
+  margin-top: 0.25rem;
+  display: inline-block;
+}
+.page--shows__row {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
 @media (min-width: 1024px) {
-  .page--shows__row { grid-template-columns: repeat(3, 1fr); }
+  .page--shows__row {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 </style>
 ```
@@ -1618,6 +2269,7 @@ git commit -m "feat(shows): compose Show Detail page"
 ## Task 12: Travel fixtures
 
 **Files:**
+
 - Create: `src/data/travel.ts`
 
 - [ ] **Step 12.1: Create `src/data/travel.ts`**
@@ -1636,12 +2288,72 @@ export const travelKpis: Kpi[] = [
 export const travelSelectedId = 'sel'
 
 export const travelSegments: TravelSegment[] = [
-  { id: 't1', date: '2026-05-20', tripNumber: 'T-101', origin: 'ATL', destination: 'BNA', mode: 'Flight', hotel: 'Grand Hyatt Nashville', status: 'Confirmed', confirmation: 'DL-7820' },
-  { id: 't2', date: '2026-05-21', tripNumber: 'T-102', origin: 'BNA', destination: 'ATL', mode: 'Flight', hotel: 'Tabernacle Suites', status: 'Confirmed', confirmation: 'DL-7821' },
-  { id: 't3', date: '2026-05-22', tripNumber: 'T-103', origin: 'ATL', destination: 'MSY', mode: 'Flight', hotel: 'NOLA Garden Hotel', status: 'Confirmed', confirmation: 'DL-7842' },
-  { id: 'sel', date: '2026-05-23', tripNumber: 'T-104', origin: 'MSY', destination: 'BHM', mode: 'Drive', hotel: 'Iron City Hotel', status: 'Pending', confirmation: '—', notes: 'Driver to confirm' },
-  { id: 't5', date: '2026-05-24', tripNumber: 'T-105', origin: 'BHM', destination: 'CLT', mode: 'Flight', hotel: 'Charlotte Marriott', status: 'Confirmed', confirmation: 'DL-7861' },
-  { id: 't6', date: '2026-05-25', tripNumber: 'T-106', origin: 'CLT', destination: 'RDU', mode: 'Drive', hotel: 'Raleigh Inn', status: 'Pending' },
+  {
+    id: 't1',
+    date: '2026-05-20',
+    tripNumber: 'T-101',
+    origin: 'ATL',
+    destination: 'BNA',
+    mode: 'Flight',
+    hotel: 'Grand Hyatt Nashville',
+    status: 'Confirmed',
+    confirmation: 'DL-7820',
+  },
+  {
+    id: 't2',
+    date: '2026-05-21',
+    tripNumber: 'T-102',
+    origin: 'BNA',
+    destination: 'ATL',
+    mode: 'Flight',
+    hotel: 'Tabernacle Suites',
+    status: 'Confirmed',
+    confirmation: 'DL-7821',
+  },
+  {
+    id: 't3',
+    date: '2026-05-22',
+    tripNumber: 'T-103',
+    origin: 'ATL',
+    destination: 'MSY',
+    mode: 'Flight',
+    hotel: 'NOLA Garden Hotel',
+    status: 'Confirmed',
+    confirmation: 'DL-7842',
+  },
+  {
+    id: 'sel',
+    date: '2026-05-23',
+    tripNumber: 'T-104',
+    origin: 'MSY',
+    destination: 'BHM',
+    mode: 'Drive',
+    hotel: 'Iron City Hotel',
+    status: 'Pending',
+    confirmation: '—',
+    notes: 'Driver to confirm',
+  },
+  {
+    id: 't5',
+    date: '2026-05-24',
+    tripNumber: 'T-105',
+    origin: 'BHM',
+    destination: 'CLT',
+    mode: 'Flight',
+    hotel: 'Charlotte Marriott',
+    status: 'Confirmed',
+    confirmation: 'DL-7861',
+  },
+  {
+    id: 't6',
+    date: '2026-05-25',
+    tripNumber: 'T-106',
+    origin: 'CLT',
+    destination: 'RDU',
+    mode: 'Drive',
+    hotel: 'Raleigh Inn',
+    status: 'Pending',
+  },
 ]
 
 export const travelSelectedTrip: TravelTrip = {
@@ -1664,10 +2376,38 @@ export const travelSelectedTrip: TravelTrip = {
 }
 
 export const travelCheckIns: TravelCheckIn[] = [
-  { id: 'c1', hotel: 'Grand Hyatt Nashville', city: 'Nashville, TN', arrival: '2026-05-20', departure: '2026-05-21', status: 'Confirmed' },
-  { id: 'c2', hotel: 'Tabernacle Suites', city: 'Atlanta, GA', arrival: '2026-05-21', departure: '2026-05-22', status: 'Confirmed' },
-  { id: 'c3', hotel: 'NOLA Garden Hotel', city: 'New Orleans, LA', arrival: '2026-05-22', departure: '2026-05-23', status: 'Confirmed' },
-  { id: 'c4', hotel: 'Iron City Hotel', city: 'Birmingham, AL', arrival: '2026-05-23', departure: '2026-05-24', status: 'Pending' },
+  {
+    id: 'c1',
+    hotel: 'Grand Hyatt Nashville',
+    city: 'Nashville, TN',
+    arrival: '2026-05-20',
+    departure: '2026-05-21',
+    status: 'Confirmed',
+  },
+  {
+    id: 'c2',
+    hotel: 'Tabernacle Suites',
+    city: 'Atlanta, GA',
+    arrival: '2026-05-21',
+    departure: '2026-05-22',
+    status: 'Confirmed',
+  },
+  {
+    id: 'c3',
+    hotel: 'NOLA Garden Hotel',
+    city: 'New Orleans, LA',
+    arrival: '2026-05-22',
+    departure: '2026-05-23',
+    status: 'Confirmed',
+  },
+  {
+    id: 'c4',
+    hotel: 'Iron City Hotel',
+    city: 'Birmingham, AL',
+    arrival: '2026-05-23',
+    departure: '2026-05-24',
+    status: 'Pending',
+  },
 ]
 
 export const travelIssues: TravelIssue[] = [
@@ -1690,6 +2430,7 @@ git commit -m "feat(data): add Travel fixtures"
 ## Task 13: Travel — `TravelSegmentsTable` + `TravelTripDetailsPanel`
 
 **Files:**
+
 - Create: `src/components/travel/TravelSegmentsTable.vue`
 - Create: `src/components/travel/TravelTripDetailsPanel.vue`
 
@@ -1719,18 +2460,16 @@ git commit -m "feat(data): add Travel fixtures"
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="s in segments"
-          :key="s.id"
-          :class="{ 'tst__row--selected': s.id === selectedId }"
-        >
+        <tr v-for="s in segments" :key="s.id" :class="{ 'tst__row--selected': s.id === selectedId }">
           <td>{{ formatShortDate(s.date) }}</td>
           <td>{{ s.tripNumber }}</td>
           <td>{{ s.origin }} → {{ s.destination }}</td>
           <td>{{ s.mode }}</td>
           <td>{{ s.hotel ?? '—' }}</td>
           <td>
-            <span class="tst__pill" :class="[statusTokens[s.status].bg, statusTokens[s.status].text]">{{ s.status }}</span>
+            <span class="tst__pill" :class="[statusTokens[s.status].bg, statusTokens[s.status].text]">{{
+              s.status
+            }}</span>
           </td>
           <td>{{ s.confirmation ?? '—' }}</td>
         </tr>
@@ -1751,16 +2490,51 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.tst { padding: 1.25rem; }
-.tst__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-.tst__title { font-weight: 600; font-size: 0.95rem; }
-.tst__actions { display: flex; gap: 0.5rem; }
-.tst__table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
-.tst__table th, .tst__table td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--va-background-border); }
-.tst__table th { color: var(--va-secondary); font-weight: 500; font-size: 0.75rem; }
-.tst__table tbody tr:last-child td { border-bottom: none; }
-.tst__row--selected { background: var(--va-background-element); }
-.tst__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
+.tst {
+  padding: 1.25rem;
+}
+.tst__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.tst__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.tst__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.tst__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.tst__table th,
+.tst__table td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.tst__table th {
+  color: var(--va-secondary);
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+.tst__table tbody tr:last-child td {
+  border-bottom: none;
+}
+.tst__row--selected {
+  background: var(--va-background-element);
+}
+.tst__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
 </style>
 ```
 
@@ -1795,7 +2569,8 @@ defineProps<{
         <div class="ttd__label">Confirmations</div>
         <ul class="ttd__list">
           <li v-for="c in trip.confirmations" :key="c.kind">
-            <span>{{ c.kind }}</span><code>{{ c.code }}</code>
+            <span>{{ c.kind }}</span
+            ><code>{{ c.code }}</code>
           </li>
         </ul>
       </div>
@@ -1803,7 +2578,8 @@ defineProps<{
         <div class="ttd__label">Travel Party</div>
         <ul class="ttd__list ttd__party">
           <li v-for="p in trip.party" :key="p.name">
-            <span>{{ p.name }}</span><span class="ttd__sub">{{ p.role }}</span>
+            <span>{{ p.name }}</span
+            ><span class="ttd__sub">{{ p.role }}</span>
           </li>
         </ul>
       </div>
@@ -1818,19 +2594,68 @@ defineProps<{ trip: TravelTrip }>()
 </script>
 
 <style scoped lang="scss">
-.ttd { padding: 1.25rem; }
-.ttd__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.ttd__title { font-weight: 600; font-size: 0.95rem; }
-.ttd__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-@media (min-width: 768px) { .ttd__grid { grid-template-columns: repeat(4, 1fr); } }
-.ttd__col--wide { grid-column: 1 / -1; }
-.ttd__label { font-size: 0.75rem; color: var(--va-secondary); margin-bottom: 0.25rem; }
-.ttd__primary { font-size: 0.875rem; font-weight: 600; }
-.ttd__sub { font-size: 0.8125rem; color: var(--va-secondary); }
-.ttd__list { list-style: none; margin: 0.25rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8125rem; }
-.ttd__list li { display: flex; justify-content: space-between; gap: 0.5rem; }
-.ttd__list code { font-family: ui-monospace, monospace; font-size: 0.75rem; color: var(--va-secondary); }
-.ttd__party li { justify-content: flex-start; gap: 0.5rem; }
+.ttd {
+  padding: 1.25rem;
+}
+.ttd__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.ttd__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.ttd__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .ttd__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.ttd__col--wide {
+  grid-column: 1 / -1;
+}
+.ttd__label {
+  font-size: 0.75rem;
+  color: var(--va-secondary);
+  margin-bottom: 0.25rem;
+}
+.ttd__primary {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.ttd__sub {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.ttd__list {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+}
+.ttd__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.ttd__list code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--va-secondary);
+}
+.ttd__party li {
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
 </style>
 ```
 
@@ -1846,6 +2671,7 @@ git commit -m "feat(travel): add TravelSegmentsTable + TravelTripDetailsPanel"
 ## Task 14: Travel — `TravelCheckInsCard` + `TravelIssuesCard`
 
 **Files:**
+
 - Create: `src/components/travel/TravelCheckInsCard.vue`
 - Create: `src/components/travel/TravelIssuesCard.vue`
 
@@ -1863,7 +2689,9 @@ git commit -m "feat(travel): add TravelSegmentsTable + TravelTripDetailsPanel"
       <li v-for="c in checkins" :key="c.id" class="tci__row">
         <div class="tci__body">
           <div class="tci__name">{{ c.hotel }}</div>
-          <div class="tci__sub">{{ c.city }} · {{ formatShortDate(c.arrival) }} – {{ formatShortDate(c.departure) }}</div>
+          <div class="tci__sub">
+            {{ c.city }} · {{ formatShortDate(c.arrival) }} – {{ formatShortDate(c.departure) }}
+          </div>
         </div>
         <span class="tci__pill" :class="[statusTokens[c.status].bg, statusTokens[c.status].text]">{{ c.status }}</span>
       </li>
@@ -1880,15 +2708,52 @@ defineProps<{ checkins: TravelCheckIn[] }>()
 </script>
 
 <style scoped lang="scss">
-.tci { padding: 1.25rem; }
-.tci__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.tci__title { font-weight: 600; font-size: 0.95rem; }
-.tci__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.tci__row { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.tci__row:last-child { border-bottom: none; }
-.tci__name { font-size: 0.875rem; font-weight: 600; }
-.tci__sub { font-size: 0.8125rem; color: var(--va-secondary); }
-.tci__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
+.tci {
+  padding: 1.25rem;
+}
+.tci__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.tci__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.tci__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tci__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.tci__row:last-child {
+  border-bottom: none;
+}
+.tci__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.tci__sub {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.tci__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
 </style>
 ```
 
@@ -1909,7 +2774,9 @@ defineProps<{ checkins: TravelCheckIn[] }>()
           <div class="tic__name">{{ i.title }}</div>
           <div class="tic__sub">{{ i.sub }}</div>
         </div>
-        <span class="tic__pill" :class="[severityTokens[i.severity].bg, severityTokens[i.severity].text]">{{ i.severity }}</span>
+        <span class="tic__pill" :class="[severityTokens[i.severity].bg, severityTokens[i.severity].text]">{{
+          i.severity
+        }}</span>
       </li>
     </ul>
   </VaCard>
@@ -1923,16 +2790,57 @@ defineProps<{ issues: TravelIssue[] }>()
 </script>
 
 <style scoped lang="scss">
-.tic { padding: 1.25rem; }
-.tic__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.tic__title { font-weight: 600; font-size: 0.95rem; }
-.tic__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.tic__row { display: grid; grid-template-columns: 0.625rem 1fr auto; gap: 0.75rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.tic__row:last-child { border-bottom: none; }
-.tic__dot { width: 0.625rem; height: 0.625rem; border-radius: 50%; }
-.tic__name { font-size: 0.875rem; font-weight: 600; }
-.tic__sub { font-size: 0.8125rem; color: var(--va-secondary); }
-.tic__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
+.tic {
+  padding: 1.25rem;
+}
+.tic__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.tic__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.tic__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tic__row {
+  display: grid;
+  grid-template-columns: 0.625rem 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.tic__row:last-child {
+  border-bottom: none;
+}
+.tic__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+}
+.tic__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.tic__sub {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.tic__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
 </style>
 ```
 
@@ -1948,6 +2856,7 @@ git commit -m "feat(travel): add TravelCheckInsCard + TravelIssuesCard"
 ## Task 15: Travel page composition
 
 **Files:**
+
 - Modify: `src/pages/Travel.vue`
 
 - [ ] **Step 15.1: Overwrite `src/pages/Travel.vue`**
@@ -1997,11 +2906,32 @@ import {
 </script>
 
 <style scoped lang="scss">
-.page--travel { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-.page--travel__body { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-@media (min-width: 1024px) { .page--travel__body { grid-template-columns: 2fr 1fr; } }
-.page--travel__main { display: flex; flex-direction: column; gap: 1rem; }
-.page--travel__rail { display: flex; flex-direction: column; gap: 1rem; }
+.page--travel {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.page--travel__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 1024px) {
+  .page--travel__body {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+.page--travel__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.page--travel__rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 </style>
 ```
 
@@ -2018,6 +2948,7 @@ git commit -m "feat(travel): compose Travel & Hotels page"
 ## Task 16: Contacts fixtures
 
 **Files:**
+
 - Create: `src/data/contacts.ts`
 
 - [ ] **Step 16.1: Create `src/data/contacts.ts`**
@@ -2036,21 +2967,153 @@ export const contactsKpis: Kpi[] = [
 export const contactsSelectedId = 'sel'
 
 export const contactsDirectory: Contact[] = [
-  { id: 'sel', role: 'Venue Manager', name: 'Sarah Williams', company: 'The Ryman', city: 'Nashville, TN', phones: ['(615) 889-3060'], email: 'sarah@ryman.com', lastShowDate: '2026-05-20' },
-  { id: 'c2', role: 'Promoter', name: 'Mike Reynolds', company: 'AC Entertainment', city: 'Nashville, TN', phones: ['(615) 555-2194'], email: 'mike@acentertainment.com', lastShowDate: '2026-05-20' },
-  { id: 'c3', role: 'Driver', name: 'Derrick Johnson', company: 'JD Tour Logistics', city: 'Nashville, TN', phones: ['(615) 555-7788'], email: 'derrick@jdtour.com', lastShowDate: '2026-05-20' },
-  { id: 'c4', role: 'Hotel', name: 'Grand Hyatt Nashville', company: 'Hyatt', city: 'Nashville, TN', phones: ['(615) 724-1234'], email: 'concierge@hyattnashville.com', lastShowDate: '2026-05-20' },
-  { id: 'c5', role: 'Venue Manager', name: 'Trent Davis', company: 'Tabernacle', city: 'Atlanta, GA', phones: ['(404) 659-9022'], email: 'trent@tabernacleatl.com', lastShowDate: '2026-05-21' },
-  { id: 'c6', role: 'Promoter', name: 'Carla Reed', company: 'Live Nation Atlanta', city: 'Atlanta, GA', phones: ['(404) 555-1182'], email: 'carla@livenation.com', lastShowDate: '2026-05-21' },
-  { id: 'c7', role: 'Production', name: 'Lou Carter', company: 'Carter Production', city: 'Atlanta, GA', phones: ['(404) 555-7710'], email: 'lou@carterprod.com', lastShowDate: '2026-05-21' },
-  { id: 'c8', role: 'Venue Manager', name: 'Maya Pierre', company: 'The Fillmore NOLA', city: 'New Orleans, LA', phones: ['(504) 555-8810'], email: 'maya@fillmorenola.com', lastShowDate: '2026-05-22' },
-  { id: 'c9', role: 'Hotel', name: 'NOLA Garden Hotel', company: 'Marriott', city: 'New Orleans, LA', phones: ['(504) 555-3120'], email: 'rooms@nolagardenhotel.com', lastShowDate: '2026-05-22' },
-  { id: 'c10', role: 'Catering', name: 'Big Easy Catering', company: 'Independent', city: 'New Orleans, LA', phones: ['(504) 555-7012'], email: 'orders@bigeasycatering.com' },
-  { id: 'c11', role: 'Venue Manager', name: 'Owen Park', company: 'Iron City', city: 'Birmingham, AL', phones: ['(205) 555-2024'], email: 'owen@ironcityalabama.com', lastShowDate: '2026-05-23' },
-  { id: 'c12', role: 'Promoter', name: 'Jenna Hayes', company: 'Magic City Live', city: 'Birmingham, AL', phones: ['(205) 555-9988'], email: 'jenna@magiccitylive.com', lastShowDate: '2026-05-23' },
-  { id: 'c13', role: 'Venue Manager', name: 'Dean Foster', company: 'The Fillmore Charlotte', city: 'Charlotte, NC', phones: ['(704) 555-4400'], email: 'dean@fillmorecharlotte.com', lastShowDate: '2026-05-24' },
-  { id: 'c14', role: 'Sound', name: 'Ravi Patel', company: 'PA Pros', city: 'Charlotte, NC', phones: ['(704) 555-6612'], email: 'ravi@papros.com' },
-  { id: 'c15', role: 'Lighting', name: 'Kim Tran', company: 'LightWorks', city: 'Charlotte, NC', phones: ['(704) 555-2255'], email: 'kim@lightworks.com' },
+  {
+    id: 'sel',
+    role: 'Venue Manager',
+    name: 'Sarah Williams',
+    company: 'The Ryman',
+    city: 'Nashville, TN',
+    phones: ['(615) 889-3060'],
+    email: 'sarah@ryman.com',
+    lastShowDate: '2026-05-20',
+  },
+  {
+    id: 'c2',
+    role: 'Promoter',
+    name: 'Mike Reynolds',
+    company: 'AC Entertainment',
+    city: 'Nashville, TN',
+    phones: ['(615) 555-2194'],
+    email: 'mike@acentertainment.com',
+    lastShowDate: '2026-05-20',
+  },
+  {
+    id: 'c3',
+    role: 'Driver',
+    name: 'Derrick Johnson',
+    company: 'JD Tour Logistics',
+    city: 'Nashville, TN',
+    phones: ['(615) 555-7788'],
+    email: 'derrick@jdtour.com',
+    lastShowDate: '2026-05-20',
+  },
+  {
+    id: 'c4',
+    role: 'Hotel',
+    name: 'Grand Hyatt Nashville',
+    company: 'Hyatt',
+    city: 'Nashville, TN',
+    phones: ['(615) 724-1234'],
+    email: 'concierge@hyattnashville.com',
+    lastShowDate: '2026-05-20',
+  },
+  {
+    id: 'c5',
+    role: 'Venue Manager',
+    name: 'Trent Davis',
+    company: 'Tabernacle',
+    city: 'Atlanta, GA',
+    phones: ['(404) 659-9022'],
+    email: 'trent@tabernacleatl.com',
+    lastShowDate: '2026-05-21',
+  },
+  {
+    id: 'c6',
+    role: 'Promoter',
+    name: 'Carla Reed',
+    company: 'Live Nation Atlanta',
+    city: 'Atlanta, GA',
+    phones: ['(404) 555-1182'],
+    email: 'carla@livenation.com',
+    lastShowDate: '2026-05-21',
+  },
+  {
+    id: 'c7',
+    role: 'Production',
+    name: 'Lou Carter',
+    company: 'Carter Production',
+    city: 'Atlanta, GA',
+    phones: ['(404) 555-7710'],
+    email: 'lou@carterprod.com',
+    lastShowDate: '2026-05-21',
+  },
+  {
+    id: 'c8',
+    role: 'Venue Manager',
+    name: 'Maya Pierre',
+    company: 'The Fillmore NOLA',
+    city: 'New Orleans, LA',
+    phones: ['(504) 555-8810'],
+    email: 'maya@fillmorenola.com',
+    lastShowDate: '2026-05-22',
+  },
+  {
+    id: 'c9',
+    role: 'Hotel',
+    name: 'NOLA Garden Hotel',
+    company: 'Marriott',
+    city: 'New Orleans, LA',
+    phones: ['(504) 555-3120'],
+    email: 'rooms@nolagardenhotel.com',
+    lastShowDate: '2026-05-22',
+  },
+  {
+    id: 'c10',
+    role: 'Catering',
+    name: 'Big Easy Catering',
+    company: 'Independent',
+    city: 'New Orleans, LA',
+    phones: ['(504) 555-7012'],
+    email: 'orders@bigeasycatering.com',
+  },
+  {
+    id: 'c11',
+    role: 'Venue Manager',
+    name: 'Owen Park',
+    company: 'Iron City',
+    city: 'Birmingham, AL',
+    phones: ['(205) 555-2024'],
+    email: 'owen@ironcityalabama.com',
+    lastShowDate: '2026-05-23',
+  },
+  {
+    id: 'c12',
+    role: 'Promoter',
+    name: 'Jenna Hayes',
+    company: 'Magic City Live',
+    city: 'Birmingham, AL',
+    phones: ['(205) 555-9988'],
+    email: 'jenna@magiccitylive.com',
+    lastShowDate: '2026-05-23',
+  },
+  {
+    id: 'c13',
+    role: 'Venue Manager',
+    name: 'Dean Foster',
+    company: 'The Fillmore Charlotte',
+    city: 'Charlotte, NC',
+    phones: ['(704) 555-4400'],
+    email: 'dean@fillmorecharlotte.com',
+    lastShowDate: '2026-05-24',
+  },
+  {
+    id: 'c14',
+    role: 'Sound',
+    name: 'Ravi Patel',
+    company: 'PA Pros',
+    city: 'Charlotte, NC',
+    phones: ['(704) 555-6612'],
+    email: 'ravi@papros.com',
+  },
+  {
+    id: 'c15',
+    role: 'Lighting',
+    name: 'Kim Tran',
+    company: 'LightWorks',
+    city: 'Charlotte, NC',
+    phones: ['(704) 555-2255'],
+    email: 'kim@lightworks.com',
+  },
 ]
 
 export const contactsSelectedContact: ContactDetail = {
@@ -2093,6 +3156,7 @@ git commit -m "feat(data): add Contacts fixtures (directory + selected contact)"
 ## Task 17: Contacts — `ContactsTable`
 
 **Files:**
+
 - Create: `src/components/contacts/ContactsTable.vue`
 
 - [ ] **Step 17.1: Create `src/components/contacts/ContactsTable.vue`**
@@ -2129,7 +3193,9 @@ git commit -m "feat(data): add Contacts fixtures (directory + selected contact)"
       <tbody>
         <tr v-for="c in contacts" :key="c.id" :class="{ 'ct__row--selected': c.id === selectedId }">
           <td><input type="checkbox" :aria-label="`Select ${c.name}`" /></td>
-          <td><span class="ct__role">{{ c.role }}</span></td>
+          <td>
+            <span class="ct__role">{{ c.role }}</span>
+          </td>
           <td>{{ c.name }}</td>
           <td>{{ c.company }}</td>
           <td>{{ c.city }}</td>
@@ -2167,19 +3233,69 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.ct { padding: 1.25rem; }
-.ct__filters { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
-.ct__search { flex: 1 1 16rem; min-width: 12rem; }
-.ct__select { width: 9rem; }
-.ct__table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
-.ct__table th, .ct__table td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--va-background-border); }
-.ct__table th { color: var(--va-secondary); font-weight: 500; font-size: 0.75rem; }
-.ct__th-check { width: 2rem; }
-.ct__email { color: var(--va-secondary); }
-.ct__role { font-size: 0.75rem; padding: 0.125rem 0.5rem; border-radius: 9999px; background: var(--va-background-element); color: var(--va-secondary); white-space: nowrap; }
-.ct__row--selected { background: var(--va-background-element); }
-.ct__footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; font-size: 0.8125rem; color: var(--va-secondary); }
-.ct__pages { display: flex; gap: 0.25rem; align-items: center; }
+.ct {
+  padding: 1.25rem;
+}
+.ct__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.ct__search {
+  flex: 1 1 16rem;
+  min-width: 12rem;
+}
+.ct__select {
+  width: 9rem;
+}
+.ct__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.ct__table th,
+.ct__table td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.ct__table th {
+  color: var(--va-secondary);
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+.ct__th-check {
+  width: 2rem;
+}
+.ct__email {
+  color: var(--va-secondary);
+}
+.ct__role {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--va-background-element);
+  color: var(--va-secondary);
+  white-space: nowrap;
+}
+.ct__row--selected {
+  background: var(--va-background-element);
+}
+.ct__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.ct__pages {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
 </style>
 ```
 
@@ -2195,6 +3311,7 @@ git commit -m "feat(contacts): add ContactsTable"
 ## Task 18: Contacts — three detail-rail sub-cards
 
 **Files:**
+
 - Create: `src/components/contacts/ContactInfoCard.vue`
 - Create: `src/components/contacts/ContactShowHistoryCard.vue`
 - Create: `src/components/contacts/ContactRecentActivityCard.vue`
@@ -2213,12 +3330,22 @@ git commit -m "feat(contacts): add ContactsTable"
         <dt>Phone {{ i === 0 ? '(primary)' : '' }}</dt>
         <dd>{{ p }}</dd>
       </div>
-      <div class="ci__row"><dt>Email</dt><dd>{{ contact.email }}</dd></div>
-      <div class="ci__row" v-for="(e, i) in contact.altEmails" :key="`e-${i}`">
-        <dt>Alt Email</dt><dd>{{ e }}</dd>
+      <div class="ci__row">
+        <dt>Email</dt>
+        <dd>{{ contact.email }}</dd>
       </div>
-      <div class="ci__row"><dt>Address</dt><dd>{{ contact.address }}</dd></div>
-      <div v-if="contact.notes" class="ci__row"><dt>Notes</dt><dd>{{ contact.notes }}</dd></div>
+      <div class="ci__row" v-for="(e, i) in contact.altEmails" :key="`e-${i}`">
+        <dt>Alt Email</dt>
+        <dd>{{ e }}</dd>
+      </div>
+      <div class="ci__row">
+        <dt>Address</dt>
+        <dd>{{ contact.address }}</dd>
+      </div>
+      <div v-if="contact.notes" class="ci__row">
+        <dt>Notes</dt>
+        <dd>{{ contact.notes }}</dd>
+      </div>
     </dl>
   </VaCard>
 </template>
@@ -2230,14 +3357,42 @@ defineProps<{ contact: ContactDetail }>()
 </script>
 
 <style scoped lang="scss">
-.ci { padding: 1.25rem; }
-.ci__head { margin-bottom: 0.75rem; }
-.ci__title { font-weight: 600; font-size: 0.95rem; }
-.ci__list { margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.ci__row { display: grid; grid-template-columns: 8rem 1fr; gap: 0.5rem; padding: 0.25rem 0; border-bottom: 1px solid var(--va-background-border); }
-.ci__row:last-child { border-bottom: none; }
-.ci__row dt { font-size: 0.8125rem; color: var(--va-secondary); margin: 0; }
-.ci__row dd { font-size: 0.875rem; margin: 0; }
+.ci {
+  padding: 1.25rem;
+}
+.ci__head {
+  margin-bottom: 0.75rem;
+}
+.ci__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.ci__list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.ci__row {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.ci__row:last-child {
+  border-bottom: none;
+}
+.ci__row dt {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+  margin: 0;
+}
+.ci__row dd {
+  font-size: 0.875rem;
+  margin: 0;
+}
 </style>
 ```
 
@@ -2272,15 +3427,50 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.csh { padding: 1.25rem; }
-.csh__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.csh__title { font-weight: 600; font-size: 0.95rem; }
-.csh__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.csh__row { display: grid; grid-template-columns: 7rem 1fr; gap: 0.5rem; align-items: start; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.csh__row:last-child { border-bottom: none; }
-.csh__date { font-size: 0.8125rem; color: var(--va-secondary); }
-.csh__venue { font-size: 0.875rem; font-weight: 600; }
-.csh__city { font-size: 0.8125rem; color: var(--va-secondary); }
+.csh {
+  padding: 1.25rem;
+}
+.csh__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.csh__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.csh__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.csh__row {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.5rem;
+  align-items: start;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.csh__row:last-child {
+  border-bottom: none;
+}
+.csh__date {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.csh__venue {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.csh__city {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
 </style>
 ```
 
@@ -2313,15 +3503,52 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.cra { padding: 1.25rem; }
-.cra__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.cra__title { font-weight: 600; font-size: 0.95rem; }
-.cra__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.cra__row { display: grid; grid-template-columns: 0.5rem 1fr auto; gap: 0.5rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.cra__row:last-child { border-bottom: none; }
-.cra__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--va-primary); }
-.cra__body { font-size: 0.875rem; }
-.cra__when { font-size: 0.75rem; color: var(--va-secondary); white-space: nowrap; }
+.cra {
+  padding: 1.25rem;
+}
+.cra__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.cra__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.cra__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.cra__row {
+  display: grid;
+  grid-template-columns: 0.5rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.cra__row:last-child {
+  border-bottom: none;
+}
+.cra__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--va-primary);
+}
+.cra__body {
+  font-size: 0.875rem;
+}
+.cra__when {
+  font-size: 0.75rem;
+  color: var(--va-secondary);
+  white-space: nowrap;
+}
 </style>
 ```
 
@@ -2337,6 +3564,7 @@ git commit -m "feat(contacts): add ContactInfo, ShowHistory, RecentActivity sub-
 ## Task 19: Contacts — `ContactDetailRail`
 
 **Files:**
+
 - Create: `src/components/contacts/ContactDetailRail.vue`
 
 - [ ] **Step 19.1: Create `src/components/contacts/ContactDetailRail.vue`**
@@ -2349,7 +3577,9 @@ git commit -m "feat(contacts): add ContactInfo, ShowHistory, RecentActivity sub-
       <VaAvatar size="large" color="secondary">{{ initials }}</VaAvatar>
       <div class="cdr__heading">
         <div class="cdr__name">{{ contact.name }}</div>
-        <div class="cdr__role"><span class="cdr__role-pill">{{ contact.role }}</span></div>
+        <div class="cdr__role">
+          <span class="cdr__role-pill">{{ contact.role }}</span>
+        </div>
         <div class="cdr__sub">{{ contact.company }} · {{ contact.city }}</div>
       </div>
       <div class="cdr__actions">
@@ -2385,12 +3615,44 @@ const initials = computed(() =>
 </script>
 
 <style scoped lang="scss">
-.cdr { display: flex; flex-direction: column; gap: 1rem; }
-.cdr__header { display: grid; grid-template-columns: auto 1fr auto; gap: 0.75rem; align-items: start; padding: 1rem 1.25rem; background: var(--va-background-element); border-radius: 0.5rem; }
-.cdr__name { font-size: 1.125rem; font-weight: 700; }
-.cdr__role-pill { display: inline-block; font-size: 0.75rem; padding: 0.125rem 0.5rem; border-radius: 9999px; background: var(--va-background-primary); color: var(--va-secondary); margin-top: 0.25rem; }
-.cdr__sub { font-size: 0.8125rem; color: var(--va-secondary); margin-top: 0.25rem; }
-.cdr__actions { display: flex; gap: 0.25rem; flex-wrap: wrap; justify-content: flex-end; }
+.cdr {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.cdr__header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 1rem 1.25rem;
+  background: var(--va-background-element);
+  border-radius: 0.5rem;
+}
+.cdr__name {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.cdr__role-pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--va-background-primary);
+  color: var(--va-secondary);
+  margin-top: 0.25rem;
+}
+.cdr__sub {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+  margin-top: 0.25rem;
+}
+.cdr__actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
 </style>
 ```
 
@@ -2406,6 +3668,7 @@ git commit -m "feat(contacts): add ContactDetailRail (composes 3 sub-cards)"
 ## Task 20: Contacts page composition
 
 **Files:**
+
 - Modify: `src/pages/Contacts.vue`
 
 - [ ] **Step 20.1: Overwrite `src/pages/Contacts.vue`**
@@ -2434,9 +3697,22 @@ import { contactsKpis, contactsDirectory, contactsSelectedId, contactsSelectedCo
 </script>
 
 <style scoped lang="scss">
-.page--contacts { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-.page--contacts__body { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-@media (min-width: 1024px) { .page--contacts__body { grid-template-columns: 2fr 1fr; } }
+.page--contacts {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.page--contacts__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 1024px) {
+  .page--contacts__body {
+    grid-template-columns: 2fr 1fr;
+  }
+}
 </style>
 ```
 
@@ -2453,6 +3729,7 @@ git commit -m "feat(contacts): compose Contacts page"
 ## Task 21: Tasks fixtures
 
 **Files:**
+
 - Create: `src/data/tasks.ts`
 
 - [ ] **Step 21.1: Create `src/data/tasks.ts`**
@@ -2469,28 +3746,119 @@ export const tasksKpis: Kpi[] = [
 ]
 
 export const tasksTodo: TaskItem[] = [
-  { id: 'td1', title: 'Send guest list update to box office', due: 'Today', tags: ['Box Office', 'Nashville'], assigneeInitials: 'JM', column: 'todo' },
-  { id: 'td2', title: 'Confirm runner pickup time', due: 'Today', tags: ['Logistics'], assigneeInitials: 'JM', column: 'todo' },
-  { id: 'td3', title: 'Finalize merch quantities for Atlanta', due: 'May 21', tags: ['Merch'], assigneeInitials: 'TS', column: 'todo' },
-  { id: 'td4', title: 'Update advance for Charlotte', due: 'May 22', tags: ['Advance'], assigneeInitials: 'JM', column: 'todo' },
+  {
+    id: 'td1',
+    title: 'Send guest list update to box office',
+    due: 'Today',
+    tags: ['Box Office', 'Nashville'],
+    assigneeInitials: 'JM',
+    column: 'todo',
+  },
+  {
+    id: 'td2',
+    title: 'Confirm runner pickup time',
+    due: 'Today',
+    tags: ['Logistics'],
+    assigneeInitials: 'JM',
+    column: 'todo',
+  },
+  {
+    id: 'td3',
+    title: 'Finalize merch quantities for Atlanta',
+    due: 'May 21',
+    tags: ['Merch'],
+    assigneeInitials: 'TS',
+    column: 'todo',
+  },
+  {
+    id: 'td4',
+    title: 'Update advance for Charlotte',
+    due: 'May 22',
+    tags: ['Advance'],
+    assigneeInitials: 'JM',
+    column: 'todo',
+  },
 ]
 
 export const tasksWaiting: TaskItem[] = [
-  { id: 'w1', title: 'Hospitality rider sign-off — promoter', due: 'May 21', tags: ['Hospitality', 'Atlanta'], assigneeInitials: 'JM', column: 'waiting' },
-  { id: 'w2', title: 'Hotel block contract — NOLA', due: 'May 22', tags: ['Hotel'], assigneeInitials: 'JM', column: 'waiting' },
-  { id: 'w3', title: 'Press release approval — label', due: 'May 23', tags: ['Promo'], assigneeInitials: 'AC', column: 'waiting' },
+  {
+    id: 'w1',
+    title: 'Hospitality rider sign-off — promoter',
+    due: 'May 21',
+    tags: ['Hospitality', 'Atlanta'],
+    assigneeInitials: 'JM',
+    column: 'waiting',
+  },
+  {
+    id: 'w2',
+    title: 'Hotel block contract — NOLA',
+    due: 'May 22',
+    tags: ['Hotel'],
+    assigneeInitials: 'JM',
+    column: 'waiting',
+  },
+  {
+    id: 'w3',
+    title: 'Press release approval — label',
+    due: 'May 23',
+    tags: ['Promo'],
+    assigneeInitials: 'AC',
+    column: 'waiting',
+  },
 ]
 
 export const tasksDueSoon: TaskItem[] = [
-  { id: 'ds1', title: 'Submit settlement for The Ryman', due: 'May 22', tags: ['Settlement'], assigneeInitials: 'JM', column: 'duesoon' },
-  { id: 'ds2', title: 'Confirm soundcheck for Iron City', due: 'May 23', tags: ['Production', 'Birmingham'], assigneeInitials: 'LC', column: 'duesoon' },
-  { id: 'ds3', title: 'Send tech rider to Charlotte', due: 'May 24', tags: ['Production'], assigneeInitials: 'LC', column: 'duesoon' },
+  {
+    id: 'ds1',
+    title: 'Submit settlement for The Ryman',
+    due: 'May 22',
+    tags: ['Settlement'],
+    assigneeInitials: 'JM',
+    column: 'duesoon',
+  },
+  {
+    id: 'ds2',
+    title: 'Confirm soundcheck for Iron City',
+    due: 'May 23',
+    tags: ['Production', 'Birmingham'],
+    assigneeInitials: 'LC',
+    column: 'duesoon',
+  },
+  {
+    id: 'ds3',
+    title: 'Send tech rider to Charlotte',
+    due: 'May 24',
+    tags: ['Production'],
+    assigneeInitials: 'LC',
+    column: 'duesoon',
+  },
 ]
 
 export const tasksDone: TaskItem[] = [
-  { id: 'd1', title: 'Confirm Nashville hotel block', due: 'May 19', tags: ['Hotel'], assigneeInitials: 'JM', column: 'done' },
-  { id: 'd2', title: 'Approve Tabernacle stage plot', due: 'May 18', tags: ['Production'], assigneeInitials: 'LC', column: 'done' },
-  { id: 'd3', title: 'Send guest list invites — Nashville', due: 'May 17', tags: ['Box Office'], assigneeInitials: 'JM', column: 'done' },
+  {
+    id: 'd1',
+    title: 'Confirm Nashville hotel block',
+    due: 'May 19',
+    tags: ['Hotel'],
+    assigneeInitials: 'JM',
+    column: 'done',
+  },
+  {
+    id: 'd2',
+    title: 'Approve Tabernacle stage plot',
+    due: 'May 18',
+    tags: ['Production'],
+    assigneeInitials: 'LC',
+    column: 'done',
+  },
+  {
+    id: 'd3',
+    title: 'Send guest list invites — Nashville',
+    due: 'May 17',
+    tags: ['Box Office'],
+    assigneeInitials: 'JM',
+    column: 'done',
+  },
 ]
 
 export const tasksDeadlines: TaskDeadline[] = [
@@ -2524,6 +3892,7 @@ git commit -m "feat(data): add Tasks fixtures"
 ## Task 22: Tasks — `TaskCard` + `TaskKanbanColumn`
 
 **Files:**
+
 - Create: `src/components/tasks/TaskCard.vue`
 - Create: `src/components/tasks/TaskKanbanColumn.vue`
 
@@ -2549,11 +3918,40 @@ defineProps<{ task: TaskItem }>()
 </script>
 
 <style scoped lang="scss">
-.tcard { padding: 0.75rem; border: 1px solid var(--va-background-border); border-radius: 0.5rem; background: var(--va-background-primary); display: flex; flex-direction: column; gap: 0.5rem; }
-.tcard__title { font-size: 0.875rem; font-weight: 600; line-height: 1.3; }
-.tcard__meta { display: flex; flex-wrap: wrap; gap: 0.25rem; align-items: center; }
-.tcard__due { font-size: 0.75rem; padding: 0.125rem 0.5rem; border-radius: 9999px; background: var(--va-background-element); color: var(--va-secondary); }
-.tcard__tag { font-size: 0.7rem; padding: 0.125rem 0.5rem; border-radius: 9999px; background: var(--va-background-element); color: var(--va-secondary); }
+.tcard {
+  padding: 0.75rem;
+  border: 1px solid var(--va-background-border);
+  border-radius: 0.5rem;
+  background: var(--va-background-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tcard__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.tcard__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+.tcard__due {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--va-background-element);
+  color: var(--va-secondary);
+}
+.tcard__tag {
+  font-size: 0.7rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--va-background-element);
+  color: var(--va-secondary);
+}
 </style>
 ```
 
@@ -2588,13 +3986,47 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.tkc { padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
-.tkc__head { display: flex; align-items: center; justify-content: space-between; }
-.tkc__title { font-size: 0.875rem; font-weight: 600; }
-.tkc__count { font-size: 0.75rem; padding: 0.125rem 0.5rem; border-radius: 9999px; background: var(--va-background-element); color: var(--va-secondary); }
-.tkc__body { display: flex; flex-direction: column; gap: 0.5rem; min-height: 4rem; }
-.tkc__footer { padding-top: 0.5rem; border-top: 1px dashed var(--va-background-border); }
-.tkc__add { background: transparent; border: 0; color: var(--va-secondary); font: inherit; font-size: 0.8125rem; cursor: pointer; padding: 0; }
+.tkc {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.tkc__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tkc__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.tkc__count {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--va-background-element);
+  color: var(--va-secondary);
+}
+.tkc__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 4rem;
+}
+.tkc__footer {
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--va-background-border);
+}
+.tkc__add {
+  background: transparent;
+  border: 0;
+  color: var(--va-secondary);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  padding: 0;
+}
 </style>
 ```
 
@@ -2610,6 +4042,7 @@ git commit -m "feat(tasks): add TaskCard + TaskKanbanColumn"
 ## Task 23: Tasks — `TaskUpcomingDeadlinesCard` + `TaskCategoriesCard`
 
 **Files:**
+
 - Create: `src/components/tasks/TaskUpcomingDeadlinesCard.vue`
 - Create: `src/components/tasks/TaskCategoriesCard.vue`
 
@@ -2640,14 +4073,45 @@ defineProps<{ deadlines: TaskDeadline[] }>()
 </script>
 
 <style scoped lang="scss">
-.tud { padding: 1.25rem; }
-.tud__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.tud__title { font-weight: 600; font-size: 0.95rem; }
-.tud__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.tud__row { display: grid; grid-template-columns: 6rem 1fr; gap: 0.5rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.tud__row:last-child { border-bottom: none; }
-.tud__date { font-size: 0.8125rem; color: var(--va-secondary); }
-.tud__body { font-size: 0.875rem; }
+.tud {
+  padding: 1.25rem;
+}
+.tud__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.tud__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.tud__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.tud__row {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.tud__row:last-child {
+  border-bottom: none;
+}
+.tud__date {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.tud__body {
+  font-size: 0.875rem;
+}
 </style>
 ```
 
@@ -2677,14 +4141,47 @@ defineProps<{ categories: TaskCategory[] }>()
 </script>
 
 <style scoped lang="scss">
-.tcc { padding: 1.25rem; }
-.tcc__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.tcc__title { font-weight: 600; font-size: 0.95rem; }
-.tcc__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.tcc__row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.tcc__row:last-child { border-bottom: none; }
-.tcc__name { font-size: 0.875rem; }
-.tcc__count { font-size: 0.75rem; padding: 0.125rem 0.5rem; border-radius: 9999px; background: var(--va-background-element); color: var(--va-secondary); }
+.tcc {
+  padding: 1.25rem;
+}
+.tcc__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.tcc__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.tcc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.tcc__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.tcc__row:last-child {
+  border-bottom: none;
+}
+.tcc__name {
+  font-size: 0.875rem;
+}
+.tcc__count {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--va-background-element);
+  color: var(--va-secondary);
+}
 </style>
 ```
 
@@ -2700,6 +4197,7 @@ git commit -m "feat(tasks): add UpcomingDeadlines + Categories cards"
 ## Task 24: Tasks page composition
 
 **Files:**
+
 - Modify: `src/pages/Tasks.vue`
 
 - [ ] **Step 24.1: Overwrite `src/pages/Tasks.vue`**
@@ -2746,13 +4244,42 @@ import {
 </script>
 
 <style scoped lang="scss">
-.page--tasks { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-.page--tasks__body { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-@media (min-width: 1024px) { .page--tasks__body { grid-template-columns: 3fr 1fr; } }
-.page--tasks__columns { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-@media (min-width: 768px) { .page--tasks__columns { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1280px) { .page--tasks__columns { grid-template-columns: repeat(4, 1fr); } }
-.page--tasks__rail { display: flex; flex-direction: column; gap: 1rem; }
+.page--tasks {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.page--tasks__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 1024px) {
+  .page--tasks__body {
+    grid-template-columns: 3fr 1fr;
+  }
+}
+.page--tasks__columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .page--tasks__columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1280px) {
+  .page--tasks__columns {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.page--tasks__rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 </style>
 ```
 
@@ -2769,6 +4296,7 @@ git commit -m "feat(tasks): compose Tasks & Follow-Ups page"
 ## Task 25: Documents fixtures
 
 **Files:**
+
 - Create: `src/data/documents.ts`
 
 - [ ] **Step 25.1: Create `src/data/documents.ts`**
@@ -2787,14 +4315,86 @@ export const docsKpis: Kpi[] = [
 export const docsSelectedId = 'sel'
 
 export const docsFiles: FileEntry[] = [
-  { id: 'sel', type: 'PDF', name: 'The Ryman.pdf', category: 'Venue Contract', show: 'The Ryman — Nashville', uploadedBy: 'JM', uploadedDate: '2026-05-15', status: 'Approved' },
-  { id: 'f2', type: 'PDF', name: 'Tabernacle_Contract.pdf', category: 'Venue Contract', show: 'Tabernacle — Atlanta', uploadedBy: 'JM', uploadedDate: '2026-05-12', status: 'Pending' },
-  { id: 'f3', type: 'PDF', name: 'Fillmore_NOLA_Contract.pdf', category: 'Venue Contract', show: 'The Fillmore — New Orleans', uploadedBy: 'JM', uploadedDate: '2026-05-10', status: 'Approved' },
-  { id: 'f4', type: 'Doc', name: 'Hospitality_Rider_v3.doc', category: 'Rider', show: 'The Ryman — Nashville', uploadedBy: 'JM', uploadedDate: '2026-05-18', status: 'Approved' },
-  { id: 'f5', type: 'PDF', name: 'StagePlot_v3.pdf', category: 'Production', show: 'The Ryman — Nashville', uploadedBy: 'LC', uploadedDate: '2026-05-19', status: 'Approved' },
-  { id: 'f6', type: 'PDF', name: 'IronCity_Contract.pdf', category: 'Venue Contract', show: 'Iron City — Birmingham', uploadedBy: 'JM', uploadedDate: '2026-05-08', status: 'Action Needed' },
-  { id: 'f7', type: 'Sheet', name: 'GuestList_AtlantaMay21.xlsx', category: 'Guest List', show: 'Tabernacle — Atlanta', uploadedBy: 'JM', uploadedDate: '2026-05-19', status: 'Pending' },
-  { id: 'f8', type: 'Image', name: 'StagePhoto_NOLA.jpg', category: 'Reference', show: 'The Fillmore — New Orleans', uploadedBy: 'LC', uploadedDate: '2026-05-17', status: 'Approved' },
+  {
+    id: 'sel',
+    type: 'PDF',
+    name: 'The Ryman.pdf',
+    category: 'Venue Contract',
+    show: 'The Ryman — Nashville',
+    uploadedBy: 'JM',
+    uploadedDate: '2026-05-15',
+    status: 'Approved',
+  },
+  {
+    id: 'f2',
+    type: 'PDF',
+    name: 'Tabernacle_Contract.pdf',
+    category: 'Venue Contract',
+    show: 'Tabernacle — Atlanta',
+    uploadedBy: 'JM',
+    uploadedDate: '2026-05-12',
+    status: 'Pending',
+  },
+  {
+    id: 'f3',
+    type: 'PDF',
+    name: 'Fillmore_NOLA_Contract.pdf',
+    category: 'Venue Contract',
+    show: 'The Fillmore — New Orleans',
+    uploadedBy: 'JM',
+    uploadedDate: '2026-05-10',
+    status: 'Approved',
+  },
+  {
+    id: 'f4',
+    type: 'Doc',
+    name: 'Hospitality_Rider_v3.doc',
+    category: 'Rider',
+    show: 'The Ryman — Nashville',
+    uploadedBy: 'JM',
+    uploadedDate: '2026-05-18',
+    status: 'Approved',
+  },
+  {
+    id: 'f5',
+    type: 'PDF',
+    name: 'StagePlot_v3.pdf',
+    category: 'Production',
+    show: 'The Ryman — Nashville',
+    uploadedBy: 'LC',
+    uploadedDate: '2026-05-19',
+    status: 'Approved',
+  },
+  {
+    id: 'f6',
+    type: 'PDF',
+    name: 'IronCity_Contract.pdf',
+    category: 'Venue Contract',
+    show: 'Iron City — Birmingham',
+    uploadedBy: 'JM',
+    uploadedDate: '2026-05-08',
+    status: 'Action Needed',
+  },
+  {
+    id: 'f7',
+    type: 'Sheet',
+    name: 'GuestList_AtlantaMay21.xlsx',
+    category: 'Guest List',
+    show: 'Tabernacle — Atlanta',
+    uploadedBy: 'JM',
+    uploadedDate: '2026-05-19',
+    status: 'Pending',
+  },
+  {
+    id: 'f8',
+    type: 'Image',
+    name: 'StagePhoto_NOLA.jpg',
+    category: 'Reference',
+    show: 'The Fillmore — New Orleans',
+    uploadedBy: 'LC',
+    uploadedDate: '2026-05-17',
+    status: 'Approved',
+  },
 ]
 
 export const docsSelectedFile: DocsSelectedFile = {
@@ -2807,17 +4407,66 @@ export const docsSelectedFile: DocsSelectedFile = {
   uploadedDate: '2026-05-15',
   status: 'Approved',
   sizeKb: 412,
-  preview: 'Standard venue contract for the May 20 show. Includes capacity, deal points, settlement terms, deductions, advance schedule, and a hospitality addendum signed by both parties.',
+  preview:
+    'Standard venue contract for the May 20 show. Includes capacity, deal points, settlement terms, deductions, advance schedule, and a hospitality addendum signed by both parties.',
   signers: ['Sarah Williams (Venue)', 'Jane Manager (Tour)'],
 }
 
 export const docsSettlements: Settlement[] = [
-  { id: 's1', show: 'The Ryman — Nashville', date: '2026-05-20', grossUsd: 165400, expensesUsd: 22300, netUsd: 143100, status: 'Pending' },
-  { id: 's2', show: 'Tabernacle — Atlanta', date: '2026-05-21', grossUsd: 142800, expensesUsd: 19800, netUsd: 123000, status: 'Pending' },
-  { id: 's3', show: 'The Fillmore — New Orleans', date: '2026-05-22', grossUsd: 128400, expensesUsd: 17900, netUsd: 110500, status: 'Pending' },
-  { id: 's4', show: 'Iron City — Birmingham', date: '2026-05-23', grossUsd: 116200, expensesUsd: 16400, netUsd: 99800, status: 'Disputed' },
-  { id: 's5', show: 'The Fillmore — Charlotte', date: '2026-05-24', grossUsd: 124000, expensesUsd: 17200, netUsd: 106800, status: 'Pending' },
-  { id: 's6', show: 'House of Blues — Houston', date: '2026-04-28', grossUsd: 138600, expensesUsd: 19100, netUsd: 119500, status: 'Confirmed' },
+  {
+    id: 's1',
+    show: 'The Ryman — Nashville',
+    date: '2026-05-20',
+    grossUsd: 165400,
+    expensesUsd: 22300,
+    netUsd: 143100,
+    status: 'Pending',
+  },
+  {
+    id: 's2',
+    show: 'Tabernacle — Atlanta',
+    date: '2026-05-21',
+    grossUsd: 142800,
+    expensesUsd: 19800,
+    netUsd: 123000,
+    status: 'Pending',
+  },
+  {
+    id: 's3',
+    show: 'The Fillmore — New Orleans',
+    date: '2026-05-22',
+    grossUsd: 128400,
+    expensesUsd: 17900,
+    netUsd: 110500,
+    status: 'Pending',
+  },
+  {
+    id: 's4',
+    show: 'Iron City — Birmingham',
+    date: '2026-05-23',
+    grossUsd: 116200,
+    expensesUsd: 16400,
+    netUsd: 99800,
+    status: 'Disputed',
+  },
+  {
+    id: 's5',
+    show: 'The Fillmore — Charlotte',
+    date: '2026-05-24',
+    grossUsd: 124000,
+    expensesUsd: 17200,
+    netUsd: 106800,
+    status: 'Pending',
+  },
+  {
+    id: 's6',
+    show: 'House of Blues — Houston',
+    date: '2026-04-28',
+    grossUsd: 138600,
+    expensesUsd: 19100,
+    netUsd: 119500,
+    status: 'Confirmed',
+  },
 ]
 
 export const docsMissing: DocsMissingItem[] = [
@@ -2847,6 +4496,7 @@ git commit -m "feat(data): add Documents & Settlements fixtures"
 ## Task 26: Documents — `DocumentsTable` + `SettlementQueueTable`
 
 **Files:**
+
 - Create: `src/components/documents/DocumentsTable.vue`
 - Create: `src/components/documents/SettlementQueueTable.vue`
 
@@ -2886,7 +4536,11 @@ git commit -m "feat(data): add Documents & Settlements fixtures"
           <td>{{ f.show }}</td>
           <td>{{ f.uploadedBy }}</td>
           <td>{{ formatShortDate(f.uploadedDate) }}</td>
-          <td><span class="dt__pill" :class="[statusTokens[f.status].bg, statusTokens[f.status].text]">{{ f.status }}</span></td>
+          <td>
+            <span class="dt__pill" :class="[statusTokens[f.status].bg, statusTokens[f.status].text]">{{
+              f.status
+            }}</span>
+          </td>
           <td><VaIcon name="mso-more_vert" size="18px" color="secondary" /></td>
         </tr>
       </tbody>
@@ -2903,26 +4557,74 @@ defineProps<{ files: FileEntry[]; selectedId: string }>()
 
 function iconFor(t: FileType): string {
   switch (t) {
-    case 'PDF': return 'mso-picture_as_pdf'
-    case 'Doc': return 'mso-description'
-    case 'Image': return 'mso-image'
-    case 'Sheet': return 'mso-table_chart'
+    case 'PDF':
+      return 'mso-picture_as_pdf'
+    case 'Doc':
+      return 'mso-description'
+    case 'Image':
+      return 'mso-image'
+    case 'Sheet':
+      return 'mso-table_chart'
   }
 }
 </script>
 
 <style scoped lang="scss">
-.dt { padding: 1.25rem; }
-.dt__head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-.dt__title { font-weight: 600; font-size: 0.95rem; }
-.dt__actions { display: flex; gap: 0.5rem; align-items: center; flex: 1; justify-content: flex-end; }
-.dt__search { max-width: 16rem; flex: 1; }
-.dt__table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
-.dt__table th, .dt__table td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--va-background-border); }
-.dt__table th { color: var(--va-secondary); font-weight: 500; font-size: 0.75rem; }
-.dt__table tbody tr:last-child td { border-bottom: none; }
-.dt__row--selected { background: var(--va-background-element); }
-.dt__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; white-space: nowrap; }
+.dt {
+  padding: 1.25rem;
+}
+.dt__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.dt__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.dt__actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+}
+.dt__search {
+  max-width: 16rem;
+  flex: 1;
+}
+.dt__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.dt__table th,
+.dt__table td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.dt__table th {
+  color: var(--va-secondary);
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+.dt__table tbody tr:last-child td {
+  border-bottom: none;
+}
+.dt__row--selected {
+  background: var(--va-background-element);
+}
+.dt__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
 </style>
 ```
 
@@ -2953,7 +4655,11 @@ function iconFor(t: FileType): string {
           <td class="sq__num">{{ formatUsd(s.grossUsd) }}</td>
           <td class="sq__num">{{ formatUsd(s.expensesUsd) }}</td>
           <td class="sq__num">{{ formatUsd(s.netUsd) }}</td>
-          <td><span class="sq__pill" :class="[statusTokens[s.status].bg, statusTokens[s.status].text]">{{ s.status }}</span></td>
+          <td>
+            <span class="sq__pill" :class="[statusTokens[s.status].bg, statusTokens[s.status].text]">{{
+              s.status
+            }}</span>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -2969,15 +4675,45 @@ defineProps<{ settlements: Settlement[] }>()
 </script>
 
 <style scoped lang="scss">
-.sq { padding: 1.25rem; }
-.sq__head { margin-bottom: 1rem; }
-.sq__title { font-weight: 600; font-size: 0.95rem; }
-.sq__table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
-.sq__table th, .sq__table td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--va-background-border); }
-.sq__table th { color: var(--va-secondary); font-weight: 500; font-size: 0.75rem; }
-.sq__table tbody tr:last-child td { border-bottom: none; }
-.sq__num { text-align: right; }
-.sq__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; white-space: nowrap; }
+.sq {
+  padding: 1.25rem;
+}
+.sq__head {
+  margin-bottom: 1rem;
+}
+.sq__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.sq__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.sq__table th,
+.sq__table td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.sq__table th {
+  color: var(--va-secondary);
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+.sq__table tbody tr:last-child td {
+  border-bottom: none;
+}
+.sq__num {
+  text-align: right;
+}
+.sq__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
 </style>
 ```
 
@@ -2993,6 +4729,7 @@ git commit -m "feat(docs): add DocumentsTable + SettlementQueueTable"
 ## Task 27: Documents — `SelectedFilePanel` + 3 right-rail cards
 
 **Files:**
+
 - Create: `src/components/documents/SelectedFilePanel.vue`
 - Create: `src/components/documents/DocsQuickActionsCard.vue`
 - Create: `src/components/documents/DocsMissingCard.vue`
@@ -3011,13 +4748,27 @@ git commit -m "feat(docs): add DocumentsTable + SettlementQueueTable"
       <div class="sfp__body">
         <div class="sfp__head">
           <span class="sfp__name">{{ file.name }}</span>
-          <span class="sfp__pill" :class="[statusTokens[file.status].bg, statusTokens[file.status].text]">{{ file.status }}</span>
+          <span class="sfp__pill" :class="[statusTokens[file.status].bg, statusTokens[file.status].text]">{{
+            file.status
+          }}</span>
         </div>
         <dl class="sfp__meta">
-          <div class="sfp__row"><dt>Category</dt><dd>{{ file.category }}</dd></div>
-          <div class="sfp__row"><dt>Show</dt><dd>{{ file.show }}</dd></div>
-          <div class="sfp__row"><dt>Uploaded</dt><dd>{{ file.uploadedBy }} · {{ formatShortDate(file.uploadedDate) }}</dd></div>
-          <div class="sfp__row"><dt>Size</dt><dd>{{ file.sizeKb }} KB</dd></div>
+          <div class="sfp__row">
+            <dt>Category</dt>
+            <dd>{{ file.category }}</dd>
+          </div>
+          <div class="sfp__row">
+            <dt>Show</dt>
+            <dd>{{ file.show }}</dd>
+          </div>
+          <div class="sfp__row">
+            <dt>Uploaded</dt>
+            <dd>{{ file.uploadedBy }} · {{ formatShortDate(file.uploadedDate) }}</dd>
+          </div>
+          <div class="sfp__row">
+            <dt>Size</dt>
+            <dd>{{ file.sizeKb }} KB</dd>
+          </div>
           <div v-if="file.signers && file.signers.length" class="sfp__row">
             <dt>Signers</dt>
             <dd>{{ file.signers.join(' · ') }}</dd>
@@ -3044,18 +4795,73 @@ defineProps<{ file: DocsSelectedFile }>()
 </script>
 
 <style scoped lang="scss">
-.sfp { padding: 1.25rem; }
-.sfp__layout { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: start; }
-.sfp__icon { display: flex; align-items: center; justify-content: center; width: 6rem; height: 7rem; background: var(--va-background-element); border-radius: 0.5rem; }
-.sfp__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
-.sfp__name { font-size: 1rem; font-weight: 700; }
-.sfp__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
-.sfp__meta { margin: 0 0 0.75rem; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.sfp__row { display: grid; grid-template-columns: 7rem 1fr; gap: 0.5rem; padding: 0.125rem 0; }
-.sfp__row dt { font-size: 0.8125rem; color: var(--va-secondary); margin: 0; }
-.sfp__row dd { font-size: 0.875rem; margin: 0; }
-.sfp__preview { font-size: 0.875rem; line-height: 1.4; margin: 0 0 0.75rem; color: var(--va-secondary); }
-.sfp__actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.sfp {
+  padding: 1.25rem;
+}
+.sfp__layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+.sfp__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6rem;
+  height: 7rem;
+  background: var(--va-background-element);
+  border-radius: 0.5rem;
+}
+.sfp__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.sfp__name {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.sfp__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
+.sfp__meta {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.sfp__row {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.5rem;
+  padding: 0.125rem 0;
+}
+.sfp__row dt {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+  margin: 0;
+}
+.sfp__row dd {
+  font-size: 0.875rem;
+  margin: 0;
+}
+.sfp__preview {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0 0 0.75rem;
+  color: var(--va-secondary);
+}
+.sfp__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 </style>
 ```
 
@@ -3072,19 +4878,49 @@ defineProps<{ file: DocsSelectedFile }>()
     <div class="dqa__list">
       <button type="button" class="dqa__action"><VaIcon name="mso-upload" size="18px" />Upload File</button>
       <button type="button" class="dqa__action"><VaIcon name="mso-draw" size="18px" />Request Signature</button>
-      <button type="button" class="dqa__action"><VaIcon name="mso-folder_zip" size="18px" />Bundle for Settlement</button>
+      <button type="button" class="dqa__action">
+        <VaIcon name="mso-folder_zip" size="18px" />Bundle for Settlement
+      </button>
       <button type="button" class="dqa__action"><VaIcon name="mso-share" size="18px" />Share with Promoter</button>
     </div>
   </VaCard>
 </template>
 
 <style scoped lang="scss">
-.dqa { padding: 1.25rem; }
-.dqa__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.dqa__title { font-weight: 600; font-size: 0.95rem; }
-.dqa__list { display: flex; flex-direction: column; gap: 0.5rem; }
-.dqa__action { display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 0.75rem; border: 1px solid var(--va-background-border); border-radius: 0.5rem; background: var(--va-background-primary); font: inherit; font-size: 0.875rem; cursor: pointer; text-align: left; }
-.dqa__action:hover { background: var(--va-background-element); }
+.dqa {
+  padding: 1.25rem;
+}
+.dqa__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.dqa__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.dqa__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.dqa__action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--va-background-border);
+  border-radius: 0.5rem;
+  background: var(--va-background-primary);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-align: left;
+}
+.dqa__action:hover {
+  background: var(--va-background-element);
+}
 </style>
 ```
 
@@ -3104,7 +4940,9 @@ defineProps<{ file: DocsSelectedFile }>()
           <div class="dmc__name">{{ i.title }}</div>
           <div class="dmc__sub">{{ i.show }}</div>
         </div>
-        <span class="dmc__pill" :class="[severityTokens[i.severity].bg, severityTokens[i.severity].text]">{{ i.severity }}</span>
+        <span class="dmc__pill" :class="[severityTokens[i.severity].bg, severityTokens[i.severity].text]">{{
+          i.severity
+        }}</span>
       </li>
     </ul>
   </VaCard>
@@ -3118,15 +4956,52 @@ defineProps<{ items: DocsMissingItem[] }>()
 </script>
 
 <style scoped lang="scss">
-.dmc { padding: 1.25rem; }
-.dmc__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.dmc__title { font-weight: 600; font-size: 0.95rem; }
-.dmc__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.dmc__row { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.dmc__row:last-child { border-bottom: none; }
-.dmc__name { font-size: 0.875rem; font-weight: 600; }
-.dmc__sub { font-size: 0.8125rem; color: var(--va-secondary); }
-.dmc__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
+.dmc {
+  padding: 1.25rem;
+}
+.dmc__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.dmc__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.dmc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.dmc__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.dmc__row:last-child {
+  border-bottom: none;
+}
+.dmc__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.dmc__sub {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.dmc__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
 </style>
 ```
 
@@ -3147,7 +5022,9 @@ defineProps<{ items: DocsMissingItem[] }>()
           <div class="dsi__name">{{ i.title }}</div>
           <div class="dsi__sub">{{ i.sub }}</div>
         </div>
-        <span class="dsi__pill" :class="[severityTokens[i.severity].bg, severityTokens[i.severity].text]">{{ i.severity }}</span>
+        <span class="dsi__pill" :class="[severityTokens[i.severity].bg, severityTokens[i.severity].text]">{{
+          i.severity
+        }}</span>
       </li>
     </ul>
   </VaCard>
@@ -3161,16 +5038,57 @@ defineProps<{ issues: TravelIssue[] }>()
 </script>
 
 <style scoped lang="scss">
-.dsi { padding: 1.25rem; }
-.dsi__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.dsi__title { font-weight: 600; font-size: 0.95rem; }
-.dsi__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.dsi__row { display: grid; grid-template-columns: 0.625rem 1fr auto; gap: 0.75rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--va-background-border); }
-.dsi__row:last-child { border-bottom: none; }
-.dsi__dot { width: 0.625rem; height: 0.625rem; border-radius: 50%; }
-.dsi__name { font-size: 0.875rem; font-weight: 600; }
-.dsi__sub { font-size: 0.8125rem; color: var(--va-secondary); }
-.dsi__pill { font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px; }
+.dsi {
+  padding: 1.25rem;
+}
+.dsi__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.dsi__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.dsi__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.dsi__row {
+  display: grid;
+  grid-template-columns: 0.625rem 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--va-background-border);
+}
+.dsi__row:last-child {
+  border-bottom: none;
+}
+.dsi__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+}
+.dsi__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.dsi__sub {
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.dsi__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
 </style>
 ```
 
@@ -3186,6 +5104,7 @@ git commit -m "feat(docs): add SelectedFilePanel + 3 right-rail cards"
 ## Task 28: Documents — `DocsSettlementsView` + page wiring
 
 **Files:**
+
 - Create: `src/components/documents/DocsSettlementsView.vue`
 - Modify: `src/pages/Documents.vue`
 - Modify: `src/pages/Settlements.vue`
@@ -3244,13 +5163,42 @@ import {
 </script>
 
 <style scoped lang="scss">
-.page--docs { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-.page--docs__body { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-@media (min-width: 1024px) { .page--docs__body { grid-template-columns: 3fr 1fr; } }
-.page--docs__main { display: flex; flex-direction: column; gap: 1rem; }
-.page--docs__tables { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-@media (min-width: 1280px) { .page--docs__tables { grid-template-columns: 1fr 1fr; } }
-.page--docs__rail { display: flex; flex-direction: column; gap: 1rem; }
+.page--docs {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.page--docs__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 1024px) {
+  .page--docs__body {
+    grid-template-columns: 3fr 1fr;
+  }
+}
+.page--docs__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.page--docs__tables {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 1280px) {
+  .page--docs__tables {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.page--docs__rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 </style>
 ```
 
@@ -3286,6 +5234,7 @@ import DocsSettlementsView from '../components/documents/DocsSettlementsView.vue
 curl -s -o /dev/null -w "/documents: HTTP %{http_code}\n" http://localhost:5173/documents
 curl -s -o /dev/null -w "/settlements: HTTP %{http_code}\n" http://localhost:5173/settlements
 ```
+
 Expect: both HTTP 200. In the browser, both routes show the combined view; sidebar highlight differs per route.
 
 - [ ] **Step 28.5: Commit**
@@ -3308,6 +5257,7 @@ for r in dashboard tour-dates shows itinerary travel contacts tasks documents se
   curl -s -o /dev/null -w "/$r: HTTP %{http_code}\n" "http://localhost:5173/$r"
 done
 ```
+
 All expect HTTP 200.
 
 - [ ] **Step 29.2: Production build**
@@ -3315,6 +5265,7 @@ All expect HTTP 200.
 ```bash
 npm run build:ci 2>&1 | tail -10
 ```
+
 Expect: `✓ built in <duration>`. No "Cannot find module" errors.
 
 - [ ] **Step 29.3: No broken imports**
@@ -3322,11 +5273,13 @@ Expect: `✓ built in <duration>`. No "Cannot find module" errors.
 ```bash
 grep -rln "components/dashboard/KpiTile" src/
 ```
+
 Expect: zero output (KpiTile move clean).
 
 - [ ] **Step 29.4: Visual walkthrough (browser)**
 
 In `http://localhost:5173/`:
+
 - Dashboard (regression check) — full mock renders, all 8 widgets, no console errors
 - `/tour-dates` — Advance Checklist with show switcher, 3 KPIs, 11 sections, 4 right-rail cards
 - `/shows` — breadcrumb, show switcher, action buttons, 3-row 9-card grid
@@ -3350,25 +5303,24 @@ git tag --list v0.2.0-screens
 
 ## Spec coverage map
 
-| Spec section | Implementing task(s) |
-|---|---|
-| §3 In scope #1 (replace 6 stubs) | Tasks 6, 11, 15, 20, 24, 28 |
-| §3 In scope #2 (per-section widget folders) | Tasks 4–5, 8–10, 13–14, 17–19, 22–23, 26–27 |
-| §3 In scope #3 (KpiRow extracted) | Tasks 1, 2 |
-| §3 In scope #4 (PageHeader extension) | Task 2 |
-| §3 In scope #5 (per-section data fixtures) | Tasks 3, 7, 12, 16, 21, 25 |
-| §3 In scope #6 (types extension) | Task 1 |
-| §3 In scope #7 (formatRelativeDateTime) | Task 1 |
-| §3 In scope #8 (Settlements re-renders Documents) | Task 28 |
-| §6.1 Tour Dates composition | Tasks 3–6 |
-| §6.2 Shows composition | Tasks 7–11 |
-| §6.3 Travel composition | Tasks 12–15 |
-| §6.4 Contacts composition | Tasks 16–20 |
-| §6.5 Tasks composition | Tasks 21–24 |
-| §6.6 Documents/Settlements composition | Tasks 25–28 |
-| §10 Definition of Done | Task 29 |
+| Spec section                                      | Implementing task(s)                        |
+| ------------------------------------------------- | ------------------------------------------- |
+| §3 In scope #1 (replace 6 stubs)                  | Tasks 6, 11, 15, 20, 24, 28                 |
+| §3 In scope #2 (per-section widget folders)       | Tasks 4–5, 8–10, 13–14, 17–19, 22–23, 26–27 |
+| §3 In scope #3 (KpiRow extracted)                 | Tasks 1, 2                                  |
+| §3 In scope #4 (PageHeader extension)             | Task 2                                      |
+| §3 In scope #5 (per-section data fixtures)        | Tasks 3, 7, 12, 16, 21, 25                  |
+| §3 In scope #6 (types extension)                  | Task 1                                      |
+| §3 In scope #7 (formatRelativeDateTime)           | Task 1                                      |
+| §3 In scope #8 (Settlements re-renders Documents) | Task 28                                     |
+| §6.1 Tour Dates composition                       | Tasks 3–6                                   |
+| §6.2 Shows composition                            | Tasks 7–11                                  |
+| §6.3 Travel composition                           | Tasks 12–15                                 |
+| §6.4 Contacts composition                         | Tasks 16–20                                 |
+| §6.5 Tasks composition                            | Tasks 21–24                                 |
+| §6.6 Documents/Settlements composition            | Tasks 25–28                                 |
+| §10 Definition of Done                            | Task 29                                     |
 
 ---
 
-*End of plan. Begin execution at Pre-flight P.1.*
-
+_End of plan. Begin execution at Pre-flight P.1._

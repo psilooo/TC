@@ -1,13 +1,13 @@
 # TourCraft — Additional Skeleton Screens Design
 
-| | |
-|---|---|
-| **Date** | 2026-05-05 |
-| **Status** | Draft (pending user review) |
-| **Author** | Claude (collaborating with user) |
-| **Implementation** | TBD — next session via `superpowers:writing-plans` → `superpowers:subagent-driven-development` |
+|                             |                                                                                                                                |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Date**                    | 2026-05-05                                                                                                                     |
+| **Status**                  | Draft (pending user review)                                                                                                    |
+| **Author**                  | Claude (collaborating with user)                                                                                               |
+| **Implementation**          | TBD — next session via `superpowers:writing-plans` → `superpowers:subagent-driven-development`                                 |
 | **Repo state at spec time** | TourCraft on `main` at tag `v0.1.0-skeleton` (Dashboard skeleton + IA shell complete; 9 stub pages render `<PagePlaceholder>`) |
-| **Reference mocks** | `screens/Tourcraft & O1S{,(1),…(7)}.png` |
+| **Reference mocks**         | `screens/Tourcraft & O1S{,(1),…(7)}.png`                                                                                       |
 
 ---
 
@@ -17,16 +17,16 @@ The Dashboard skeleton (spec `2026-05-05-tourcraft-dashboard-skeleton-design.md`
 
 The user provided 8 PNG mocks in `screens/`:
 
-| File | What it shows | Active sidebar |
-|---|---|---|
-| `Tourcraft & O1S.png` | Tour Dashboard | Dashboard (already built) |
-| `Tourcraft & O1S (1).png` | **Advance Checklist** for "Atlanta — Tabernacle, May 21" | **Tour Dates** |
-| `Tourcraft & O1S (2).png` | (duplicate of (1)) | — |
-| `Tourcraft & O1S (3).png` | **Show Detail** for "The Ryman — Nashville, TN" | **Shows** |
-| `Tourcraft & O1S (4).png` | **Travel & Hotels** | **Travel** |
-| `Tourcraft & O1S (5).png` | **Contacts** directory + selected-contact rail | **Contacts** |
-| `Tourcraft & O1S (6).png` | **Tasks & Follow-Ups** kanban | **Tasks** |
-| `Tourcraft & O1S (7).png` | **Documents & Settlements** combined view | **Documents** |
+| File                      | What it shows                                            | Active sidebar            |
+| ------------------------- | -------------------------------------------------------- | ------------------------- |
+| `Tourcraft & O1S.png`     | Tour Dashboard                                           | Dashboard (already built) |
+| `Tourcraft & O1S (1).png` | **Advance Checklist** for "Atlanta — Tabernacle, May 21" | **Tour Dates**            |
+| `Tourcraft & O1S (2).png` | (duplicate of (1))                                       | —                         |
+| `Tourcraft & O1S (3).png` | **Show Detail** for "The Ryman — Nashville, TN"          | **Shows**                 |
+| `Tourcraft & O1S (4).png` | **Travel & Hotels**                                      | **Travel**                |
+| `Tourcraft & O1S (5).png` | **Contacts** directory + selected-contact rail           | **Contacts**              |
+| `Tourcraft & O1S (6).png` | **Tasks & Follow-Ups** kanban                            | **Tasks**                 |
+| `Tourcraft & O1S (7).png` | **Documents & Settlements** combined view                | **Documents**             |
 
 Itinerary and Notes have no mocks.
 
@@ -38,7 +38,7 @@ Render all 6 mocked pages faithfully at their respective sidebar routes. Make `S
 
 ### Locked decisions (from brainstorming)
 
-- **Routing — Approach A**: render the mock at its sidebar route. Tour Dates and Shows use a *visual-only* show-switcher in the page header (chevron-down button that doesn't actually open a dropdown). Selected items in tables (Sarah Williams in Contacts, "BNA → CLT" in Travel, "The Ryman.pdf" in Documents) are hardcoded.
+- **Routing — Approach A**: render the mock at its sidebar route. Tour Dates and Shows use a _visual-only_ show-switcher in the page header (chevron-down button that doesn't actually open a dropdown). Selected items in tables (Sarah Williams in Contacts, "BNA → CLT" in Travel, "The Ryman.pdf" in Documents) are hardcoded.
 - **Documents + Settlements**: same combined view, two routes. Both `/documents` and `/settlements` render the same component. Active sidebar item still highlights correctly per route.
 - **Itinerary + Notes**: stay as `<PagePlaceholder>`. No mock, no work this spec.
 - **One spec, faithful** (Approach A in Q2). All ~50 widgets across 6 pages built faithfully.
@@ -203,11 +203,32 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.page-header { margin-bottom: 1.5rem; }
-.page-header__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-.page-header__title { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
-.page-header__subtitle { margin: 0.25rem 0 0; color: var(--va-secondary); font-size: 0.875rem; }
-.page-header__actions { display: flex; gap: 0.5rem; align-items: center; }
+.page-header {
+  margin-bottom: 1.5rem;
+}
+.page-header__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.page-header__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.page-header__subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--va-secondary);
+  font-size: 0.875rem;
+}
+.page-header__actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
 </style>
 ```
 
@@ -232,10 +253,19 @@ defineProps<{ name: string }>()
 
 <style scoped lang="scss">
 .show-switcher {
-  display: inline-flex; align-items: center; gap: 0.25rem;
-  background: transparent; border: 0; padding: 0; margin: 0;
-  font: inherit; color: inherit; cursor: pointer;
-  font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 </style>
 ```
@@ -262,9 +292,24 @@ defineProps<{ items: string[] }>()
 </script>
 
 <style scoped lang="scss">
-.breadcrumb ol { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.25rem; align-items: center; font-size: 0.8125rem; color: var(--va-secondary); }
-.breadcrumb li { display: inline-flex; align-items: center; gap: 0.25rem; }
-.breadcrumb__crumb.is-current { color: var(--va-text-primary); }
+.breadcrumb ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--va-secondary);
+}
+.breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.breadcrumb__crumb.is-current {
+  color: var(--va-text-primary);
+}
 </style>
 ```
 
@@ -286,10 +331,26 @@ defineProps<{ kpis: Kpi[] }>()
 </script>
 
 <style scoped lang="scss">
-.kpi-row { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-@media (min-width: 768px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1024px) { .kpi-row { grid-template-columns: repeat(4, 1fr); } }
-@media (min-width: 1024px) { .kpi-row--three { grid-template-columns: repeat(3, 1fr); } }
+.kpi-row {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .kpi-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .kpi-row--three {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 </style>
 ```
 
@@ -337,6 +398,7 @@ Each page section below specifies: page header structure, KPIs, main content, ri
 > The mock shows the 3 KPI tiles inline-right of the page title. We render them as a regular `<KpiRow>` section directly below `<PageHeader>` instead — slight visual deviation (one extra row of vertical space), simpler markup, consistent with every other page. Wireframe fidelity allows this.
 
 **KPIs (3-up):**
+
 - `% Complete` — value `'75%'`, sub `'Sections progress'`, icon `mso-percent` (rendered via `KpiTile`'s normal layout; the circular ring in the mock is a stretch, see §6.1.x below)
 - `Sections Complete` — `'8 of 11'`, sub `'Sections complete'`, icon `mso-check_circle`
 - `Missing Items` — `'3'`, sub `'Need follow-up'`, icon `mso-warning`
@@ -364,6 +426,7 @@ Tally: 8 Complete · 2 Need Follow-Up · 1 Missing. 8/11 ≈ 73%; KPI fixture sh
 Status pills use the same severity-token pattern from `OpenIssuesCard`: Complete = green (success), Need Follow-Up = amber, Missing = red. Add to `severity.ts` if needed (see §8).
 
 **Right rail:**
+
 - `AdvanceMissingCard` — list of missing items: title + sub + severity pill (3 entries)
 - `AdvanceQuickContactsCard` — 3 contacts (Promoter, Hospitality, Production), simpler than dashboard's QuickContactsCard (no email button, just call icon + name + sub)
 - `AdvanceNotesCard` — 1-2 short note entries with author initials avatar
@@ -416,6 +479,7 @@ Status pills use the same severity-token pattern from `OpenIssuesCard`: Complete
 Each row is `grid-cols-3` on `lg`, stack on smaller. **No KPI row** (mock doesn't show one).
 
 **Card contents (paraphrased from mock 3, fixture in §8):**
+
 - `ShowSnapshotCard` — Venue, Address, Capacity, Doors, Show Time, Set Length, Support, etc., as label/value pairs
 - `ShowScheduleCard` — vertical timeline (reuse pattern from `TodayTimelineCard`); same 5 events as the dashboard's Today timeline (Load-In 9 AM, Soundcheck 11 AM, Dinner 5 PM, Show 7:30 PM, Load-Out 11 PM)
 - `ShowContactsCard` — same quick-contacts pattern: Venue Manager / Promoter / Driver / Hotel
@@ -476,11 +540,7 @@ Each row is `grid-cols-3` on `lg`, stack on smaller. **No KPI row** (mock doesn'
     <KpiRow :kpis="contactsKpis" />
 
     <section class="page--contacts__body">
-      <ContactsTable
-        :contacts="contactsDirectory"
-        :selected-id="contactsSelectedId"
-        :total="contactsKpis[0].value"
-      />
+      <ContactsTable :contacts="contactsDirectory" :selected-id="contactsSelectedId" :total="contactsKpis[0].value" />
       <ContactDetailRail :contact="contactsSelectedContact" />
     </section>
   </div>
@@ -494,6 +554,7 @@ Each row is `grid-cols-3` on `lg`, stack on smaller. **No KPI row** (mock doesn'
 **Table columns:** Checkbox · Role badge · Name · Company · City · Phone · Email · Last Show · Notes · trailing icon (kebab/details). 12-15 visible rows; pagination footer "Showing 1–15 of 642" + page numbers (visual only). One row visually selected (Sarah Williams).
 
 **`ContactDetailRail`** composes:
+
 - Header strip — name + role badge + company/city + 4 action icons (Call, Email, View Phone, More)
 - `ContactInfoCard` — Phone Numbers, Emails, Address, Notes (label/value pairs)
 - `ContactShowHistoryCard` — list of past shows with date + venue (5+ entries)
@@ -591,20 +652,20 @@ import DocsSettlementsView from '../components/documents/DocsSettlementsView.vue
 
 ## 7. Visual conventions across new pages
 
-| Convention | Decision |
-|---|---|
-| Card chrome | `VaCard` defaults; padding `1.25rem`; no per-widget overrides this spec |
-| BEM class prefix | One per component (e.g., `.advance-row`, `.travel-segments`, `.contacts-table`, `.task-card`, `.docs-files`) — keeps scoped styles non-colliding |
-| Grid breakpoints | Mobile 1-col, `md` 2-col, `lg` 3-col or 4-col per page — same as dashboard |
-| Status / severity pills | Reuse `severityTokens` from `data/severity.ts`. Add `Status` token map for table-row "Confirmed/Pending/Missing/etc." badges (see §8) |
-| Date formatting | `formatShortDate(iso)` for table cells; `formatRelativeDateTime(iso)` for activity timestamps ("May 19 · 4:08 PM"); `formatLongDate(iso)` for page header dates ("Tuesday, May 20") |
-| Currency | `formatUsd(n)` for column cells; pre-format strings in KPI fixtures where the mock shows formatted ("$128,740.00") |
-| Icons | Material Symbols Outlined (`mso-*`); already loaded via `index.html` |
-| Action buttons | `<VaButton preset="secondary" size="small" icon="mso-...">label</VaButton>`; no `@click` handlers this spec |
-| Avatars | `<VaAvatar size="small">JM</VaAvatar>` for initials |
-| Table styles | Plain `<table>` + Tailwind, same pattern as `UpcomingShowsTable` |
-| Filter bars | Render `<VaInput>` / `<VaSelect>` controls visually; no `@change`/`@input` handlers |
-| Pagination | Render visually with hardcoded page numbers; no actual pagination logic |
+| Convention              | Decision                                                                                                                                                                            |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card chrome             | `VaCard` defaults; padding `1.25rem`; no per-widget overrides this spec                                                                                                             |
+| BEM class prefix        | One per component (e.g., `.advance-row`, `.travel-segments`, `.contacts-table`, `.task-card`, `.docs-files`) — keeps scoped styles non-colliding                                    |
+| Grid breakpoints        | Mobile 1-col, `md` 2-col, `lg` 3-col or 4-col per page — same as dashboard                                                                                                          |
+| Status / severity pills | Reuse `severityTokens` from `data/severity.ts`. Add `Status` token map for table-row "Confirmed/Pending/Missing/etc." badges (see §8)                                               |
+| Date formatting         | `formatShortDate(iso)` for table cells; `formatRelativeDateTime(iso)` for activity timestamps ("May 19 · 4:08 PM"); `formatLongDate(iso)` for page header dates ("Tuesday, May 20") |
+| Currency                | `formatUsd(n)` for column cells; pre-format strings in KPI fixtures where the mock shows formatted ("$128,740.00")                                                                  |
+| Icons                   | Material Symbols Outlined (`mso-*`); already loaded via `index.html`                                                                                                                |
+| Action buttons          | `<VaButton preset="secondary" size="small" icon="mso-...">label</VaButton>`; no `@click` handlers this spec                                                                         |
+| Avatars                 | `<VaAvatar size="small">JM</VaAvatar>` for initials                                                                                                                                 |
+| Table styles            | Plain `<table>` + Tailwind, same pattern as `UpcomingShowsTable`                                                                                                                    |
+| Filter bars             | Render `<VaInput>` / `<VaSelect>` controls visually; no `@change`/`@input` handlers                                                                                                 |
+| Pagination              | Render visually with hardcoded page numbers; no actual pagination logic                                                                                                             |
 
 ## 8. Mock data shape
 
@@ -618,10 +679,10 @@ export type AdvanceStatus = 'Complete' | 'Need Follow-Up' | 'Missing'
 export interface AdvanceSection {
   id: string
   name: string
-  icon: string                           // mso-*
-  sub?: string                           // small explanatory text
-  done: number                           // count completed
-  total: number                          // count total
+  icon: string // mso-*
+  sub?: string // small explanatory text
+  done: number // count completed
+  total: number // count total
   status: AdvanceStatus
 }
 
@@ -629,13 +690,13 @@ export interface AdvanceMissingItem {
   id: string
   title: string
   sub: string
-  severity: Severity                     // reuse from existing types
+  severity: Severity // reuse from existing types
 }
 
 export interface AdvanceUpdate {
   id: string
-  body: string                           // "Sound spec sheet uploaded by JM"
-  at: string                             // ISO datetime
+  body: string // "Sound spec sheet uploaded by JM"
+  at: string // ISO datetime
 }
 
 // Show Detail (rich nested shape)
@@ -643,9 +704,9 @@ export interface ShowSnapshot {
   venue: string
   address: string
   capacity: number
-  doors: string                          // "7:00 PM"
-  showStart: string                      // "7:30 PM"
-  setLength: string                      // "90 min"
+  doors: string // "7:00 PM"
+  showStart: string // "7:30 PM"
+  setLength: string // "90 min"
   support: string
   ageRestriction?: string
   ticketSales?: { sold: number; capacity: number }
@@ -669,24 +730,24 @@ export interface ShowSettlementSnapshot {
 export interface ShowAttachment {
   id: string
   name: string
-  type: string                           // "PDF", "Doc", "Image"
+  type: string // "PDF", "Doc", "Image"
   sizeKb: number
 }
 
 export interface ShowActivityEntry {
   id: string
   body: string
-  at: string                             // ISO datetime
+  at: string // ISO datetime
 }
 
 export interface ShowDetail {
   id: string
-  title: string                          // "The Ryman — Nashville, TN"
-  dateIso: string                        // "2026-05-20"
-  dateLong: string                       // "Tuesday, May 20"
+  title: string // "The Ryman — Nashville, TN"
+  dateIso: string // "2026-05-20"
+  dateLong: string // "Tuesday, May 20"
   snapshot: ShowSnapshot
-  schedule: TimelineEvent[]              // reuse existing type
-  contacts: QuickContact[]               // reuse existing type
+  schedule: TimelineEvent[] // reuse existing type
+  contacts: QuickContact[] // reuse existing type
   guestList: ShowGuestListData
   hospitality: { rider: string; bullets: string[] }
   openTasks: { id: string; title: string; due: string; severity?: Severity }[]
@@ -700,19 +761,19 @@ export type TravelMode = 'Flight' | 'Drive' | 'Train' | 'Bus'
 
 export interface TravelSegment {
   id: string
-  date: string                           // ISO yyyy-mm-dd
-  tripNumber: string                     // "T-104"
-  origin: string                         // "ATL"
-  destination: string                    // "BNA"
+  date: string // ISO yyyy-mm-dd
+  tripNumber: string // "T-104"
+  origin: string // "ATL"
+  destination: string // "BNA"
   mode: TravelMode
   hotel?: string
-  status: Status                         // reuse 'Confirmed' | 'Pending'
+  status: Status // reuse 'Confirmed' | 'Pending'
   confirmation?: string
   notes?: string
 }
 
 export interface TravelTrip {
-  id: string                             // matches a TravelSegment id
+  id: string // matches a TravelSegment id
   origin: { city: string; airport: string; date: string }
   destination: { city: string; airport: string; date: string }
   hotel: { name: string; address: string; checkIn: string; checkOut: string }
@@ -724,8 +785,8 @@ export interface TravelCheckIn {
   id: string
   hotel: string
   city: string
-  arrival: string                        // ISO date
-  departure: string                      // ISO date
+  arrival: string // ISO date
+  departure: string // ISO date
   status: Status
 }
 
@@ -737,7 +798,16 @@ export interface TravelIssue {
 }
 
 // Contacts
-export type ContactRole = 'Venue Manager' | 'Promoter' | 'Driver' | 'Hotel' | 'Production' | 'Catering' | 'Sound' | 'Lighting' | 'Other'
+export type ContactRole =
+  | 'Venue Manager'
+  | 'Promoter'
+  | 'Driver'
+  | 'Hotel'
+  | 'Production'
+  | 'Catering'
+  | 'Sound'
+  | 'Lighting'
+  | 'Other'
 
 export interface Contact {
   id: string
@@ -745,9 +815,9 @@ export interface Contact {
   name: string
   company: string
   city: string
-  phones: string[]                       // first one is primary
+  phones: string[] // first one is primary
   email: string
-  lastShowDate?: string                  // ISO
+  lastShowDate?: string // ISO
   notes?: string
 }
 
@@ -764,8 +834,8 @@ export type TaskColumn = 'todo' | 'waiting' | 'duesoon' | 'done'
 export interface TaskItem {
   id: string
   title: string
-  due?: string                           // human "Today" / "Tomorrow" / "May 22" or ISO; renderer decides
-  tags: string[]                         // ["Hotel", "Travel", ...]
+  due?: string // human "Today" / "Tomorrow" / "May 22" or ISO; renderer decides
+  tags: string[] // ["Hotel", "Travel", ...]
   assigneeInitials: string
   column: TaskColumn
 }
@@ -773,7 +843,7 @@ export interface TaskItem {
 export interface TaskDeadline {
   id: string
   title: string
-  date: string                           // ISO date
+  date: string // ISO date
 }
 
 export interface TaskCategory {
@@ -789,17 +859,17 @@ export interface FileEntry {
   id: string
   type: FileType
   name: string
-  category: string                       // "Venue Contract", "Settlement", etc.
+  category: string // "Venue Contract", "Settlement", etc.
   show: string
   uploadedBy: string
-  uploadedDate: string                   // ISO
+  uploadedDate: string // ISO
   status: FileStatus
 }
 
 export interface Settlement {
   id: string
-  show: string                           // "The Ryman — Nashville"
-  date: string                           // ISO
+  show: string // "The Ryman — Nashville"
+  date: string // ISO
   grossUsd: number
   expensesUsd: number
   netUsd: number
@@ -815,7 +885,7 @@ export interface DocsMissingItem {
 
 export interface DocsSelectedFile extends FileEntry {
   sizeKb: number
-  preview: string                        // small description used as placeholder for file preview
+  preview: string // small description used as placeholder for file preview
   signers?: string[]
 }
 ```
@@ -827,14 +897,14 @@ Add a `statusTokens` map for table status pills (Approved / Pending / Missing / 
 ```ts
 // Append to existing severity.ts.
 export const statusTokens = {
-  Confirmed:       { bg: 'bg-emerald-100', text: 'text-emerald-800' },
-  Approved:        { bg: 'bg-emerald-100', text: 'text-emerald-800' },
-  Pending:         { bg: 'bg-amber-100',   text: 'text-amber-800' },
-  'Action Needed': { bg: 'bg-amber-100',   text: 'text-amber-800' },
-  Missing:         { bg: 'bg-red-100',     text: 'text-red-800' },
-  Disputed:        { bg: 'bg-red-100',     text: 'text-red-800' },
-  Complete:        { bg: 'bg-emerald-100', text: 'text-emerald-800' },
-  'Need Follow-Up':{ bg: 'bg-amber-100',   text: 'text-amber-800' },
+  Confirmed: { bg: 'bg-emerald-100', text: 'text-emerald-800' },
+  Approved: { bg: 'bg-emerald-100', text: 'text-emerald-800' },
+  Pending: { bg: 'bg-amber-100', text: 'text-amber-800' },
+  'Action Needed': { bg: 'bg-amber-100', text: 'text-amber-800' },
+  Missing: { bg: 'bg-red-100', text: 'text-red-800' },
+  Disputed: { bg: 'bg-red-100', text: 'text-red-800' },
+  Complete: { bg: 'bg-emerald-100', text: 'text-emerald-800' },
+  'Need Follow-Up': { bg: 'bg-amber-100', text: 'text-amber-800' },
 } as const
 ```
 
@@ -925,4 +995,4 @@ Bump `version`: `0.1.0` → `0.2.0` (we're shipping the rest of the IA). Optiona
 
 ---
 
-*End of spec. Implementation plan to follow via `superpowers:writing-plans`.*
+_End of spec. Implementation plan to follow via `superpowers:writing-plans`._
