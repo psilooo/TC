@@ -1,7 +1,8 @@
+<!-- src/pages/Settlements.vue -->
 <template>
-  <PagePlaceholder name="Settlements" />
+  <DocsSettlementsView />
 </template>
 
 <script setup lang="ts">
-import PagePlaceholder from '../components/PagePlaceholder.vue'
+import DocsSettlementsView from '../components/documents/DocsSettlementsView.vue'
 </script>
