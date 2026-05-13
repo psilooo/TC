@@ -266,3 +266,93 @@ export interface DocsSelectedFile extends FileEntry {
   preview: string
   signers?: string[]
 }
+
+// === Global Dashboard (added by spec 2026-05-13-tourcraft-global-dashboard) ===
+
+export interface ArtistRef {
+  id: string
+  name: string
+  tourName: string
+  avatarInitials: string
+}
+
+export interface GlobalKpi {
+  icon: string
+  label: string
+  value: string
+  sub: string
+  routeName: string
+}
+
+export type ArtistDayStatus = 'Show Day' | 'Travel Day' | 'Off Day' | 'Promo Day'
+export type ArtistTrack = 'On Track' | 'Needs Attention' | 'At Risk'
+
+export interface ArtistTodayRow {
+  artist: ArtistRef
+  city: string
+  dayStatus: ArtistDayStatus
+  nextUp: { title: string; sub: string }
+  track: ArtistTrack
+}
+
+export type TimelineKind = 'Show' | 'Travel' | 'Deadline'
+
+export interface GlobalTimelineEvent {
+  id: string
+  artistId: string
+  title: string
+  sub: string
+  kind: TimelineKind
+}
+
+export interface GlobalTimelineGroup {
+  label: string
+  events: GlobalTimelineEvent[]
+}
+
+export interface CriticalIssue {
+  id: string
+  title: string
+  artistId: string
+  artistName: string
+  due: string
+  severity: Severity
+}
+
+export type ActionStatus = 'Open' | 'Due Today' | 'Overdue'
+
+export interface RequiredAction {
+  id: string
+  title: string
+  artistId: string
+  artistName: string
+  due: string
+  status: ActionStatus
+}
+
+export type TravelWatchTag = 'Driver Not Assigned' | 'Pickup Unconfirmed' | 'Pending'
+
+export interface TravelWatchRow {
+  id: string
+  primary: string
+  sub: string
+  artistId: string
+  tag: TravelWatchTag
+}
+
+export interface WaitingOnRow {
+  id: string
+  title: string
+  sub: string
+  artistId: string
+  waitingOn: string
+}
+
+export interface ArtistReadiness {
+  artist: ArtistRef
+  todayLabel: string
+  readinessPct: number
+  risks: number
+  tasksDue: number
+  daysToShow: number
+}
