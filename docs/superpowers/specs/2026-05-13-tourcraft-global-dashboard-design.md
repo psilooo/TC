@@ -13,7 +13,7 @@
 
 ## 1. Context
 
-The current `/dashboard` is single-tour: 4 KPIs, a Today timeline, a 72-hour show list, travel & hotel, quick contacts, open issues, an upcoming shows table, and recent notes. All seven widgets are scoped to one implicit tour and consume `data/dashboard.ts`. Nothing else in the codebase imports those widgets or that fixture.
+The current `/dashboard` is single-tour: 4 KPIs, a Today timeline, a 72-hour show list, travel & hotel, quick contacts, open issues, an upcoming shows table, and recent notes. All seven widgets are scoped to one implicit tour and consume `data/dashboard.ts`. **Two of that file's exports** (`todayTimeline`, `quickContacts`) are also reused by `data/shows.ts` to populate the Show Detail fixture — handled in §4 by inlining those two values into `shows.ts` before deletion.
 
 The user has given a new mock for `/dashboard` showing a **multi-artist roster view**: 4 artists (Baka, Luna Rae, Kofi James, Maya Stone), each with their own tour, surfaced together on one page so the user can scan everything important "at a glance before clicking on any individual item for more detail." This redesign replaces the Tour Dashboard wholesale.
 
@@ -28,13 +28,13 @@ Replace the page at `/dashboard` with a faithful render of the Global Dashboard 
 ### Locked decisions (from brainstorming)
 
 - **Scope — Q1 → "Dashboard only"**: only `/dashboard` changes. Other pages stay tour-scoped exactly as today. No `Artist` switcher in the nav. No app-wide artist dimension. The `Artist` type is added to `types.ts` so it's positioned for future promotion, but is consumed only by the new dashboard fixture.
-- **Click-through — Q2 → "Fully wired"**: every row, KPI tile, card, and "View All" footer is a `RouterLink`. Destinations that don't exist today are stubbed with `PagePlaceholder` (per §7).
-- **Approach — Q3 → "Clean replacement"**: delete all 7 current dashboard widgets and the old fixture. Build the new page from scratch under `src/components/dashboard/`. No widget is adapted.
-- **Issues route — Q4 → "New `/issues` stub + sidebar entry under Tasks"**: a new sidebar item `Issues` (icon `mso-priority_high`) is inserted directly after `Tasks`. Both the "Critical Issues" KPI tile and the rows inside the `CriticalIssuesCard` route to `/issues`.
+- **Click-through — Q2 → "Fully wired"**: every KPI tile, table row, list row, card, and "View All" footer is a `RouterLink` (or a `VaButton :to=` rendering as one). Destinations that don't exist today are stubbed with `PagePlaceholder` (per §7). **Exception**: Critical Issues row body is a plain `<div>` (HTML5 forbids `<button>` inside `<a>`); the row's only clickable element is the per-row `Resolve` button. See §6.4.
+- **Approach — Q3 → "Clean replacement"**: delete all 7 current dashboard widgets and the old fixture. Build the new page from scratch under `src/components/dashboard/`. No widget is adapted. (Caveat: `data/dashboard.ts` has 2 exports consumed by `data/shows.ts` — see §4 for the inlining step.)
+- **Issues route — Q4 → "New `/issues` stub + sidebar entry under Tasks"**: a new sidebar item `Issues` (icon `mso-priority_high`) is inserted directly after `Tasks`. The "Critical Issues" KPI tile, each Resolve button, and the card footer all route to `/issues`.
 
 ### In scope
 
-1. Replace `src/pages/Dashboard.vue` end-to-end. Title becomes **"Global Dashboard"**; subtitle becomes **"Overview across all artists and tours"**; a **"Customize Dashboard"** button sits in the `PageHeader` `#actions` slot (visual-only, click → `console.log` stub).
+1. Replace `src/pages/Dashboard.vue` end-to-end. Title becomes **"Global Dashboard"**; subtitle becomes **"Overview across all artists and tours"**; a **"Customize Dashboard"** button sits in the `PageHeader` `#actions` slot, rendered `disabled` (visual-only; no handler).
 2. Build 8 new dashboard widgets under `src/components/dashboard/` (see §6).
 3. New fixture `src/data/globalDashboard.ts` containing all data the page consumes.
 4. New types in `src/data/types.ts` (Section "Global Dashboard").
@@ -45,7 +45,7 @@ Replace the page at `/dashboard` with a faithful render of the Global Dashboard 
 
 - No `/artists/:id` detail content beyond `<PagePlaceholder>`. Same for `/artists` and `/issues`.
 - No `Artist` switcher in the top nav. No app-wide artist scoping.
-- No real "Resolve" action on Critical Issues — the button is a plain `VaButton` whose click bubbles to the row's `RouterLink`, which navigates to `/issues`.
+- No real "Resolve" action on Critical Issues — the button is a `VaButton :to="{ name: 'issues' }"` that renders as a `router-link`, navigating to `/issues`. The surrounding row is **not** a `RouterLink` (would be invalid HTML5: nested interactive elements).
 - No filter state in query params (e.g. `/tasks?queue=critical`). All KPI/row routes go to a static destination.
 - No drag-to-customize behavior. The "Customize Dashboard" button is visual-only.
 - No changes to the existing AppNavbar, sidebar shell, or any other page.
@@ -94,7 +94,17 @@ src/components/dashboard/TravelHotelCard.vue
 src/components/dashboard/UpcomingShowsTable.vue
 ```
 
-All 8 deletes verified as referenced only by the old `Dashboard.vue` (grep confirmed at spec time).
+**Caveat — partial dependency on `data/dashboard.ts`**: `src/data/shows.ts:3` also imports two exports from `data/dashboard.ts`:
+
+```ts
+import { todayTimeline, quickContacts } from './dashboard'
+```
+
+These are consumed at `shows.ts:21` (`schedule: todayTimeline`) and `shows.ts:22` (`contacts: quickContacts`).
+
+**Resolution**: before deleting `data/dashboard.ts`, **inline both fixtures into `data/shows.ts`** (≈ 12 lines total — 5 timeline events + 4 contacts). Replace the import statement in `shows.ts` with the literal const declarations. Then delete `data/dashboard.ts` outright.
+
+The 7 widget components are referenced only by the old `Dashboard.vue` (grep confirmed at spec time).
 
 ## 5. Data model
 
@@ -192,24 +202,46 @@ export interface ArtistReadiness {
 }
 ```
 
-### Reuse of existing tokens
+### Token strategy
 
-- `Severity` (existing): drives `CriticalIssue.severity` color via the existing `severityTokens` map.
-- Status badges new to this spec (`ArtistDayStatus`, `ArtistTrack`, `ActionStatus`, `TravelWatchTag`) are added to the existing `statusTokens` map in `src/data/severity.ts`. Concrete color mapping:
-  - `Show Day` → `info` (blue)
-  - `Travel Day` → `warning` (amber)
-  - `Off Day` → `secondary` (neutral)
-  - `Promo Day` → `info`
-  - `On Track` → `success`
-  - `Needs Attention` → `warning`
-  - `At Risk` → `danger`
-  - `Open` → `secondary`
-  - `Due Today` → `warning`
-  - `Overdue` → `danger`
-  - `Driver Not Assigned` → `danger`
-  - `Pickup Unconfirmed` → `warning`
-  - `Pending` → `warning`
-- `WaitingOnRow.waitingOn` is a free-form label, not an enum. Right-side badge uses a neutral Vuestic chip (`color="secondary"`).
+- `Severity` (existing): drives `CriticalIssue.severity` color via the existing `severityTokens` map. **Unchanged.**
+- The existing `statusTokens` map in `src/data/severity.ts` has shape `{ bg: 'bg-xxx-100'; text: 'text-xxx-800' }` (Tailwind classes), consumed by 4+ existing widgets via `[statusTokens[s].bg, statusTokens[s].text]`. **Do not modify `statusTokens` — it's load-bearing.**
+- Add a new sibling export in the same file for Vuestic-color string tokens used by the new dashboard's `VaBadge` / `VaChip` consumers:
+
+```ts
+// src/data/severity.ts (added by spec 2026-05-13)
+import type {
+  ArtistDayStatus, ArtistTrack, ActionStatus, TravelWatchTag,
+} from './types'
+
+type VaColor = 'success' | 'warning' | 'danger' | 'info' | 'secondary' | 'primary'
+
+export const vaBadgeTokens: Record<
+  ArtistDayStatus | ArtistTrack | ActionStatus | TravelWatchTag,
+  VaColor
+> = {
+  // ArtistDayStatus
+  'Show Day': 'info',
+  'Travel Day': 'warning',
+  'Off Day': 'secondary',
+  'Promo Day': 'info',
+  // ArtistTrack
+  'On Track': 'success',
+  'Needs Attention': 'warning',
+  'At Risk': 'danger',
+  // ActionStatus
+  'Open': 'secondary',
+  'Due Today': 'warning',
+  'Overdue': 'danger',
+  // TravelWatchTag
+  'Driver Not Assigned': 'danger',
+  'Pickup Unconfirmed': 'warning',
+  'Pending': 'warning',
+}
+```
+
+- `WaitingOnRow.waitingOn` is a free-form label, not an enum. Right-side badge uses a literal `<VaBadge color="secondary">` — no token lookup needed.
+- `CriticalIssue.severity` rendering: the left-side dot uses `severityTokens[issue.severity].dot` (Tailwind `bg-red-500` etc.) on a `<span class="...">`. No `VaBadge` for the severity dot.
 
 ### `src/data/globalDashboard.ts` exports
 
@@ -235,7 +267,7 @@ Concrete fixture content (verbatim from mock where readable):
 - `kofiJames`: { id: 'kofi-james', name: 'Kofi James', tourName: 'KJ Promo Tour', avatarInitials: 'KJ' }
 - `mayaStone`: { id: 'maya-stone', name: 'Maya Stone', tourName: 'Summer Club Run', avatarInitials: 'MS' }
 
-**`kpis`** (in mock order):
+**`kpis`** (in mock order; values + sub-labels are **verbatim from mock copy**, not derived from the other fixtures. Wireframe data — these numbers are illustrative, not computed counts. A reviewer who tries to reconcile "Travel Days: 2 / Across 2 artists" with the `todayAcrossArtists` data will find only 1 artist on Travel Day today — that's expected. The sub-label is mock text, not a derived stat.):
 1. `mso-group`, "ARTISTS ACTIVE", "4", "On tour", `routeName: 'artists'`
 2. `mso-calendar_today`, "SHOWS TODAY", "2", "Across 2 artists", `routeName: 'shows'`
 3. `mso-flight`, "TRAVEL DAYS", "2", "Across 2 artists", `routeName: 'travel'`
@@ -302,7 +334,25 @@ All components are `<script setup lang="ts">` SFCs with scoped SCSS using BEM-st
 
 **Props:** `kpis: GlobalKpi[]` (length must be 5)
 **Layout:** 5-column grid at `lg`, 2 at `md`, 1 at `sm`.
-**Body:** for each KPI, render `<RouterLink :to="{ name: kpi.routeName }">` wrapping the existing `<KpiTile>` component (unchanged). `KpiTile` keeps its current props (`icon`, `label`, `value`, `sub`).
+**Body:** for each KPI, render `<RouterLink :to="{ name: kpi.routeName }">` wrapping `<KpiTile>` with **explicitly destructured props** (do not `v-bind="kpi"`, because `GlobalKpi` has the extra `routeName` field which `KpiTile`'s `Kpi`-typed props do not accept under vue-tsc strict mode):
+
+```vue
+<RouterLink
+  v-for="kpi in kpis"
+  :key="kpi.label"
+  :to="{ name: kpi.routeName }"
+  class="artist-kpi-row__link"
+>
+  <KpiTile
+    :icon="kpi.icon"
+    :label="kpi.label"
+    :value="kpi.value"
+    :sub="kpi.sub"
+  />
+</RouterLink>
+```
+
+`KpiTile` remains unchanged. `.artist-kpi-row__link` styles: `display: block; color: inherit; text-decoration: none;`
 **No internal state.**
 
 ### 6.2 `TodayAcrossArtistsTable.vue`
@@ -333,10 +383,13 @@ Row contents: bold title, small grey sub, right-side small chip (SHOW/TRAVEL/DEA
 
 **Props:** `issues: CriticalIssue[]`
 **Header:** "Critical Issues" with `mso-warning` icon prefix (`color: var(--va-danger)`).
-**Body:** rows. Each row is a `RouterLink` to `{ name: 'issues' }`. Row contents:
-- Left dot/icon colored by `severityTokens[issue.severity]`
+**Body:** rows. Each row is a plain `<div class="critical-issues__row">` (**not** a `RouterLink` — `VaButton` inside `<a>` is invalid HTML5: nested interactive elements). Row contents:
+- Left dot: `<span class="critical-issues__dot" :class="severityTokens[issue.severity].dot" />`
 - Stack: bold title + grey sub "{issue.artistName} — {issue.due}"
-- Right: `<VaButton size="small" preset="primary">Resolve</VaButton>` (plain button, not a nested link). Click bubbles to the row's `RouterLink` and navigates to `/issues` — same destination, so no event-propagation handling needed.
+- Right: `<VaButton :to="{ name: 'issues' }" size="small" preset="secondary">Resolve</VaButton>` — VaButton with `:to` renders as `router-link` natively (Vuestic UI feature; see docs).
+
+The Resolve button is the only clickable affordance on the row. The row itself is not clickable. This is a deliberate tradeoff: lose "click-anywhere" convenience to gain HTML validity + a11y correctness.
+
 **Footer:** `<RouterLink :to="{ name: 'issues' }">View All Issues & Risks →</RouterLink>`
 
 ### 6.5 `RequiredActionsCard.vue`
@@ -376,13 +429,18 @@ Row contents: bold title, small grey sub, right-side small chip (SHOW/TRAVEL/DEA
 **SVG ring implementation** (inline, no dependency):
 ```html
 <svg viewBox="0 0 36 36" class="readiness-ring">
-  <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--va-background-element)" stroke-width="3" />
-  <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--va-primary)" stroke-width="3"
-          :stroke-dasharray="`${pct} ${100 - pct}`" stroke-dashoffset="25" transform="rotate(-90 18 18)" />
-  <text x="18" y="20" text-anchor="middle" font-size="9" font-weight="700">{{ pct }}%</text>
+  <!-- track -->
+  <circle cx="18" cy="18" r="15.915" fill="none"
+          stroke="var(--va-background-element)" stroke-width="3" />
+  <!-- progress: rotate -90° around center so the dash starts at 12 o'clock and fills clockwise -->
+  <circle cx="18" cy="18" r="15.915" fill="none"
+          stroke="var(--va-primary)" stroke-width="3" stroke-linecap="round"
+          :stroke-dasharray="`${pct} ${100 - pct}`"
+          transform="rotate(-90 18 18)" />
+  <text x="18" y="20.5" text-anchor="middle" font-size="9" font-weight="700">{{ pct }}%</text>
 </svg>
 ```
-The 15.915 radius makes the circumference ≈ 100, so `stroke-dasharray` accepts percentages directly.
+The 15.915 radius makes the circumference ≈ 100, so `stroke-dasharray` accepts percentages directly. **Do NOT also set `stroke-dashoffset`** — that would compose with the rotation and offset the dash start, producing a ring that fills from the wrong position.
 
 ### 6.9 Dashboard.vue (rewritten)
 
@@ -391,7 +449,8 @@ The 15.915 radius makes the circumference ≈ 100, so `stroke-dasharray` accepts
   <div class="global-dashboard">
     <PageHeader title="Global Dashboard" subtitle="Overview across all artists and tours">
       <template #actions>
-        <VaButton preset="secondary" icon="mso-tune" @click="onCustomize">Customize Dashboard</VaButton>
+        <!-- Visual affordance only — feature not implemented; explicit `disabled` is more honest than a console.log stub -->
+        <VaButton preset="secondary" icon="mso-tune" disabled>Customize Dashboard</VaButton>
       </template>
     </PageHeader>
 
@@ -399,29 +458,34 @@ The 15.915 radius makes the circumference ≈ 100, so `stroke-dasharray` accepts
       <ArtistKpiRow :kpis="kpis" />
     </section>
 
-    <section class="global-dashboard__today">
-      <TodayAcrossArtistsTable :rows="todayAcrossArtists" />
-    </section>
-
-    <section class="global-dashboard__next72">
-      <GlobalNext72HoursCard :groups="next72h" />
-    </section>
-
-    <section class="global-dashboard__critical">
-      <CriticalIssuesCard :issues="criticalIssues" />
-    </section>
-
-    <section class="global-dashboard__actions">
-      <RequiredActionsCard :actions="requiredActions" />
-    </section>
-
-    <section class="global-dashboard__travel">
-      <TravelMovementCard :rows="travelWatch" />
-    </section>
-
-    <section class="global-dashboard__waiting">
-      <WaitingOnCard :rows="waitingOn" />
-    </section>
+    <div class="global-dashboard__body">
+      <!-- Left column: today + (critical + actions) stacked -->
+      <div class="global-dashboard__main">
+        <section class="global-dashboard__today">
+          <TodayAcrossArtistsTable :rows="todayAcrossArtists" />
+        </section>
+        <div class="global-dashboard__main-row">
+          <section class="global-dashboard__critical">
+            <CriticalIssuesCard :issues="criticalIssues" />
+          </section>
+          <section class="global-dashboard__actions">
+            <RequiredActionsCard :actions="requiredActions" />
+          </section>
+        </div>
+      </div>
+      <!-- Right rail: next72 + travel + waiting stacked -->
+      <div class="global-dashboard__rail">
+        <section class="global-dashboard__next72">
+          <GlobalNext72HoursCard :groups="next72h" />
+        </section>
+        <section class="global-dashboard__travel">
+          <TravelMovementCard :rows="travelWatch" />
+        </section>
+        <section class="global-dashboard__waiting">
+          <WaitingOnCard :rows="waitingOn" />
+        </section>
+      </div>
+    </div>
 
     <section class="global-dashboard__readiness">
       <ArtistReadinessGrid :cards="artistReadiness" />
@@ -431,44 +495,55 @@ The 15.915 radius makes the circumference ≈ 100, so `stroke-dasharray` accepts
 
 <script setup lang="ts">
 // imports for all 8 widget components + PageHeader + fixture exports
-function onCustomize() {
-  // eslint-disable-next-line no-console
-  console.log('Customize Dashboard — stub')
-}
+// No script-level handlers — Customize button is disabled, no click target.
 </script>
 ```
 
 ## 7. Page layout & responsive grid
 
-The page uses a 12-column CSS Grid. Section names match the BEM modifier on each `<section>` above.
+Two-column outer layout (main + rail) avoids the empty-cell trap of a 12-column auto-placed grid. Each column is a flex stack; sections inside flow naturally.
 
 ```scss
 .global-dashboard {
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.global-dashboard__body {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
 
-  &__kpi-row,
-  &__readiness     { grid-column: 1 / -1; }
-
-  // @media (min-width: 1024px) — desktop layout from the mock
   @media (min-width: 1024px) {
-    &__today       { grid-column: 1 / 9; }
-    &__critical    { grid-column: 1 / 5; }
-    &__actions     { grid-column: 5 / 9; }
-    &__next72      { grid-column: 9 / 13; grid-row: span 2; }
-    &__travel      { grid-column: 9 / 13; }
-    &__waiting     { grid-column: 9 / 13; }
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   }
+}
 
-  @media (max-width: 1023px) {
-    & > section { grid-column: 1 / -1; }
+.global-dashboard__main,
+.global-dashboard__rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0; // prevent overflow inside grid track
+}
+
+.global-dashboard__main-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
   }
 }
 ```
 
-KPI row uses its own internal responsive grid (1 / 2 / 3 / 5 at sm / md / lg / xl), same as the current dashboard's KPI row but extended to 5 columns.
+- The outer `.global-dashboard` stacks: KPI row, body (2-col grid), readiness. No empty cells.
+- The body's left column (`__main`) is a vertical flex stack: TodayAcrossArtistsTable on top, then `__main-row` holding CriticalIssues + RequiredActions side-by-side.
+- The body's right column (`__rail`) is a vertical flex stack: Next72 → Travel → Waiting.
+- KPI row uses its own internal responsive grid inside `ArtistKpiRow.vue` (1 / 2 / 3 / 5 at sm / md / lg / xl).
 
 `PageHeader` already has an `#actions` slot — no change needed.
 
@@ -529,8 +604,8 @@ Names: `Artists`, `Artist Detail`, `Issues`.
 | Next 72 Hours — Travel event           | `/travel`                                                    |
 | Next 72 Hours — Deadline event         | `/tasks`                                                     |
 | Next 72 Hours footer                   | `/itinerary`                                                 |
-| Critical Issues row                    | `/issues`                                                    |
-| Critical Issues "Resolve" button       | `/issues` (click bubbles to the row's `RouterLink`)          |
+| Critical Issues row body               | (not clickable — row body is a plain `<div>`)                |
+| Critical Issues "Resolve" button       | `/issues` (`VaButton :to="{ name: 'issues' }"`)              |
 | Critical Issues footer                 | `/issues`                                                    |
 | Required Actions row                   | `/tasks`                                                     |
 | Required Actions footer                | `/tasks`                                                     |
@@ -540,7 +615,7 @@ Names: `Artists`, `Artist Detail`, `Issues`.
 | Waiting On footer                      | `/tasks`                                                     |
 | Artist Readiness card                  | `/artists/:id` (per card's artist)                           |
 | Artist Readiness footer                | `/artists`                                                   |
-| "Customize Dashboard" button           | (none — `console.log` stub)                                  |
+| "Customize Dashboard" button           | (none — rendered `disabled`, no handler)                     |
 
 ## 10. Acceptance criteria
 
@@ -552,20 +627,23 @@ A successful implementation:
 4. "Today Across Artists" table shows exactly 4 rows in §5's order.
 5. "Next 72 Hours" panel shows 3 day groups in §5's order with the listed events.
 6. "Critical Issues", "Today's Required Actions", "Travel & Movement Watch", "Waiting On" panels each render in §5's order.
-7. "Artist Readiness Overview" shows 4 cards in §5's order. Each card has an SVG ring rendering the listed percentage.
-8. Every clickable element in §9 navigates to its stated destination. The Customize button only `console.log`s.
+7. "Artist Readiness Overview" shows 4 cards in §5's order. Each card has an SVG ring rendering the listed percentage. The ring fills **clockwise starting from 12 o'clock** (visually verify each card; a ring that fills counter-clockwise or starts at the wrong position fails this criterion).
+8. Every clickable element in §9 navigates to its stated destination. The Customize button is rendered `disabled` and has no handler.
 9. Sidebar shows a new "Issues" entry directly below "Tasks". `/issues` renders a `PagePlaceholder` titled "Issues".
 10. `/artists` and `/artists/:id` render `PagePlaceholder`s; they are not in the sidebar.
-11. `npm run build:ci` passes (lint + type-check + build).
-12. After deletion, no broken imports remain anywhere in `src/` (`npm run build:ci` proves this; spot grep confirms `data/dashboard` and each deleted widget name yield zero hits in `src/`).
-13. Layout matches the mock at ≥ 1024px width. Below 1024px, sections stack 1-column.
+11. `npm run build` passes — the full pipeline (`npm run lint && vue-tsc --noEmit && vite build`). Note: `npm run build:ci` is `vite build` alone and skips lint + type-check, so it cannot substitute.
+12. After deletion, no broken imports remain anywhere in `src/`. `npm run build` proves this; spot grep `from.*['"]\\./dashboard['"]` and each deleted widget filename should yield zero hits in `src/`.
+13. **`/shows` still renders without errors** after `data/dashboard.ts` is deleted (depends on the `todayTimeline` + `quickContacts` inlining in `data/shows.ts` per §4).
+14. Layout matches the mock at ≥ 1024px width. Below 1024px, sections stack 1-column. No empty grid cells at any viewport width.
 
 ## 11. Implementation notes for the plan
 
-- Order matters: types & severity tokens → fixture → widgets → page → routes → sidebar/i18n → delete old files last. Deleting old files first would briefly break `Dashboard.vue` and put the dev server in an error state.
-- The 8-file delete (7 old widgets + old `data/dashboard.ts`) happens in a single commit after the new page is wired and dev-server-clean.
-- Reuse of `KpiTile` is important — do **not** rebuild the tile. `ArtistKpiRow` is just the 5-up grid + RouterLink wrapper around `KpiTile`.
+- **Order matters**: types + `vaBadgeTokens` → fixture → widgets → page → routes/sidebar/i18n → inline `todayTimeline`+`quickContacts` into `data/shows.ts` → delete old files last. Deleting old files first would break `Dashboard.vue` AND `data/shows.ts` simultaneously and leave the dev server in an error state.
+- **The `shows.ts` inlining is a hard prerequisite for deleting `data/dashboard.ts`.** A subagent that deletes `dashboard.ts` without first inlining will fail `npm run build`. Plan task ordering must encode this.
+- The 8-file delete (7 old widgets + old `data/dashboard.ts`) happens in a single commit **after** the inlining commit and after the new page is wired and dev-server-clean.
+- Reuse of `KpiTile` is important — do **not** rebuild the tile. `ArtistKpiRow` is just the 5-up grid + `RouterLink` wrapper around `KpiTile` with explicitly destructured props (§6.1).
 - No new top-level dependencies. SVG ring is hand-rolled.
+- **Type-check coverage**: `npm run build` (the full build, not `build:ci`) is the gate. `build:ci` skips `vue-tsc --noEmit`, so type errors can slip past it. Reviewers and the plan's verification step must invoke `npm run build`.
 
 ---
 
