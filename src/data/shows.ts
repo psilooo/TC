@@ -1,6 +1,22 @@
 // src/data/shows.ts — Show Detail fixture (matches mock 3 — The Ryman)
-import type { ShowDetail } from './types'
-import { todayTimeline, quickContacts } from './dashboard'
+import type { ShowDetail, TimelineEvent, QuickContact } from './types'
+
+// Inlined from former src/data/dashboard.ts (deleted in same commit).
+// Kept here because /shows depends on these as part of the Show Detail mock.
+const todayTimeline: TimelineEvent[] = [
+  { id: 't1', time: '9:00 AM', title: 'Load-In', sub: 'Ryman Auditorium' },
+  { id: 't2', time: '11:00 AM', title: 'Soundcheck', sub: 'Stage' },
+  { id: 't3', time: '5:00 PM', title: 'Dinner', sub: 'Crew & Band' },
+  { id: 't4', time: '7:30 PM', title: 'Show', sub: 'The Ryman' },
+  { id: 't5', time: '11:00 PM', title: 'Load-Out', sub: 'Ryman Auditorium' },
+]
+
+const quickContacts: QuickContact[] = [
+  { role: 'Venue Manager', name: 'Sarah Williams', phone: '(615) 889-3060' },
+  { role: 'Promoter', name: 'Mike Reynolds', phone: '(615) 555-2194' },
+  { role: 'Driver', name: 'Derrick Johnson', phone: '(615) 555-7788' },
+  { role: 'Hotel', name: 'Grand Hyatt Nashville', phone: '(615) 724-1234' },
+]
 
 export const showDetail: ShowDetail = {
   id: 'show-may-20',
