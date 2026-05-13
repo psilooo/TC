@@ -160,14 +160,7 @@ Use the Write tool to overwrite `src/data/severity.ts` with this exact content (
 
 ```ts
 // src/data/severity.ts — severity tokens shared across sections (Issues here, future Tasks/Alerts elsewhere)
-import type {
-  Severity,
-  ArtistDayStatus,
-  ArtistTrack,
-  ActionStatus,
-  TravelWatchTag,
-  TimelineKind,
-} from './types'
+import type { Severity, ArtistDayStatus, ArtistTrack, ActionStatus, TravelWatchTag, TimelineKind } from './types'
 
 export const severityTokens: Record<Severity, { bg: string; text: string; dot: string }> = {
   High: { bg: 'bg-red-100', text: 'text-red-800', dot: 'bg-red-500' },
@@ -190,10 +183,7 @@ export const statusTokens = {
 
 type VaColor = 'success' | 'warning' | 'danger' | 'info' | 'secondary' | 'primary'
 
-export const vaBadgeTokens: Record<
-  ArtistDayStatus | ArtistTrack | ActionStatus | TravelWatchTag,
-  VaColor
-> = {
+export const vaBadgeTokens: Record<ArtistDayStatus | ArtistTrack | ActionStatus | TravelWatchTag, VaColor> = {
   // ArtistDayStatus
   'Show Day': 'info',
   'Travel Day': 'warning',
@@ -361,38 +351,112 @@ export const next72h: GlobalTimelineGroup[] = [
 
 export const criticalIssues: CriticalIssue[] = [
   { id: 'i1', title: 'Hotel not confirmed', artistId: 'baka', artistName: 'Baka', due: 'May 19', severity: 'High' },
-  { id: 'i2', title: 'Off-load contract missing', artistId: 'luna-rae', artistName: 'Luna Rae', due: 'May 19', severity: 'High' },
-  { id: 'i3', title: 'Settlement terms missing', artistId: 'maya-stone', artistName: 'Maya Stone', due: 'May 19', severity: 'Medium' },
-  { id: 'i4', title: 'Guest list not received', artistId: 'kofi-james', artistName: 'Kofi James', due: 'May 19', severity: 'Medium' },
+  {
+    id: 'i2',
+    title: 'Off-load contract missing',
+    artistId: 'luna-rae',
+    artistName: 'Luna Rae',
+    due: 'May 19',
+    severity: 'High',
+  },
+  {
+    id: 'i3',
+    title: 'Settlement terms missing',
+    artistId: 'maya-stone',
+    artistName: 'Maya Stone',
+    due: 'May 19',
+    severity: 'Medium',
+  },
+  {
+    id: 'i4',
+    title: 'Guest list not received',
+    artistId: 'kofi-james',
+    artistName: 'Kofi James',
+    due: 'May 19',
+    severity: 'Medium',
+  },
 ]
 
 export const requiredActions: RequiredAction[] = [
   { id: 'a1', title: 'Confirm guest pickup', artistId: 'baka', artistName: 'Baka', due: 'May 19', status: 'Due Today' },
-  { id: 'a2', title: 'Send Charlotte routing list', artistId: 'luna-rae', artistName: 'Luna Rae', due: 'May 19', status: 'Open' },
-  { id: 'a3', title: 'Upload signed settlement sheet', artistId: 'kofi-james', artistName: 'Kofi James', due: 'May 19', status: 'Overdue' },
+  {
+    id: 'a2',
+    title: 'Send Charlotte routing list',
+    artistId: 'luna-rae',
+    artistName: 'Luna Rae',
+    due: 'May 19',
+    status: 'Open',
+  },
+  {
+    id: 'a3',
+    title: 'Upload signed settlement sheet',
+    artistId: 'kofi-james',
+    artistName: 'Kofi James',
+    due: 'May 19',
+    status: 'Overdue',
+  },
   { id: 'a4', title: 'Approve rider', artistId: 'maya-stone', artistName: 'Maya Stone', due: 'May 20', status: 'Open' },
   { id: 'a5', title: 'Tour manager check-in', artistId: 'baka', artistName: 'Baka', due: 'May 19', status: 'Open' },
 ]
 
 export const travelWatch: TravelWatchRow[] = [
-  { id: 'tw1', primary: 'Luna Rae — BNA → CLT', sub: 'May 19 • 11:15 AM', artistId: 'luna-rae', tag: 'Driver Not Assigned' },
+  {
+    id: 'tw1',
+    primary: 'Luna Rae — BNA → CLT',
+    sub: 'May 19 • 11:15 AM',
+    artistId: 'luna-rae',
+    tag: 'Driver Not Assigned',
+  },
   { id: 'tw2', primary: 'Maya Stone — DTW arrival', sub: 'May 20', artistId: 'maya-stone', tag: 'Pickup Unconfirmed' },
   { id: 'tw3', primary: 'Baka — Charlotte hotel check-in', sub: 'May 20', artistId: 'baka', tag: 'Pending' },
 ]
 
 export const waitingOn: WaitingOnRow[] = [
-  { id: 'w1', title: 'Hilton Atlanta hotel confirmation', sub: 'Baka — May 22', artistId: 'baka', waitingOn: 'Hilton Sales' },
-  { id: 'w2', title: 'Berlin settlement approval', sub: 'Kofi James — May 19', artistId: 'kofi-james', waitingOn: 'Promoter' },
+  {
+    id: 'w1',
+    title: 'Hilton Atlanta hotel confirmation',
+    sub: 'Baka — May 22',
+    artistId: 'baka',
+    waitingOn: 'Hilton Sales',
+  },
+  {
+    id: 'w2',
+    title: 'Berlin settlement approval',
+    sub: 'Kofi James — May 19',
+    artistId: 'kofi-james',
+    waitingOn: 'Promoter',
+  },
   { id: 'w3', title: 'Guest list', sub: 'Maya Stone — May 19', artistId: 'maya-stone', waitingOn: 'Artist Team' },
   { id: 'w4', title: 'Driver assignment', sub: 'Luna Rae — May 19', artistId: 'luna-rae', waitingOn: 'Transport Co.' },
   { id: 'w5', title: 'Rider approval', sub: 'Baka — May 20', artistId: 'baka', waitingOn: 'Venue Production' },
 ]
 
 export const artistReadiness: ArtistReadiness[] = [
-  { artist: artists.baka, todayLabel: 'Today: Charlotte travel', readinessPct: 76, risks: 3, tasksDue: 6, daysToShow: 3 },
-  { artist: artists.lunaRae, todayLabel: 'Today: Charlotte show', readinessPct: 64, risks: 2, tasksDue: 4, daysToShow: 2 },
+  {
+    artist: artists.baka,
+    todayLabel: 'Today: Charlotte travel',
+    readinessPct: 76,
+    risks: 3,
+    tasksDue: 6,
+    daysToShow: 3,
+  },
+  {
+    artist: artists.lunaRae,
+    todayLabel: 'Today: Charlotte show',
+    readinessPct: 64,
+    risks: 2,
+    tasksDue: 4,
+    daysToShow: 2,
+  },
   { artist: artists.kofiJames, todayLabel: 'Today: Off day', readinessPct: 82, risks: 1, tasksDue: 3, daysToShow: 4 },
-  { artist: artists.mayaStone, todayLabel: 'Today: Detroit travel', readinessPct: 69, risks: 2, tasksDue: 5, daysToShow: 2 },
+  {
+    artist: artists.mayaStone,
+    todayLabel: 'Today: Detroit travel',
+    readinessPct: 69,
+    risks: 2,
+    tasksDue: 5,
+    daysToShow: 2,
+  },
 ]
 ```
 
@@ -425,18 +489,8 @@ git commit -m "feat(data): add globalDashboard fixture"
 <!-- src/components/dashboard/ArtistKpiRow.vue -->
 <template>
   <div class="artist-kpi-row">
-    <RouterLink
-      v-for="kpi in kpis"
-      :key="kpi.label"
-      :to="{ name: kpi.routeName }"
-      class="artist-kpi-row__link"
-    >
-      <KpiTile
-        :icon="kpi.icon"
-        :label="kpi.label"
-        :value="kpi.value"
-        :sub="kpi.sub"
-      />
+    <RouterLink v-for="kpi in kpis" :key="kpi.label" :to="{ name: kpi.routeName }" class="artist-kpi-row__link">
+      <KpiTile :icon="kpi.icon" :label="kpi.label" :value="kpi.value" :sub="kpi.sub" />
     </RouterLink>
   </div>
 </template>
@@ -681,28 +735,17 @@ git commit -m "feat(dashboard): add TodayAcrossArtistsTable widget"
     <div v-for="group in groups" :key="group.label" class="next72__group">
       <div class="next72__day-label">{{ group.label }}</div>
 
-      <RouterLink
-        v-for="ev in group.events"
-        :key="ev.id"
-        :to="routeFor(ev.kind)"
-        class="next72__row"
-      >
+      <RouterLink v-for="ev in group.events" :key="ev.id" :to="routeFor(ev.kind)" class="next72__row">
         <div class="next72__row-body">
           <div class="next72__row-title">{{ ev.title }}</div>
           <div v-if="ev.sub && ev.sub !== '—'" class="next72__row-sub">{{ ev.sub }}</div>
         </div>
-        <VaBadge
-          :text="kindLabel(ev.kind)"
-          :color="timelineKindColor[ev.kind]"
-          class="next72__row-chip"
-        />
+        <VaBadge :text="kindLabel(ev.kind)" :color="timelineKindColor[ev.kind]" class="next72__row-chip" />
       </RouterLink>
     </div>
 
     <footer class="next72__footer">
-      <RouterLink :to="{ name: 'itinerary' }" class="next72__footer-link">
-        View Full Timeline →
-      </RouterLink>
+      <RouterLink :to="{ name: 'itinerary' }" class="next72__footer-link"> View Full Timeline → </RouterLink>
     </footer>
   </VaCard>
 </template>
@@ -848,20 +891,11 @@ git commit -m "feat(dashboard): add GlobalNext72HoursCard widget"
         <div class="critical__row-title">{{ issue.title }}</div>
         <div class="critical__row-sub">{{ issue.artistName }} — {{ issue.due }}</div>
       </div>
-      <VaButton
-        :to="{ name: 'issues' }"
-        size="small"
-        preset="secondary"
-        class="critical__resolve"
-      >
-        Resolve
-      </VaButton>
+      <VaButton :to="{ name: 'issues' }" size="small" preset="secondary" class="critical__resolve"> Resolve </VaButton>
     </div>
 
     <footer class="critical__footer">
-      <RouterLink :to="{ name: 'issues' }" class="critical__footer-link">
-        View All Issues & Risks →
-      </RouterLink>
+      <RouterLink :to="{ name: 'issues' }" class="critical__footer-link"> View All Issues & Risks → </RouterLink>
     </footer>
   </VaCard>
 </template>
@@ -970,12 +1004,7 @@ git commit -m "feat(dashboard): add CriticalIssuesCard widget"
       <h2 class="actions-card__title">Today's Required Actions</h2>
     </header>
 
-    <RouterLink
-      v-for="action in actions"
-      :key="action.id"
-      :to="{ name: 'tasks' }"
-      class="actions-card__row"
-    >
+    <RouterLink v-for="action in actions" :key="action.id" :to="{ name: 'tasks' }" class="actions-card__row">
       <div class="actions-card__title-cell">{{ action.title }}</div>
       <div class="actions-card__artist">{{ action.artistName }}</div>
       <div class="actions-card__due">{{ action.due }}</div>
@@ -983,9 +1012,7 @@ git commit -m "feat(dashboard): add CriticalIssuesCard widget"
     </RouterLink>
 
     <footer class="actions-card__footer">
-      <RouterLink :to="{ name: 'tasks' }" class="actions-card__footer-link">
-        View All Tasks →
-      </RouterLink>
+      <RouterLink :to="{ name: 'tasks' }" class="actions-card__footer-link"> View All Tasks → </RouterLink>
     </footer>
   </VaCard>
 </template>
@@ -1098,12 +1125,7 @@ git commit -m "feat(dashboard): add RequiredActionsCard widget"
       <h2 class="travel-watch__title">Travel & Movement Watch</h2>
     </header>
 
-    <RouterLink
-      v-for="row in rows"
-      :key="row.id"
-      :to="{ name: 'travel' }"
-      class="travel-watch__row"
-    >
+    <RouterLink v-for="row in rows" :key="row.id" :to="{ name: 'travel' }" class="travel-watch__row">
       <div class="travel-watch__body">
         <div class="travel-watch__primary">{{ row.primary }}</div>
         <div class="travel-watch__sub">{{ row.sub }}</div>
@@ -1112,9 +1134,7 @@ git commit -m "feat(dashboard): add RequiredActionsCard widget"
     </RouterLink>
 
     <footer class="travel-watch__footer">
-      <RouterLink :to="{ name: 'travel' }" class="travel-watch__footer-link">
-        View All Travel →
-      </RouterLink>
+      <RouterLink :to="{ name: 'travel' }" class="travel-watch__footer-link"> View All Travel → </RouterLink>
     </footer>
   </VaCard>
 </template>
@@ -1235,12 +1255,7 @@ git commit -m "feat(dashboard): add TravelMovementCard widget"
       <h2 class="waiting-on__title">Waiting On</h2>
     </header>
 
-    <RouterLink
-      v-for="row in rows"
-      :key="row.id"
-      :to="{ name: 'tasks' }"
-      class="waiting-on__row"
-    >
+    <RouterLink v-for="row in rows" :key="row.id" :to="{ name: 'tasks' }" class="waiting-on__row">
       <div class="waiting-on__body">
         <div class="waiting-on__title-cell">{{ row.title }}</div>
         <div class="waiting-on__sub">{{ row.sub }}</div>
@@ -1249,9 +1264,7 @@ git commit -m "feat(dashboard): add TravelMovementCard widget"
     </RouterLink>
 
     <footer class="waiting-on__footer">
-      <RouterLink :to="{ name: 'tasks' }" class="waiting-on__footer-link">
-        View All Waiting On →
-      </RouterLink>
+      <RouterLink :to="{ name: 'tasks' }" class="waiting-on__footer-link"> View All Waiting On → </RouterLink>
     </footer>
   </VaCard>
 </template>
@@ -1382,14 +1395,7 @@ git commit -m "feat(dashboard): add WaitingOnCard widget"
           </div>
           <svg viewBox="0 0 36 36" class="readiness__ring" aria-hidden="true">
             <!-- track -->
-            <circle
-              cx="18"
-              cy="18"
-              r="15.915"
-              fill="none"
-              stroke="var(--va-background-element)"
-              stroke-width="3"
-            />
+            <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--va-background-element)" stroke-width="3" />
             <!-- progress: rotate -90° around center so the dash starts at 12 o'clock and fills clockwise -->
             <circle
               cx="18"
@@ -1402,9 +1408,7 @@ git commit -m "feat(dashboard): add WaitingOnCard widget"
               :stroke-dasharray="`${card.readinessPct} ${100 - card.readinessPct}`"
               transform="rotate(-90 18 18)"
             />
-            <text x="18" y="20.5" text-anchor="middle" font-size="9" font-weight="700">
-              {{ card.readinessPct }}%
-            </text>
+            <text x="18" y="20.5" text-anchor="middle" font-size="9" font-weight="700">{{ card.readinessPct }}%</text>
           </svg>
         </div>
         <div class="readiness__stats">
@@ -1425,9 +1429,7 @@ git commit -m "feat(dashboard): add WaitingOnCard widget"
     </div>
 
     <footer class="readiness__footer">
-      <RouterLink :to="{ name: 'artists' }" class="readiness__footer-link">
-        View All Artist Details →
-      </RouterLink>
+      <RouterLink :to="{ name: 'artists' }" class="readiness__footer-link"> View All Artist Details → </RouterLink>
     </footer>
   </VaCard>
 </template>
@@ -1837,6 +1839,7 @@ curl -s -o /dev/null -w "HTTP %{http_code}\n" http://localhost:5173/dashboard
 ```
 
 Expect: `HTTP 200`. Open the URL in a browser and visually confirm:
+
 - Title: **Global Dashboard**
 - Subtitle: **Overview across all artists and tours**
 - "Customize Dashboard" button visible and **disabled** (greyed out)
@@ -1851,6 +1854,7 @@ Expect: `HTTP 200`. Open the URL in a browser and visually confirm:
 - [ ] **Step 13.4: Spot-check click-throughs (manual)**
 
 In the browser at `/dashboard`:
+
 - Click "ARTISTS ACTIVE" KPI → URL becomes `/artists`, page shows "Artists" placeholder
 - Click "CRITICAL ISSUES" KPI → URL becomes `/issues`, page shows "Issues" placeholder
 - Click a row in "Today Across Artists" → URL becomes `/artists/<id>`, page shows "Artist Detail" placeholder

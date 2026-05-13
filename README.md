@@ -25,10 +25,10 @@ npm run dev        # http://localhost:5173/
 
 This is a **skeleton frontend** — every page renders mock data; there is no real backend, no auth, and no tests yet.
 
-| Tag | What ships |
-|---|---|
-| `v0.1.0-skeleton` | Layout shell, IA sidebar, Tour Dashboard view fully built; 9 other sections render `<PagePlaceholder>` |
-| `v0.2.0-screens` | 6 mocked pages added (Tour Dates, Shows, Travel, Contacts, Tasks, Documents/Settlements). `/itinerary` and `/notes` still placeholders pending designs. |
+| Tag               | What ships                                                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `v0.1.0-skeleton` | Layout shell, IA sidebar, Tour Dashboard view fully built; 9 other sections render `<PagePlaceholder>`                                                  |
+| `v0.2.0-screens`  | 6 mocked pages added (Tour Dates, Shows, Travel, Contacts, Tasks, Documents/Settlements). `/itinerary` and `/notes` still placeholders pending designs. |
 
 `/documents` and `/settlements` both render the same combined view (sidebar highlight differs per route — the IA semantics may collapse in a future spec).
 
@@ -45,14 +45,14 @@ This is a **skeleton frontend** — every page renders mock data; there is no re
 
 ## Scripts
 
-| Script | What it does |
-|---|---|
-| `npm run dev` | Vite dev server (HMR) |
+| Script             | What it does                                                  |
+| ------------------ | ------------------------------------------------------------- |
+| `npm run dev`      | Vite dev server (HMR)                                         |
 | `npm run build:ci` | Fast production build (no lint, no tsc) — for CI smoke checks |
-| `npm run build` | Full production build (lint + `vue-tsc --noEmit` + Vite) |
-| `npm run lint` | ESLint with auto-fix on `src/**/*.{ts,js,vue}` |
-| `npm run format` | Prettier on the whole tree |
-| `npm run preview` | Serve the built `dist/` |
+| `npm run build`    | Full production build (lint + `vue-tsc --noEmit` + Vite)      |
+| `npm run lint`     | ESLint with auto-fix on `src/**/*.{ts,js,vue}`                |
+| `npm run format`   | Prettier on the whole tree                                    |
+| `npm run preview`  | Serve the built `dist/`                                       |
 
 A pre-commit hook (Husky + lint-staged) runs Prettier and ESLint on staged files automatically.
 

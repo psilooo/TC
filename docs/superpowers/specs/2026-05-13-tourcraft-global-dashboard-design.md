@@ -1,13 +1,13 @@
 # TourCraft — Global Dashboard Redesign
 
-|                             |                                                                                                                                                              |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Date**                    | 2026-05-13                                                                                                                                                   |
-| **Status**                  | Draft (pending user review)                                                                                                                                  |
-| **Author**                  | Claude (collaborating with user)                                                                                                                             |
-| **Implementation**          | Next session via `superpowers:writing-plans` → `superpowers:subagent-driven-development`                                                                     |
+|                             |                                                                                                                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Date**                    | 2026-05-13                                                                                                                                                                |
+| **Status**                  | Draft (pending user review)                                                                                                                                               |
+| **Author**                  | Claude (collaborating with user)                                                                                                                                          |
+| **Implementation**          | Next session via `superpowers:writing-plans` → `superpowers:subagent-driven-development`                                                                                  |
 | **Repo state at spec time** | TourCraft on `main` at tag `v0.2.0-screens`. `/dashboard` currently renders the single-tour "Tour Dashboard" (7 widgets, single-tour scope, fixture `data/dashboard.ts`). |
-| **Reference mock**          | `newScreens/global_dashboard.png` (converted from `.heic`). Multi-artist roster view.                                                                        |
+| **Reference mock**          | `newScreens/global_dashboard.png` (converted from `.heic`). Multi-artist roster view.                                                                                     |
 
 ---
 
@@ -114,18 +114,18 @@ Appended after the existing "Additional Screens" section. Section header in sour
 
 ```ts
 export interface ArtistRef {
-  id: string                       // 'baka' | 'luna-rae' | 'kofi-james' | 'maya-stone'
-  name: string                     // 'Baka'
-  tourName: string                 // 'Spring 2025 Run'
-  avatarInitials: string           // 'B', 'LR', 'KJ', 'MS' (1–2 chars, drives avatar circle)
+  id: string // 'baka' | 'luna-rae' | 'kofi-james' | 'maya-stone'
+  name: string // 'Baka'
+  tourName: string // 'Spring 2025 Run'
+  avatarInitials: string // 'B', 'LR', 'KJ', 'MS' (1–2 chars, drives avatar circle)
 }
 
 export interface GlobalKpi {
-  icon: string                     // mso-* identifier
-  label: string                    // 'ARTISTS ACTIVE' — rendered uppercase via CSS
-  value: string                    // pre-formatted ('4', '14')
-  sub: string                      // 'On tour' | 'Across 2 artists' | etc.
-  routeName: string                // 'artists' | 'shows' | 'travel' | 'issues' | 'tasks'
+  icon: string // mso-* identifier
+  label: string // 'ARTISTS ACTIVE' — rendered uppercase via CSS
+  value: string // pre-formatted ('4', '14')
+  sub: string // 'On tour' | 'Across 2 artists' | etc.
+  routeName: string // 'artists' | 'shows' | 'travel' | 'issues' | 'tasks'
 }
 
 export type ArtistDayStatus = 'Show Day' | 'Travel Day' | 'Off Day' | 'Promo Day'
@@ -133,9 +133,9 @@ export type ArtistTrack = 'On Track' | 'Needs Attention' | 'At Risk'
 
 export interface ArtistTodayRow {
   artist: ArtistRef
-  city: string                     // 'Nashville, TN'
+  city: string // 'Nashville, TN'
   dayStatus: ArtistDayStatus
-  nextUp: { title: string; sub: string }   // 'Show 7:00 PM' / 'Ryman Auditorium'
+  nextUp: { title: string; sub: string } // 'Show 7:00 PM' / 'Ryman Auditorium'
   track: ArtistTrack
 }
 
@@ -143,24 +143,24 @@ export type TimelineKind = 'Show' | 'Travel' | 'Deadline'
 
 export interface GlobalTimelineEvent {
   id: string
-  artistId: string                 // for routing
-  title: string                    // 'Baka — Nashville show'
-  sub: string                      // 'Ryman Auditorium' or '11:15 AM'
+  artistId: string // for routing
+  title: string // 'Baka — Nashville show'
+  sub: string // 'Ryman Auditorium' or '11:15 AM'
   kind: TimelineKind
 }
 
 export interface GlobalTimelineGroup {
-  label: string                    // 'TODAY • MAY 19' | 'TOMORROW • MAY 20' | 'MAY 21'
+  label: string // 'TODAY • MAY 19' | 'TOMORROW • MAY 20' | 'MAY 21'
   events: GlobalTimelineEvent[]
 }
 
 export interface CriticalIssue {
   id: string
-  title: string                    // 'Hotel not confirmed'
+  title: string // 'Hotel not confirmed'
   artistId: string
-  artistName: string               // 'Baka'
-  due: string                      // 'May 19' (pre-formatted via formatShortDate or hardcoded)
-  severity: Severity               // reuses existing 'High' | 'Medium' | 'Low'
+  artistName: string // 'Baka'
+  due: string // 'May 19' (pre-formatted via formatShortDate or hardcoded)
+  severity: Severity // reuses existing 'High' | 'Medium' | 'Low'
 }
 
 export type ActionStatus = 'Open' | 'Due Today' | 'Overdue'
@@ -178,24 +178,24 @@ export type TravelWatchTag = 'Driver Not Assigned' | 'Pickup Unconfirmed' | 'Pen
 
 export interface TravelWatchRow {
   id: string
-  primary: string                  // 'Luna Rae — BNA → CLT'
-  sub: string                      // 'May 19 • 11:15 AM'
+  primary: string // 'Luna Rae — BNA → CLT'
+  sub: string // 'May 19 • 11:15 AM'
   artistId: string
   tag: TravelWatchTag
 }
 
 export interface WaitingOnRow {
   id: string
-  title: string                    // 'Hilton Atlanta hotel confirmation'
-  sub: string                      // 'Baka — May 22'
+  title: string // 'Hilton Atlanta hotel confirmation'
+  sub: string // 'Baka — May 22'
   artistId: string
-  waitingOn: string                // 'Hilton Sales' (right-side badge label)
+  waitingOn: string // 'Hilton Sales' (right-side badge label)
 }
 
 export interface ArtistReadiness {
-  artist: ArtistRef                // tour name comes from artist.tourName
-  todayLabel: string               // 'Today: Charlotte travel' | 'Today: Off day' | 'Today: Detroit travel'
-  readinessPct: number             // 0–100 — drives the SVG ring
+  artist: ArtistRef // tour name comes from artist.tourName
+  todayLabel: string // 'Today: Charlotte travel' | 'Today: Off day' | 'Today: Detroit travel'
+  readinessPct: number // 0–100 — drives the SVG ring
   risks: number
   tasksDue: number
   daysToShow: number
@@ -210,16 +210,11 @@ export interface ArtistReadiness {
 
 ```ts
 // src/data/severity.ts (added by spec 2026-05-13)
-import type {
-  ArtistDayStatus, ArtistTrack, ActionStatus, TravelWatchTag,
-} from './types'
+import type { ArtistDayStatus, ArtistTrack, ActionStatus, TravelWatchTag } from './types'
 
 type VaColor = 'success' | 'warning' | 'danger' | 'info' | 'secondary' | 'primary'
 
-export const vaBadgeTokens: Record<
-  ArtistDayStatus | ArtistTrack | ActionStatus | TravelWatchTag,
-  VaColor
-> = {
+export const vaBadgeTokens: Record<ArtistDayStatus | ArtistTrack | ActionStatus | TravelWatchTag, VaColor> = {
   // ArtistDayStatus
   'Show Day': 'info',
   'Travel Day': 'warning',
@@ -230,13 +225,13 @@ export const vaBadgeTokens: Record<
   'Needs Attention': 'warning',
   'At Risk': 'danger',
   // ActionStatus
-  'Open': 'secondary',
+  Open: 'secondary',
   'Due Today': 'warning',
-  'Overdue': 'danger',
+  Overdue: 'danger',
   // TravelWatchTag
   'Driver Not Assigned': 'danger',
   'Pickup Unconfirmed': 'warning',
-  'Pending': 'warning',
+  Pending: 'warning',
 }
 ```
 
@@ -247,27 +242,29 @@ export const vaBadgeTokens: Record<
 
 All exports are typed against §5 interfaces. Quantities match the mock:
 
-| Export                | Type                       | Count |
-| --------------------- | -------------------------- | ----- |
-| `artists`             | `{ [shortKey]: ArtistRef }` | 4     |
-| `kpis`                | `GlobalKpi[]`              | 5     |
-| `todayAcrossArtists`  | `ArtistTodayRow[]`         | 4     |
-| `next72h`             | `GlobalTimelineGroup[]`    | 3 groups, 8 events total |
-| `criticalIssues`      | `CriticalIssue[]`          | 4     |
-| `requiredActions`     | `RequiredAction[]`         | 5     |
-| `travelWatch`         | `TravelWatchRow[]`         | 3     |
-| `waitingOn`           | `WaitingOnRow[]`           | 5     |
-| `artistReadiness`     | `ArtistReadiness[]`        | 4     |
+| Export               | Type                        | Count                    |
+| -------------------- | --------------------------- | ------------------------ |
+| `artists`            | `{ [shortKey]: ArtistRef }` | 4                        |
+| `kpis`               | `GlobalKpi[]`               | 5                        |
+| `todayAcrossArtists` | `ArtistTodayRow[]`          | 4                        |
+| `next72h`            | `GlobalTimelineGroup[]`     | 3 groups, 8 events total |
+| `criticalIssues`     | `CriticalIssue[]`           | 4                        |
+| `requiredActions`    | `RequiredAction[]`          | 5                        |
+| `travelWatch`        | `TravelWatchRow[]`          | 3                        |
+| `waitingOn`          | `WaitingOnRow[]`            | 5                        |
+| `artistReadiness`    | `ArtistReadiness[]`         | 4                        |
 
 Concrete fixture content (verbatim from mock where readable):
 
 **`artists`**:
+
 - `baka`: { id: 'baka', name: 'Baka', tourName: 'Spring 2025 Run', avatarInitials: 'B' }
 - `lunaRae`: { id: 'luna-rae', name: 'Luna Rae', tourName: 'Festival Run', avatarInitials: 'LR' }
 - `kofiJames`: { id: 'kofi-james', name: 'Kofi James', tourName: 'KJ Promo Tour', avatarInitials: 'KJ' }
 - `mayaStone`: { id: 'maya-stone', name: 'Maya Stone', tourName: 'Summer Club Run', avatarInitials: 'MS' }
 
 **`kpis`** (in mock order; values + sub-labels are **verbatim from mock copy**, not derived from the other fixtures. Wireframe data — these numbers are illustrative, not computed counts. A reviewer who tries to reconcile "Travel Days: 2 / Across 2 artists" with the `todayAcrossArtists` data will find only 1 artist on Travel Day today — that's expected. The sub-label is mock text, not a derived stat.):
+
 1. `mso-group`, "ARTISTS ACTIVE", "4", "On tour", `routeName: 'artists'`
 2. `mso-calendar_today`, "SHOWS TODAY", "2", "Across 2 artists", `routeName: 'shows'`
 3. `mso-flight`, "TRAVEL DAYS", "2", "Across 2 artists", `routeName: 'travel'`
@@ -275,12 +272,14 @@ Concrete fixture content (verbatim from mock where readable):
 5. `mso-task_alt`, "ACTIVE TASKS", "14", "Across 2 artists", `routeName: 'tasks'`
 
 **`todayAcrossArtists`** (in mock order):
+
 1. Baka — Nashville, TN — Show Day — "Show 7:00 PM" / "Ryman Auditorium" — On Track
 2. Luna Rae — Charlotte, NC — Travel Day — "Flight BNA → CLT" / "11:15 AM" — On Track
 3. Kofi James — London, UK — Off Day — "Free day, recovery" / "—" — On Track
 4. Maya Stone — Joshua Tree, CA — Show Day — "House of Blues" / "Doors 7:30 PM" — Needs Attention
 
 **`next72h`** (3 groups, content from mock):
+
 - Group "TODAY • MAY 19":
   - Baka — Nashville show / Ryman Auditorium / Show
   - Luna Rae — BNA → CLT / 11:15 AM / Travel
@@ -294,12 +293,14 @@ Concrete fixture content (verbatim from mock where readable):
   - Kofi James — London show / — / Show
 
 **`criticalIssues`** (from mock, 4 items):
+
 1. "Hotel not confirmed" — Baka — May 19 — High
 2. "Off-load contract missing" — Luna Rae — May 19 — High
 3. "Settlement terms missing" — Maya Stone — May 19 — Medium
 4. "Guest list not received" — Kofi James — May 19 — Medium
 
 **`requiredActions`** (5 items):
+
 1. "Confirm guest pickup" — Baka — May 19 — Due Today
 2. "Send Charlotte routing list" — Luna Rae — May 19 — Open
 3. "Upload signed settlement sheet" — Kofi James — May 19 — Overdue
@@ -307,11 +308,13 @@ Concrete fixture content (verbatim from mock where readable):
 5. "Tour manager check-in" — Baka — May 19 — Open
 
 **`travelWatch`** (3 items):
+
 1. "Luna Rae — BNA → CLT" / "May 19 • 11:15 AM" / Driver Not Assigned
 2. "Maya Stone — DTW arrival" / "May 20" / Pickup Unconfirmed
 3. "Baka — Charlotte hotel check-in" / "May 20" / Pending
 
 **`waitingOn`** (5 items):
+
 1. "Hilton Atlanta hotel confirmation" / "Baka — May 22" / "Hilton Sales"
 2. "Berlin settlement approval" / "Kofi James — May 19" / "Promoter"
 3. "Guest list" / "Maya Stone — May 19" / "Artist Team"
@@ -319,6 +322,7 @@ Concrete fixture content (verbatim from mock where readable):
 5. "Rider approval" / "Baka — May 20" / "Venue Production"
 
 **`artistReadiness`** (4 items, percentages from mock):
+
 1. Baka (Spring 2025 Run) — "Today: Charlotte travel" — 76% — Risks 3, Tasks 6, Days 3
 2. Luna Rae (Festival Run) — "Today: Charlotte show" — 64% — Risks 2, Tasks 4, Days 2
 3. Kofi James (KJ Promo Tour) — "Today: Off day" — 82% — Risks 1, Tasks 3, Days 4
@@ -337,12 +341,7 @@ All components are `<script setup lang="ts">` SFCs with scoped SCSS using BEM-st
 **Body:** for each KPI, render `<RouterLink :to="{ name: kpi.routeName }">` wrapping `<KpiTile>` with **explicitly destructured props** (do not `v-bind="kpi"`, because `GlobalKpi` has the extra `routeName` field which `KpiTile`'s `Kpi`-typed props do not accept under vue-tsc strict mode):
 
 ```vue
-<RouterLink
-  v-for="kpi in kpis"
-  :key="kpi.label"
-  :to="{ name: kpi.routeName }"
-  class="artist-kpi-row__link"
->
+<RouterLink v-for="kpi in kpis" :key="kpi.label" :to="{ name: kpi.routeName }" class="artist-kpi-row__link">
   <KpiTile
     :icon="kpi.icon"
     :label="kpi.label"
@@ -360,30 +359,33 @@ All components are `<script setup lang="ts">` SFCs with scoped SCSS using BEM-st
 **Props:** `rows: ArtistTodayRow[]`
 **Header:** card title "Today Across Artists" (no count).
 **Body:** vertical list. Each row is a `RouterLink` to `{ name: 'artist-detail', params: { id: row.artist.id } }`. Row contents (left → right):
+
 - Avatar circle: 32px, `var(--va-primary)` background, white initials, `row.artist.avatarInitials`.
 - Stack: bold artist name + small grey tour name (`row.artist.tourName`).
 - City (`row.city`).
 - Day-status chip (`VaBadge` or `VaChip`, color from `statusTokens[row.dayStatus]`).
 - Next-up stack: bold title + small grey sub.
 - Right-aligned track chip (color from `statusTokens[row.track]`).
-**Footer:** `<RouterLink :to="{ name: 'tour-dates' }">View Full Run Overview →</RouterLink>`
+  **Footer:** `<RouterLink :to="{ name: 'tour-dates' }">View Full Run Overview →</RouterLink>`
 
 ### 6.3 `GlobalNext72HoursCard.vue`
 
 **Props:** `groups: GlobalTimelineGroup[]`
 **Header:** "Next 72 Hours" with `mso-schedule` icon prefix.
 **Body:** for each group, an uppercase day-label header (e.g., "TODAY • MAY 19", `font-size: 0.75rem; letter-spacing: 0.05em; color: var(--va-secondary)`), then rows. Each event row is a `RouterLink`:
+
 - `kind === 'Show'` → `{ name: 'shows' }`
 - `kind === 'Travel'` → `{ name: 'travel' }`
 - `kind === 'Deadline'` → `{ name: 'tasks' }`
-Row contents: bold title, small grey sub, right-side small chip (SHOW/TRAVEL/DEADLINE, uppercase, color from `statusTokens` per kind).
-**Footer:** `<RouterLink :to="{ name: 'itinerary' }">View Full Timeline →</RouterLink>`
+  Row contents: bold title, small grey sub, right-side small chip (SHOW/TRAVEL/DEADLINE, uppercase, color from `statusTokens` per kind).
+  **Footer:** `<RouterLink :to="{ name: 'itinerary' }">View Full Timeline →</RouterLink>`
 
 ### 6.4 `CriticalIssuesCard.vue`
 
 **Props:** `issues: CriticalIssue[]`
 **Header:** "Critical Issues" with `mso-warning` icon prefix (`color: var(--va-danger)`).
 **Body:** rows. Each row is a plain `<div class="critical-issues__row">` (**not** a `RouterLink` — `VaButton` inside `<a>` is invalid HTML5: nested interactive elements). Row contents:
+
 - Left dot: `<span class="critical-issues__dot" :class="severityTokens[issue.severity].dot" />`
 - Stack: bold title + grey sub "{issue.artistName} — {issue.due}"
 - Right: `<VaButton :to="{ name: 'issues' }" size="small" preset="secondary">Resolve</VaButton>` — VaButton with `:to` renders as `router-link` natively (Vuestic UI feature; see docs).
@@ -404,42 +406,53 @@ The Resolve button is the only clickable affordance on the row. The row itself i
 **Props:** `rows: TravelWatchRow[]`
 **Header:** "Travel & Movement Watch" with `mso-flight` icon prefix.
 **Body:** rows. Each row is a `RouterLink` to `{ name: 'travel' }`. Row contents:
+
 - Stack: bold `row.primary` + small grey `row.sub`
 - Right: uppercase tag chip (color from `statusTokens[row.tag]`)
-**Footer:** `<RouterLink :to="{ name: 'travel' }">View All Travel →</RouterLink>`
+  **Footer:** `<RouterLink :to="{ name: 'travel' }">View All Travel →</RouterLink>`
 
 ### 6.7 `WaitingOnCard.vue`
 
 **Props:** `rows: WaitingOnRow[]`
 **Header:** "Waiting On" with `mso-pending` icon prefix.
 **Body:** rows. Each row is a `RouterLink` to `{ name: 'tasks' }`. Row contents:
+
 - Stack: bold `row.title` + small grey `row.sub`
 - Right: neutral chip with `row.waitingOn` text (color="secondary")
-**Footer:** `<RouterLink :to="{ name: 'tasks' }">View All Waiting On →</RouterLink>`
+  **Footer:** `<RouterLink :to="{ name: 'tasks' }">View All Waiting On →</RouterLink>`
 
 ### 6.8 `ArtistReadinessGrid.vue`
 
 **Props:** `cards: ArtistReadiness[]`
 **Header:** card-level title "Artist Readiness Overview".
 **Body:** grid of 4 sub-cards (4 cols at `lg`, 2 at `md`, 1 at `sm`). Each sub-card is a `RouterLink` to `{ name: 'artist-detail', params: { id: card.artist.id } }`. Sub-card contents:
+
 - Top row (flex): left = avatar 48px (initials) + stack (name bold, `card.artist.tourName` small grey, `card.todayLabel` small grey); right = SVG ring 64×64 with percentage in center.
 - Bottom row (flex, 3 cols): "{card.risks}\nRisks" / "{card.tasksDue}\nTasks Due" / "{card.daysToShow}\nDays to Show" — number on top large, label below small.
-**Footer:** `<RouterLink :to="{ name: 'artists' }">View All Artist Details →</RouterLink>`
+  **Footer:** `<RouterLink :to="{ name: 'artists' }">View All Artist Details →</RouterLink>`
 
 **SVG ring implementation** (inline, no dependency):
+
 ```html
 <svg viewBox="0 0 36 36" class="readiness-ring">
   <!-- track -->
-  <circle cx="18" cy="18" r="15.915" fill="none"
-          stroke="var(--va-background-element)" stroke-width="3" />
+  <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--va-background-element)" stroke-width="3" />
   <!-- progress: rotate -90° around center so the dash starts at 12 o'clock and fills clockwise -->
-  <circle cx="18" cy="18" r="15.915" fill="none"
-          stroke="var(--va-primary)" stroke-width="3" stroke-linecap="round"
-          :stroke-dasharray="`${pct} ${100 - pct}`"
-          transform="rotate(-90 18 18)" />
+  <circle
+    cx="18"
+    cy="18"
+    r="15.915"
+    fill="none"
+    stroke="var(--va-primary)"
+    stroke-width="3"
+    stroke-linecap="round"
+    :stroke-dasharray="`${pct} ${100 - pct}`"
+    transform="rotate(-90 18 18)"
+  />
   <text x="18" y="20.5" text-anchor="middle" font-size="9" font-weight="700">{{ pct }}%</text>
 </svg>
 ```
+
 The 15.915 radius makes the circumference ≈ 100, so `stroke-dasharray` accepts percentages directly. **Do NOT also set `stroke-dashoffset`** — that would compose with the rotation and offset the dash start, producing a ring that fills from the wrong position.
 
 ### 6.9 Dashboard.vue (rewritten)
@@ -591,31 +604,31 @@ Names: `Artists`, `Artist Detail`, `Issues`.
 
 ## 9. Click-through map
 
-| Element                                | Destination                                                  |
-| -------------------------------------- | ------------------------------------------------------------ |
-| KPI: Artists Active                    | `/artists`                                                   |
-| KPI: Shows Today                       | `/shows`                                                     |
-| KPI: Travel Days                       | `/travel`                                                    |
-| KPI: Critical Issues                   | `/issues`                                                    |
-| KPI: Active Tasks                      | `/tasks`                                                     |
-| Today Across Artists row               | `/artists/:id` (per row's artist)                            |
-| Today Across Artists footer            | `/tour-dates`                                                |
-| Next 72 Hours — Show event             | `/shows`                                                     |
-| Next 72 Hours — Travel event           | `/travel`                                                    |
-| Next 72 Hours — Deadline event         | `/tasks`                                                     |
-| Next 72 Hours footer                   | `/itinerary`                                                 |
-| Critical Issues row body               | (not clickable — row body is a plain `<div>`)                |
-| Critical Issues "Resolve" button       | `/issues` (`VaButton :to="{ name: 'issues' }"`)              |
-| Critical Issues footer                 | `/issues`                                                    |
-| Required Actions row                   | `/tasks`                                                     |
-| Required Actions footer                | `/tasks`                                                     |
-| Travel & Movement Watch row            | `/travel`                                                    |
-| Travel & Movement Watch footer         | `/travel`                                                    |
-| Waiting On row                         | `/tasks`                                                     |
-| Waiting On footer                      | `/tasks`                                                     |
-| Artist Readiness card                  | `/artists/:id` (per card's artist)                           |
-| Artist Readiness footer                | `/artists`                                                   |
-| "Customize Dashboard" button           | (none — rendered `disabled`, no handler)                     |
+| Element                          | Destination                                     |
+| -------------------------------- | ----------------------------------------------- |
+| KPI: Artists Active              | `/artists`                                      |
+| KPI: Shows Today                 | `/shows`                                        |
+| KPI: Travel Days                 | `/travel`                                       |
+| KPI: Critical Issues             | `/issues`                                       |
+| KPI: Active Tasks                | `/tasks`                                        |
+| Today Across Artists row         | `/artists/:id` (per row's artist)               |
+| Today Across Artists footer      | `/tour-dates`                                   |
+| Next 72 Hours — Show event       | `/shows`                                        |
+| Next 72 Hours — Travel event     | `/travel`                                       |
+| Next 72 Hours — Deadline event   | `/tasks`                                        |
+| Next 72 Hours footer             | `/itinerary`                                    |
+| Critical Issues row body         | (not clickable — row body is a plain `<div>`)   |
+| Critical Issues "Resolve" button | `/issues` (`VaButton :to="{ name: 'issues' }"`) |
+| Critical Issues footer           | `/issues`                                       |
+| Required Actions row             | `/tasks`                                        |
+| Required Actions footer          | `/tasks`                                        |
+| Travel & Movement Watch row      | `/travel`                                       |
+| Travel & Movement Watch footer   | `/travel`                                       |
+| Waiting On row                   | `/tasks`                                        |
+| Waiting On footer                | `/tasks`                                        |
+| Artist Readiness card            | `/artists/:id` (per card's artist)              |
+| Artist Readiness footer          | `/artists`                                      |
+| "Customize Dashboard" button     | (none — rendered `disabled`, no handler)        |
 
 ## 10. Acceptance criteria
 
