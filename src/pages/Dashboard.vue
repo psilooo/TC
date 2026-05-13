@@ -1,94 +1,105 @@
 <!-- src/pages/Dashboard.vue -->
 <template>
-  <div class="dashboard-page">
-    <PageHeader title="Tour Dashboard" subtitle="Today / Command Center" />
+  <div class="global-dashboard">
+    <PageHeader title="Global Dashboard" subtitle="Overview across all artists and tours">
+      <template #actions>
+        <VaButton preset="secondary" icon="mso-tune" disabled>Customize Dashboard</VaButton>
+      </template>
+    </PageHeader>
 
-    <section class="kpi-row">
-      <KpiTile v-for="k in kpis" :key="k.label" v-bind="k" />
+    <section class="global-dashboard__kpi-row">
+      <ArtistKpiRow :kpis="kpis" />
     </section>
 
-    <section class="row-2">
-      <Next72HoursCard :shows="next72h" />
-      <TodayTimelineCard :date="todayDate" :events="todayTimeline" />
-      <TravelHotelCard :legs="travelLegs" />
-    </section>
+    <div class="global-dashboard__body">
+      <div class="global-dashboard__main">
+        <section class="global-dashboard__today">
+          <TodayAcrossArtistsTable :rows="todayAcrossArtists" />
+        </section>
+        <div class="global-dashboard__main-row">
+          <section class="global-dashboard__critical">
+            <CriticalIssuesCard :issues="criticalIssues" />
+          </section>
+          <section class="global-dashboard__actions">
+            <RequiredActionsCard :actions="requiredActions" />
+          </section>
+        </div>
+      </div>
 
-    <section class="row-3">
-      <QuickContactsCard :contacts="quickContacts" />
-      <OpenIssuesCard :issues="openIssues" />
-      <UpcomingShowsTable :shows="upcomingShows" />
-    </section>
+      <div class="global-dashboard__rail">
+        <section class="global-dashboard__next72">
+          <GlobalNext72HoursCard :groups="next72h" />
+        </section>
+        <section class="global-dashboard__travel">
+          <TravelMovementCard :rows="travelWatch" />
+        </section>
+        <section class="global-dashboard__waiting">
+          <WaitingOnCard :rows="waitingOn" />
+        </section>
+      </div>
+    </div>
 
-    <RecentNotesCard :notes="recentNotes" class="recent-notes" />
+    <section class="global-dashboard__readiness">
+      <ArtistReadinessGrid :cards="artistReadiness" />
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import PageHeader from '../components/PageHeader.vue'
-import KpiTile from '../components/KpiTile.vue'
-import Next72HoursCard from '../components/dashboard/Next72HoursCard.vue'
-import TodayTimelineCard from '../components/dashboard/TodayTimelineCard.vue'
-import TravelHotelCard from '../components/dashboard/TravelHotelCard.vue'
-import QuickContactsCard from '../components/dashboard/QuickContactsCard.vue'
-import OpenIssuesCard from '../components/dashboard/OpenIssuesCard.vue'
-import UpcomingShowsTable from '../components/dashboard/UpcomingShowsTable.vue'
-import RecentNotesCard from '../components/dashboard/RecentNotesCard.vue'
+import ArtistKpiRow from '../components/dashboard/ArtistKpiRow.vue'
+import TodayAcrossArtistsTable from '../components/dashboard/TodayAcrossArtistsTable.vue'
+import GlobalNext72HoursCard from '../components/dashboard/GlobalNext72HoursCard.vue'
+import CriticalIssuesCard from '../components/dashboard/CriticalIssuesCard.vue'
+import RequiredActionsCard from '../components/dashboard/RequiredActionsCard.vue'
+import TravelMovementCard from '../components/dashboard/TravelMovementCard.vue'
+import WaitingOnCard from '../components/dashboard/WaitingOnCard.vue'
+import ArtistReadinessGrid from '../components/dashboard/ArtistReadinessGrid.vue'
 import {
   kpis,
+  todayAcrossArtists,
   next72h,
-  todayDate,
-  todayTimeline,
-  travelLegs,
-  quickContacts,
-  openIssues,
-  upcomingShows,
-  recentNotes,
-} from '../data/dashboard'
+  criticalIssues,
+  requiredActions,
+  travelWatch,
+  waitingOn,
+  artistReadiness,
+} from '../data/globalDashboard'
 </script>
 
 <style scoped lang="scss">
-.dashboard-page {
+.global-dashboard {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.kpi-row {
+.global-dashboard__body {
   display: grid;
-  gap: 1rem;
   grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}
+
+.global-dashboard__main,
+.global-dashboard__rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.global-dashboard__main-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
   }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.row-2 {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr;
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.row-3 {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr;
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.recent-notes {
-  width: 100%;
 }
 </style>
